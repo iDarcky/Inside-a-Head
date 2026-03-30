@@ -1,0 +1,61 @@
+{
+  "profile": {
+    "name": "Daniel",
+    "role": "Musician and Developer",
+    "bio": "I build tools and experiences around music, software, and creative workflows.",
+    "avatarAlt": "Portrait of Daniel",
+    "links": [
+      { "label": "GitHub", "url": "https://github.com/" },
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/" },
+      { "label": "Email", "url": "mailto:hello@example.com" }
+    ]
+  },
+  "projects": [
+    {
+      "title": "Chord Vault",
+      "description": "A focused workspace for organizing chord progressions and songwriting ideas.",
+      "stack": ["TypeScript", "React", "Audio"],
+      "url": "https://example.com/chord-vault",
+      "date": "2026-03",
+      "status": "Active"
+    },
+    {
+      "title": "Setlist Companion",
+      "description": "A mobile-friendly utility for managing live sets and tempo notes.",
+      "stack": ["JavaScript", "PWA"],
+      "url": "https://example.com/setlist-companion",
+      "date": "2025-11",
+      "status": "Maintained"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Designing Music Tools That Feel Fast",
+      "excerpt": "A practical look at reducing friction in creative software interfaces.",
+      "date": "2026-03-21",
+      "readTime": "5 min read",
+      "slug": "designing-music-tools-that-feel-fast"
+    },
+    {
+      "title": "What I Learned Shipping Tiny Features Weekly",
+      "excerpt": "Consistency beats complexity when projects need momentum.",
+      "date": "2026-02-15",
+      "readTime": "4 min read",
+      "slug": "shipping-tiny-features-weekly"
+    }
+  ],
+  "activity": [
+    {
+      "category": "Watching",
+      "label": "A new sci-fi series",
+      "timestamp": "3 days ago",
+      "url": "https://example.com/activity/watch"
+    },
+    {
+      "category": "Listening",
+      "label": "Minimal ambient playlist",
+      "timestamp": "1 week ago",
+      "url": "https://example.com/activity/listen"
+    }
+  ]
+}

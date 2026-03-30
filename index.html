@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Personal portfolio inspired by a clean, human-first single-page style."
+    />
+    <title>Daniel - Musician and Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="layout" id="top">
+      <section class="hero section" aria-labelledby="hero-title">
+        <div>
+          <p class="kicker">Hi, I&apos;m <span id="profile-name">Daniel</span>.</p>
+          <h1 id="hero-title" class="hero-title">Musician and Developer</h1>
+          <p class="hero-copy" id="profile-bio">
+            I build tools and experiences around music, software, and creative workflows.
+          </p>
+          <div class="cta-row">
+            <a class="button" href="#projects">View Projects</a>
+            <a class="button button-secondary" href="#writing">Read Writing</a>
+          </div>
+        </div>
+        <aside class="link-list-card" aria-label="Profile links">
+          <h2 class="aside-title">Elsewhere</h2>
+          <ul id="profile-links" class="link-list"></ul>
+        </aside>
+      </section>
+
+      <section class="section" id="about" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p id="about-text">
+          I&apos;m curious about software that helps people create, think, and collaborate.
+        </p>
+      </section>
+
+      <section class="section" id="projects" aria-labelledby="projects-title">
+        <div class="section-header">
+          <h2 id="projects-title">Latest Projects</h2>
+        </div>
+        <div id="projects-grid" class="card-grid"></div>
+      </section>
+
+      <section class="section split" aria-label="Writing and activity">
+        <div id="writing" aria-labelledby="writing-title">
+          <h2 id="writing-title">Writing</h2>
+          <ul id="posts-list" class="list-block"></ul>
+        </div>
+        <div id="activity" aria-labelledby="activity-title">
+          <h2 id="activity-title">Recent Activity</h2>
+          <ul id="activity-list" class="list-block"></ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Built with a minimal, human-first approach.</p>
+      <a href="#top">Back to top</a>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
