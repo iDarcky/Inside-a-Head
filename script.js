@@ -14,82 +14,102 @@ function createTag(tag) {
 }
 
 function createProjectCard(project) {
-  const card = document.createElement("article");
+  const card = document.createElement("a");
   card.className = "card";
+  card.href = project.url;
+  card.target = "_blank";
+  card.rel = "noreferrer";
 
   const title = document.createElement("h3");
-  const link = document.createElement("a");
-  link.href = project.url;
-  link.target = "_blank";
-  link.rel = "noreferrer";
-  link.textContent = project.title;
-  title.appendChild(link);
+  title.textContent = project.title;
 
   const desc = document.createElement("p");
   desc.textContent = project.description;
-
-  const meta = document.createElement("p");
-  meta.className = "meta";
-  meta.textContent = `${project.date} - ${project.status}`;
 
   const tagRow = document.createElement("div");
   tagRow.className = "tag-row";
   project.stack.forEach((tag) => tagRow.appendChild(createTag(tag)));
 
-  card.append(title, desc, meta, tagRow);
+  const meta = document.createElement("p");
+  meta.className = "meta";
+  meta.textContent = `${project.date} - ${project.status}`;
+
+  card.append(title, desc, tagRow, meta);
   return card;
 }
 
 function createPostItem(post) {
   const item = document.createElement("li");
   item.innerHTML = `
-    <a href="/posts/${post.slug}"><strong>${post.title}</strong></a>
-    <div class="meta">${post.date} - ${post.readTime}</div>
-    <p>${post.excerpt}</p>
-  `;
-  return item;
-}
-
-function createActivityItem(entry) {
-  const item = document.createElement("li");
-  item.innerHTML = `
-    <div class="meta">${entry.category}</div>
-    <a href="${entry.url}" target="_blank" rel="noreferrer"><strong>${entry.label}</strong></a>
-    <div class="meta">${entry.timestamp}</div>
+    <a href="/posts/${post.slug}">
+      <strong style="display: block; font-size: 1.125rem;">${post.title}</strong>
+      <div class="meta" style="margin-top: 4px;">${post.date} - ${post.readTime}</div>
+    </a>
   `;
   return item;
 }
 
 function renderProfile(profile) {
   document.getElementById("profile-name").textContent = profile.name;
-  document.querySelector(".hero-title").textContent = profile.role;
+  document.getElementById("hero-title").textContent = profile.role;
   document.getElementById("profile-bio").textContent = profile.bio;
-  document.getElementById("about-text").textContent = profile.bio;
+
+  if (profile.who_am_i) {
+    document.getElementById("who-am-i-text").textContent = profile.who_am_i;
+  }
+
+  const whatIDoList = document.getElementById("what-i-do-list");
+  if (profile.what_i_do && whatIDoList) {
+    whatIDoList.innerHTML = "";
+    profile.what_i_do.forEach(item => {
+      const li = document.createElement("li");
+      li.style.borderBottom = "none";
+      li.style.padding = "4px 0";
+      li.innerHTML = `<i data-lucide="check" style="width: 14px; height: 14px; color: var(--geist-success); margin-right: 8px;"></i> ${item}`;
+      whatIDoList.appendChild(li);
+    });
+    lucide.createIcons({
+      elements: whatIDoList.querySelectorAll('[data-lucide]')
+    });
+  }
 
   const linksList = document.getElementById("profile-links");
+  linksList.innerHTML = "";
   profile.links.forEach((item) => {
     const li = document.createElement("li");
-    li.innerHTML = `<a href="${item.url}" target="_blank" rel="noreferrer">${item.label}</a>`;
+    li.innerHTML = `<a href="${item.url}" class="button button-secondary" target="_blank" rel="noreferrer">${item.label}</a>`;
     linksList.appendChild(li);
   });
 }
 
 function renderCollections(data) {
   const projectsGrid = document.getElementById("projects-grid");
+  projectsGrid.innerHTML = ""; // Clear skeletons
   data.projects.forEach((project) =>
     projectsGrid.appendChild(createProjectCard(project))
   );
 
   const postsList = document.getElementById("posts-list");
+  postsList.innerHTML = ""; // Clear skeletons
   data.posts.forEach((post) => postsList.appendChild(createPostItem(post)));
+}
 
-  const activityList = document.getElementById("activity-list");
-  data.activity.forEach((entry) =>
-    activityList.appendChild(createActivityItem(entry))
-  );
+// Theme management
+function initTheme() {
+  const themeToggle = document.getElementById("theme-toggle");
+
+  const currentTheme = localStorage.getItem("theme") || "light";
+  document.documentElement.setAttribute("data-theme", currentTheme);
+
+  themeToggle.addEventListener("click", () => {
+    const theme = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  });
 }
 
 async function init() {
+  initTheme();
   try {
     const data = await loadContent();
     renderProfile(data.profile);

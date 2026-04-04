@@ -1,215 +1,303 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap');
+
 :root {
-  --color-bg: #f7f6f3;
-  --color-surface: #ffffff;
-  --color-text: #1f2328;
-  --color-muted: #56606b;
-  --color-border: #d9dee5;
-  --color-accent: #2f6fed;
-  --color-accent-soft: #eaf0ff;
+  /* Light Theme (Geist Colors) */
+  --geist-background: #fff;
+  --geist-foreground: #000;
+  --accents-1: #fafafa;
+  --accents-2: #eaeaea;
+  --accents-3: #999;
+  --accents-4: #888;
+  --accents-5: #666;
+  --accents-6: #444;
+  --accents-7: #333;
+  --accents-8: #111;
+  --geist-border: #eaeaea;
+  --geist-border-hover: #000;
 
-  --fs-hero: clamp(2rem, 4vw, 3.25rem);
-  --fs-h2: clamp(1.4rem, 2.2vw, 2rem);
+  --geist-link-color: #0070f3;
+  --geist-success: #0070f3;
+  --geist-error: #ee0000;
+  --geist-warning: #f5a623;
+
+  --fs-hero: clamp(2.5rem, 5vw, 4rem);
+  --fs-h2: clamp(1.5rem, 3vw, 2.25rem);
   --fs-body: 1rem;
-  --fs-meta: 0.9rem;
+  --fs-meta: 0.875rem;
 
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-12: 3rem;
+  --space-gap: 24px;
+  --radius: 8px;
+
+  --transition: 0.2s ease;
 }
 
-*,
-*::before,
-*::after {
+[data-theme='dark'] {
+  --geist-background: #000;
+  --geist-foreground: #fff;
+  --accents-1: #111;
+  --accents-2: #333;
+  --accents-3: #444;
+  --accents-4: #666;
+  --accents-5: #888;
+  --accents-6: #999;
+  --accents-7: #eaeaea;
+  --accents-8: #fafafa;
+  --geist-border: #333;
+  --geist-border-hover: #fff;
+}
+
+*, *::before, *::after {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: "Inter", "Segoe UI", sans-serif;
-  font-size: var(--fs-body);
-  color: var(--color-text);
-  background: var(--color-bg);
+  font-family: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  background-color: var(--geist-background);
+  color: var(--geist-foreground);
   line-height: 1.6;
-}
-
-a {
-  color: inherit;
-  text-underline-offset: 3px;
-}
-
-a:hover,
-a:focus-visible {
-  color: var(--color-accent);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition), color var(--transition);
 }
 
 .layout {
-  width: min(980px, calc(100% - 2rem));
+  max-width: 1000px;
   margin: 0 auto;
-  padding: var(--space-12) 0;
+  padding: 80px 24px;
 }
 
-.section {
-  margin-bottom: var(--space-12);
+header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 40px;
 }
 
-.hero {
-  display: grid;
-  gap: var(--space-8);
-  align-items: start;
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--geist-border);
+  border-radius: var(--radius);
+  padding: 8px;
+  cursor: pointer;
+  color: var(--geist-foreground);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color var(--transition);
+}
+
+.theme-toggle:hover {
+  border-color: var(--geist-border-hover);
+}
+
+[data-theme='light'] .moon-icon { display: none; }
+[data-theme='dark'] .sun-icon { display: none; }
+
+h1, h2, h3 {
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+}
+
+h1 {
+  font-size: var(--fs-hero);
+  line-height: 1;
+  margin-bottom: 16px;
+}
+
+h2 {
+  font-size: var(--fs-h2);
+  margin-bottom: 24px;
 }
 
 .kicker {
-  margin: 0 0 var(--space-2);
-  color: var(--color-muted);
-}
-
-.hero-title {
-  font-family: "Fraunces", Georgia, serif;
-  font-size: var(--fs-hero);
-  line-height: 1.1;
-  margin: 0;
+  color: var(--accents-5);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  margin-bottom: 8px;
 }
 
 .hero-copy {
-  max-width: 65ch;
-  margin: var(--space-4) 0 var(--space-6);
+  font-size: 1.25rem;
+  color: var(--accents-5);
+  max-width: 600px;
+  margin-bottom: 32px;
+}
+
+.section {
+  padding: 64px 0;
+  border-top: 1px solid var(--geist-border);
+}
+
+.hero {
+  padding-bottom: 64px;
 }
 
 .cta-row {
   display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: 16px;
 }
 
 .button {
-  display: inline-block;
-  padding: 0.62rem 1rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-accent);
-  color: #ffffff;
-  background: var(--color-accent);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  height: 40px;
+  border-radius: var(--radius);
+  font-weight: 500;
   text-decoration: none;
-  font-weight: 600;
+  font-size: 0.875rem;
+  transition: all var(--transition);
+}
+
+.button-primary {
+  background: var(--geist-foreground);
+  color: var(--geist-background);
+  border: 1px solid var(--geist-foreground);
+}
+
+.button-primary:hover {
+  background: transparent;
+  color: var(--geist-foreground);
 }
 
 .button-secondary {
-  color: var(--color-accent);
   background: transparent;
+  color: var(--accents-5);
+  border: 1px solid var(--geist-border);
 }
 
-.link-list-card,
-.card,
-.list-block li,
-.section {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-}
-
-.section {
-  padding: var(--space-8);
-}
-
-.link-list-card {
-  padding: var(--space-6);
-}
-
-.aside-title,
-h2 {
-  margin: 0 0 var(--space-4);
-  font-family: "Fraunces", Georgia, serif;
-  font-size: var(--fs-h2);
-  line-height: 1.2;
-}
-
-.link-list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: var(--space-3);
+.button-secondary:hover {
+  border-color: var(--geist-border-hover);
+  color: var(--geist-foreground);
 }
 
 .card-grid {
   display: grid;
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
 }
 
 .card {
-  padding: var(--space-6);
-  transition: box-shadow 120ms ease;
+  padding: 24px;
+  border: 1px solid var(--geist-border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition);
+  text-decoration: none;
+  color: inherit;
 }
 
 .card:hover {
-  box-shadow: 0 8px 24px rgba(22, 29, 37, 0.08);
+  border-color: var(--geist-border-hover);
 }
 
 .card h3 {
-  margin: 0;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
 }
 
-.meta {
-  color: var(--color-muted);
-  font-size: var(--fs-meta);
+.card p {
+  color: var(--accents-5);
+  margin-bottom: 16px;
 }
 
 .tag-row {
   display: flex;
+  gap: 8px;
   flex-wrap: wrap;
-  gap: var(--space-2);
-  margin-top: var(--space-4);
 }
 
 .tag {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  background: var(--accents-1);
+  border: 1px solid var(--geist-border);
   border-radius: 999px;
-  background: var(--color-accent-soft);
-  color: var(--color-accent);
-  font-size: 0.82rem;
-  font-weight: 600;
+  color: var(--accents-6);
+}
+
+.meta {
+  font-size: 0.75rem;
+  color: var(--accents-4);
+  margin-top: 16px;
 }
 
 .list-block {
-  margin: 0;
-  padding: 0;
   list-style: none;
-  display: grid;
-  gap: var(--space-3);
+  padding: 0;
+  margin: 0;
 }
 
 .list-block li {
-  padding: var(--space-4);
+  padding: 16px 0;
+  border-bottom: 1px solid var(--geist-border);
 }
 
-.split {
-  display: grid;
-  gap: var(--space-8);
+.list-block li:last-child {
+  border-bottom: none;
+}
+
+.list-block a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.list-block a:hover strong {
+  text-decoration: underline;
 }
 
 .footer {
-  width: min(980px, calc(100% - 2rem));
-  margin: 0 auto var(--space-8);
-  color: var(--color-muted);
+  margin-top: 80px;
+  padding: 40px 0;
+  border-top: 1px solid var(--geist-border);
   display: flex;
   justify-content: space-between;
-  gap: var(--space-4);
-  flex-wrap: wrap;
+  color: var(--accents-4);
+  font-size: 0.875rem;
 }
 
-@media (min-width: 820px) {
-  .hero {
-    grid-template-columns: 2fr 1fr;
-  }
+/* Skeletons */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--accents-1) 25%,
+    var(--accents-2) 50%,
+    var(--accents-1) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 4px;
+}
 
-  .card-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
-  .split {
-    grid-template-columns: 1.5fr 1fr;
+.skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+}
+
+.skeleton-card {
+  height: 200px;
+  border: 1px solid var(--geist-border);
+  border-radius: var(--radius);
+}
+
+@media (max-width: 640px) {
+  .layout {
+    padding: 40px 16px;
+  }
+  .cta-row {
+    flex-direction: column;
+  }
+  .footer {
+    flex-direction: column;
+    gap: 16px;
   }
 }

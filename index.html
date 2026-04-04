@@ -1,72 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Personal portfolio inspired by a clean, human-first single-page style."
+      content="Daniel - Product Manager & Musician. Clean, minimalist portfolio."
     />
-    <title>Daniel - Musician and Developer</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <title>Daniel | Product Manager & Musician</title>
     <link rel="stylesheet" href="styles.css" />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
   </head>
   <body>
-    <main class="layout" id="top">
-      <section class="hero section" aria-labelledby="hero-title">
-        <div>
-          <p class="kicker">Hi, I&apos;m <span id="profile-name">Daniel</span>.</p>
-          <h1 id="hero-title" class="hero-title">Musician and Developer</h1>
+    <div class="layout">
+      <header>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+          <i data-lucide="sun" class="sun-icon"></i>
+          <i data-lucide="moon" class="moon-icon"></i>
+        </button>
+      </header>
+
+      <main>
+        <section class="hero" id="top">
+          <p class="kicker">Hi, I'm <span id="profile-name">Daniel</span></p>
+          <h1 id="hero-title">Product Manager & Musician</h1>
           <p class="hero-copy" id="profile-bio">
-            I build tools and experiences around music, software, and creative workflows.
+            Building products and playing music. Currently focused on human-centric software and creative workflows.
           </p>
           <div class="cta-row">
-            <a class="button" href="#projects">View Projects</a>
-            <a class="button button-secondary" href="#writing">Read Writing</a>
+            <a class="button button-primary" href="#projects">View Projects</a>
+            <a class="button button-secondary" href="mailto:hello@example.com" id="profile-email">Get in Touch</a>
           </div>
-        </div>
-        <aside class="link-list-card" aria-label="Profile links">
-          <h2 class="aside-title">Elsewhere</h2>
-          <ul id="profile-links" class="link-list"></ul>
-        </aside>
-      </section>
+        </section>
 
-      <section class="section" id="about" aria-labelledby="about-title">
-        <h2 id="about-title">About</h2>
-        <p id="about-text">
-          I&apos;m curious about software that helps people create, think, and collaborate.
-        </p>
-      </section>
+        <section class="section" id="about" aria-labelledby="about-title">
+          <h2 id="about-title">Who I am</h2>
+          <div id="who-am-i-text" class="hero-copy"></div>
+          <div id="what-i-do">
+            <h3 style="margin-bottom: 16px; font-size: 1rem; color: var(--accents-6);">What I like to do</h3>
+            <ul id="what-i-do-list" class="list-block"></ul>
+          </div>
+        </section>
 
-      <section class="section" id="projects" aria-labelledby="projects-title">
-        <div class="section-header">
-          <h2 id="projects-title">Latest Projects</h2>
-        </div>
-        <div id="projects-grid" class="card-grid"></div>
-      </section>
+        <section class="section" id="projects" aria-labelledby="projects-title">
+          <div class="section-header">
+            <h2 id="projects-title">Projects</h2>
+          </div>
+          <div id="projects-grid" class="card-grid">
+            <!-- Skeletons initially -->
+            <div class="card skeleton skeleton-card"></div>
+            <div class="card skeleton skeleton-card"></div>
+          </div>
+        </section>
 
-      <section class="section split" aria-label="Writing and activity">
-        <div id="writing" aria-labelledby="writing-title">
+        <section class="section" id="writing" aria-labelledby="writing-title">
           <h2 id="writing-title">Writing</h2>
-          <ul id="posts-list" class="list-block"></ul>
-        </div>
-        <div id="activity" aria-labelledby="activity-title">
-          <h2 id="activity-title">Recent Activity</h2>
-          <ul id="activity-list" class="list-block"></ul>
-        </div>
-      </section>
-    </main>
+          <ul id="posts-list" class="list-block">
+            <li class="skeleton skeleton-text" style="width: 80%;"></li>
+            <li class="skeleton skeleton-text" style="width: 60%;"></li>
+          </ul>
+        </section>
 
-    <footer class="footer">
-      <p>Built with a minimal, human-first approach.</p>
-      <a href="#top">Back to top</a>
-    </footer>
+        <section class="section" id="elsewhere" aria-label="Social Links">
+          <h2>Elsewhere</h2>
+          <ul id="profile-links" class="tag-row" style="list-style: none; padding: 0;"></ul>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>&copy; 2024 Daniel. Built with Geist.</p>
+        <a href="#top" style="color: inherit; text-decoration: none;">Back to top &uarr;</a>
+      </footer>
+    </div>
 
     <script src="script.js"></script>
+    <script>
+      // Initialize icons
+      lucide.createIcons();
+    </script>
   </body>
 </html>

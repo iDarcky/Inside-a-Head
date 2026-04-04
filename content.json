@@ -1,12 +1,20 @@
 {
   "profile": {
     "name": "Daniel",
-    "role": "Musician and Developer",
-    "bio": "I build tools and experiences around music, software, and creative workflows.",
+    "role": "Product Manager & Musician",
+    "bio": "Building products and playing music. Currently focused on human-centric software and creative workflows.",
+    "who_am_i": "I'm a Product Manager with a background in music, combining analytical thinking with creative expression. I love building things that solve real problems while maintaining a high bar for design and user experience.",
+    "what_i_do": [
+      "Product Strategy & Roadmap planning",
+      "User Research & Data-driven insights",
+      "Musical Composition & Production",
+      "Frontend Development (React, TypeScript)"
+    ],
     "avatarAlt": "Portrait of Daniel",
     "links": [
       { "label": "GitHub", "url": "https://github.com/" },
       { "label": "LinkedIn", "url": "https://www.linkedin.com/" },
+      { "label": "X", "url": "https://x.com/" },
       { "label": "Email", "url": "mailto:hello@example.com" }
     ]
   },
@@ -35,13 +43,6 @@
       "date": "2026-03-21",
       "readTime": "5 min read",
       "slug": "designing-music-tools-that-feel-fast"
-    },
-    {
-      "title": "What I Learned Shipping Tiny Features Weekly",
-      "excerpt": "Consistency beats complexity when projects need momentum.",
-      "date": "2026-02-15",
-      "readTime": "4 min read",
-      "slug": "shipping-tiny-features-weekly"
     }
   ],
   "activity": [
@@ -50,12 +51,6 @@
       "label": "A new sci-fi series",
       "timestamp": "3 days ago",
       "url": "https://example.com/activity/watch"
-    },
-    {
-      "category": "Listening",
-      "label": "Minimal ambient playlist",
-      "timestamp": "1 week ago",
-      "url": "https://example.com/activity/listen"
     }
   ]
 }
