@@ -23,7 +23,7 @@
       "description": "A specialized comparison engine for retro gaming hardware. Built with Next.js, Supabase, and Tailwind CSS, following a Swiss Industrial design philosophy.",
       "stack": ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
       "url": "https://theretrocircuit.com/",
-      "date": "2024",
+      "date": "2025",
       "status": "Live"
     },
     {
@@ -31,7 +31,7 @@
       "description": "A focused workspace for organizing setlists and musical ideas using Markdown. Streamlining the workflow for musicians and performers.",
       "stack": ["JavaScript", "Vite", "Markdown"],
       "url": "https://setlists-md.vercel.app/",
-      "date": "2024",
+      "date": "2026",
       "status": "Maintained"
     },
     {
@@ -39,7 +39,7 @@
       "description": "A high-performance running application built to track and analyze athletic performance with precision.",
       "stack": ["TypeScript", "React", "AI Studio"],
       "url": "https://running-app-brown.vercel.app/",
-      "date": "2024",
+      "date": "2025",
       "status": "Active"
     }
   ],

@@ -67,11 +67,6 @@ body {
   padding: 80px 24px;
 }
 
-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 40px;
-}
 
 .theme-toggle {
   background: none;

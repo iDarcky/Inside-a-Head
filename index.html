@@ -14,13 +14,6 @@
   </head>
   <body>
     <div class="layout">
-      <header>
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
-          <i data-lucide="sun" class="sun-icon"></i>
-          <i data-lucide="moon" class="moon-icon"></i>
-        </button>
-      </header>
-
       <main>
         <section class="hero" id="top">
           <p class="kicker">Hi, I'm <span id="profile-name">Daniel</span></p>
@@ -82,7 +75,13 @@
       </main>
 
       <footer class="footer">
-        <p>&copy; 2024 Daniel. Built with Geist.</p>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <p style="margin: 0;">&copy; 2026 Daniel. Built with Geist.</p>
+          <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme" style="padding: 4px; border: none; background: transparent;">
+            <i data-lucide="sun" class="sun-icon" style="width: 16px; height: 16px;"></i>
+            <i data-lucide="moon" class="moon-icon" style="width: 16px; height: 16px;"></i>
+          </button>
+        </div>
         <a href="#top" style="color: inherit; text-decoration: none;">Back to top &uarr;</a>
       </footer>
     </div>
