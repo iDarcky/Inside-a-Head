@@ -50,26 +50,16 @@
       "url": "https://www.goodreads.com/book/show/16640.The_Sorrows_of_Young_Werther"
     },
     "read": [
-      {
-        "title": "1984",
-        "author": "George Orwell",
-        "rating": 5
-      },
-      {
-        "title": "Man's Search for Meaning",
-        "author": "Viktor Frankl",
-        "rating": 4
-      },
-      {
-        "title": "Meditations",
-        "author": "Marcus Aurelius",
-        "rating": 5
-      },
-      {
-        "title": "The Hitchhiker's Guide to the Galaxy",
-        "author": "Douglas Adams",
-        "rating": 5
-      }
+      { "title": "From the Editorial Page of the Falchester Weekly Review", "author": "Marie Brennan", "rating": 4 },
+      { "title": "The Voyage of the Basilisk", "author": "Marie Brennan", "rating": 3 },
+      { "title": "The Old Man and the Sea", "author": "Ernest Hemingway", "rating": 3 },
+      { "title": "The Magician's Nephew", "author": "C.S. Lewis", "rating": 3 },
+      { "title": "The Last Battle", "author": "C.S. Lewis", "rating": 4 },
+      { "title": "Prince Caspian", "author": "C.S. Lewis", "rating": 4 },
+      { "title": "The Subtle Art of Not Giving a F*ck", "author": "Mark Manson", "rating": 5 },
+      { "title": "Selling 101", "author": "Zig Ziglar", "rating": 4 },
+      { "title": "Inteligența emoțională", "author": "Daniel Goleman", "rating": 3 },
+      { "title": "The Shallows", "author": "Nicholas Carr", "rating": 5 }
     ],
     "goodreads_url": "https://www.goodreads.com/user/show/106429003-daniel-maghis"
   }

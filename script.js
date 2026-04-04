@@ -38,18 +38,22 @@ function createProjectCard(project) {
   return card;
 }
 
-function createBookItem(book) {
+function createBookItem(book, index) {
   const item = document.createElement("li");
   item.style.display = "flex";
-  item.style.justify_content = "space-between";
   item.style.alignItems = "center";
+  item.style.gap = "16px";
+  item.style.padding = "16px 0";
 
   const rating = "★".repeat(book.rating) + "☆".repeat(5 - book.rating);
 
   item.innerHTML = `
+    <div style="font-family: 'Geist Mono', monospace; font-size: 0.875rem; color: var(--accents-3); width: 24px;">
+      ${String(index + 1).padStart(2, '0')}
+    </div>
     <div style="flex: 1;">
       <strong style="display: block; font-size: 1rem;">${book.title}</strong>
-      <span style="font-size: 0.875rem; color: var(--accents-5);">${book.author}</span>
+      <span style="font-size: 0.875rem; color: var(--accents-5); text-transform: lowercase;">${book.author}</span>
     </div>
     <div style="color: var(--geist-warning); font-size: 0.75rem; letter-spacing: 0.1em;">${rating}</div>
   `;
@@ -80,37 +84,66 @@ function renderProfile(profile) {
     });
   }
 
-  // LinkedIn and GitHub buttons already in HTML, but we could update URLs if needed
   const linkedinBtn = document.getElementById("linkedin-btn");
   const githubBtn = document.getElementById("github-btn");
-  const linkedinLink = profile.links.find(l => l.label === "LinkedIn");
-  const githubLink = profile.links.find(l => l.label === "GitHub");
 
-  if (linkedinLink) linkedinBtn.href = linkedinLink.url;
-  if (githubLink) githubBtn.href = githubLink.url;
+  if (profile.links) {
+    const linkedinLink = profile.links.find(l => l.label === "LinkedIn");
+    const githubLink = profile.links.find(l => l.label === "GitHub");
+    if (linkedinLink) linkedinBtn.href = linkedinLink.url;
+    if (githubLink) githubBtn.href = githubLink.url;
+  }
 }
 
 function renderCollections(data) {
+  // Projects
   const projectsGrid = document.getElementById("projects-grid");
-  projectsGrid.innerHTML = ""; // Clear skeletons
+  projectsGrid.innerHTML = "";
   data.projects.forEach((project) =>
     projectsGrid.appendChild(createProjectCard(project))
   );
 
+  // Books
   const booksList = document.getElementById("books-list");
-  booksList.innerHTML = ""; // Clear skeletons
-  if (data.books && data.books.read) {
-    data.books.read.forEach((book) => booksList.appendChild(createBookItem(book)));
+  booksList.innerHTML = "";
+
+  const allBooks = data.books.read || [];
+  const initialCount = 5;
+
+  function displayBooks(count) {
+    booksList.innerHTML = "";
+    allBooks.slice(0, count).forEach((book, index) => {
+      booksList.appendChild(createBookItem(book, index));
+    });
   }
 
-  // Update currently reading
+  displayBooks(initialCount);
+
+  const seeAllBtn = document.getElementById("see-all-books");
+  if (allBooks.length > initialCount) {
+    seeAllBtn.style.display = "inline-flex";
+    seeAllBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (seeAllBtn.textContent.includes("See all")) {
+        displayBooks(10);
+        seeAllBtn.innerHTML = 'Show less <i data-lucide="chevron-up" style="margin-left: 8px; width: 16px;"></i>';
+      } else {
+        displayBooks(initialCount);
+        seeAllBtn.innerHTML = 'See all <i data-lucide="chevron-down" style="margin-left: 8px; width: 16px;"></i>';
+      }
+      lucide.createIcons({ elements: seeAllBtn.querySelectorAll('[data-lucide]') });
+    });
+  } else {
+    seeAllBtn.style.display = "none";
+  }
+
+  // Currently Reading
   if (data.books && data.books.currently_reading) {
     document.getElementById("reading-title").textContent = data.books.currently_reading.title;
     document.getElementById("reading-author").textContent = data.books.currently_reading.author;
-    const readingCard = document.getElementById("reading-card");
-    if (readingCard.tagName === 'A' || readingCard.parentElement.tagName === 'A') {
-        // already wrapped or is a link
-    } else {
+
+    let readingCard = document.getElementById("reading-card");
+    if (readingCard.parentElement.tagName !== 'A') {
         const link = document.createElement("a");
         link.href = data.books.currently_reading.url;
         link.target = "_blank";
@@ -123,10 +156,8 @@ function renderCollections(data) {
   }
 }
 
-// Theme management
 function initTheme() {
   const themeToggle = document.getElementById("theme-toggle");
-
   const currentTheme = localStorage.getItem("theme") || "light";
   document.documentElement.setAttribute("data-theme", currentTheme);
 
