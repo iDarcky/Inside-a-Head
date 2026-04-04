@@ -1,25 +1,11 @@
-npm warn exec The following package was not found and will be installed: serve@14.2.6
  INFO  Accepting connections at http://localhost:3000
- HTTP  4/4/2026 9:59:59 PM ::1 GET /
- HTTP  4/4/2026 9:59:59 PM ::1 Returned 200 in 380 ms
- HTTP  4/4/2026 9:59:59 PM ::1 GET /styles.css
- HTTP  4/4/2026 9:59:59 PM ::1 Returned 200 in 2 ms
- HTTP  4/4/2026 9:59:59 PM ::1 GET /script.js
- HTTP  4/4/2026 9:59:59 PM ::1 Returned 200 in 3 ms
- HTTP  4/4/2026 10:00:00 PM ::1 GET /content.json
- HTTP  4/4/2026 10:00:00 PM ::1 Returned 200 in 4 ms
- HTTP  4/4/2026 10:01:40 PM ::1 GET /
- HTTP  4/4/2026 10:01:40 PM ::1 Returned 200 in 2 ms
- HTTP  4/4/2026 10:01:40 PM ::1 GET /styles.css
- HTTP  4/4/2026 10:01:40 PM ::1 GET /script.js
- HTTP  4/4/2026 10:01:40 PM ::1 Returned 200 in 5 ms
- HTTP  4/4/2026 10:01:40 PM ::1 Returned 200 in 4 ms
- HTTP  4/4/2026 10:01:40 PM ::1 GET /content.json
- HTTP  4/4/2026 10:01:40 PM ::1 Returned 200 in 2 ms
+ HTTP  4/4/2026 10:23:39 PM ::1 GET /
+ HTTP  4/4/2026 10:23:39 PM ::1 Returned 200 in 64 ms
+ HTTP  4/4/2026 10:23:39 PM ::1 GET /styles.css
+ HTTP  4/4/2026 10:23:39 PM ::1 GET /script.js
+ HTTP  4/4/2026 10:23:39 PM ::1 Returned 200 in 8 ms
+ HTTP  4/4/2026 10:23:39 PM ::1 Returned 200 in 8 ms
+ HTTP  4/4/2026 10:23:39 PM ::1 GET /content.json
+ HTTP  4/4/2026 10:23:39 PM ::1 Returned 200 in 3 ms
 
  INFO  Gracefully shutting down. Please wait...
-npm notice
-npm notice New minor version of npm available! 11.11.0 -> 11.12.1
-npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
-npm notice To update run: npm install -g npm@11.12.1
-npm notice

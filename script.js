@@ -38,13 +38,20 @@ function createProjectCard(project) {
   return card;
 }
 
-function createPostItem(post) {
+function createBookItem(book) {
   const item = document.createElement("li");
+  item.style.display = "flex";
+  item.style.justify_content = "space-between";
+  item.style.alignItems = "center";
+
+  const rating = "★".repeat(book.rating) + "☆".repeat(5 - book.rating);
+
   item.innerHTML = `
-    <a href="/posts/${post.slug}">
-      <strong style="display: block; font-size: 1.125rem;">${post.title}</strong>
-      <div class="meta" style="margin-top: 4px;">${post.date} - ${post.readTime}</div>
-    </a>
+    <div style="flex: 1;">
+      <strong style="display: block; font-size: 1rem;">${book.title}</strong>
+      <span style="font-size: 0.875rem; color: var(--accents-5);">${book.author}</span>
+    </div>
+    <div style="color: var(--geist-warning); font-size: 0.75rem; letter-spacing: 0.1em;">${rating}</div>
   `;
   return item;
 }
@@ -73,13 +80,14 @@ function renderProfile(profile) {
     });
   }
 
-  const linksList = document.getElementById("profile-links");
-  linksList.innerHTML = "";
-  profile.links.forEach((item) => {
-    const li = document.createElement("li");
-    li.innerHTML = `<a href="${item.url}" class="button button-secondary" target="_blank" rel="noreferrer">${item.label}</a>`;
-    linksList.appendChild(li);
-  });
+  // LinkedIn and GitHub buttons already in HTML, but we could update URLs if needed
+  const linkedinBtn = document.getElementById("linkedin-btn");
+  const githubBtn = document.getElementById("github-btn");
+  const linkedinLink = profile.links.find(l => l.label === "LinkedIn");
+  const githubLink = profile.links.find(l => l.label === "GitHub");
+
+  if (linkedinLink) linkedinBtn.href = linkedinLink.url;
+  if (githubLink) githubBtn.href = githubLink.url;
 }
 
 function renderCollections(data) {
@@ -89,9 +97,30 @@ function renderCollections(data) {
     projectsGrid.appendChild(createProjectCard(project))
   );
 
-  const postsList = document.getElementById("posts-list");
-  postsList.innerHTML = ""; // Clear skeletons
-  data.posts.forEach((post) => postsList.appendChild(createPostItem(post)));
+  const booksList = document.getElementById("books-list");
+  booksList.innerHTML = ""; // Clear skeletons
+  if (data.books && data.books.read) {
+    data.books.read.forEach((book) => booksList.appendChild(createBookItem(book)));
+  }
+
+  // Update currently reading
+  if (data.books && data.books.currently_reading) {
+    document.getElementById("reading-title").textContent = data.books.currently_reading.title;
+    document.getElementById("reading-author").textContent = data.books.currently_reading.author;
+    const readingCard = document.getElementById("reading-card");
+    if (readingCard.tagName === 'A' || readingCard.parentElement.tagName === 'A') {
+        // already wrapped or is a link
+    } else {
+        const link = document.createElement("a");
+        link.href = data.books.currently_reading.url;
+        link.target = "_blank";
+        link.rel = "noreferrer";
+        link.style.textDecoration = "none";
+        link.style.color = "inherit";
+        readingCard.parentNode.replaceChild(link, readingCard);
+        link.appendChild(readingCard);
+    }
+  }
 }
 
 // Theme management

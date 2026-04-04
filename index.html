@@ -30,13 +30,14 @@
           </p>
           <div class="cta-row">
             <a class="button button-primary" href="#projects">View Projects</a>
-            <a class="button button-secondary" href="mailto:hello@example.com" id="profile-email">Get in Touch</a>
+            <a class="button button-secondary" href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn">LinkedIn</a>
+            <a class="button button-secondary" href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn">GitHub</a>
           </div>
         </section>
 
         <section class="section" id="about" aria-labelledby="about-title">
           <h2 id="about-title">Who I am</h2>
-          <div id="who-am-i-text" class="hero-copy"></div>
+          <div id="who-am-i-text" class="hero-copy" style="margin-bottom: 40px;"></div>
           <div id="what-i-do">
             <h3 style="margin-bottom: 16px; font-size: 1rem; color: var(--accents-6);">What I like to do</h3>
             <ul id="what-i-do-list" class="list-block"></ul>
@@ -54,17 +55,26 @@
           </div>
         </section>
 
-        <section class="section" id="writing" aria-labelledby="writing-title">
-          <h2 id="writing-title">Writing</h2>
-          <ul id="posts-list" class="list-block">
+        <section class="section" id="books" aria-labelledby="books-title">
+          <h2 id="books-title">Shelf</h2>
+          <div id="currently-reading" style="margin-bottom: 32px;">
+            <h3 style="font-size: 0.875rem; text-transform: uppercase; color: var(--accents-5); letter-spacing: 0.1em; margin-bottom: 12px;">Currently Reading</h3>
+            <div id="reading-card" class="card" style="display: flex; align-items: center; gap: 16px; padding: 16px;">
+               <i data-lucide="book-open" style="color: var(--geist-success);"></i>
+               <div>
+                 <strong id="reading-title" style="display: block;">The Sorrows of Young Werther</strong>
+                 <span id="reading-author" style="font-size: 0.875rem; color: var(--accents-5);">Johann Wolfgang von Goethe</span>
+               </div>
+            </div>
+          </div>
+          <h3 style="font-size: 0.875rem; text-transform: uppercase; color: var(--accents-5); letter-spacing: 0.1em; margin-bottom: 12px;">Recently Read</h3>
+          <ul id="books-list" class="list-block">
             <li class="skeleton skeleton-text" style="width: 80%;"></li>
             <li class="skeleton skeleton-text" style="width: 60%;"></li>
           </ul>
-        </section>
-
-        <section class="section" id="elsewhere" aria-label="Social Links">
-          <h2>Elsewhere</h2>
-          <ul id="profile-links" class="tag-row" style="list-style: none; padding: 0;"></ul>
+          <div style="margin-top: 24px;">
+            <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" class="button button-secondary" style="font-size: 0.75rem;">View all on Goodreads &rarr;</a>
+          </div>
         </section>
       </main>
 
