@@ -15,21 +15,37 @@ function createAppPanel(project, index) {
   const bgColor = colors[index % colors.length];
   panel.setAttribute('data-bg', bgColor);
 
+
   const paddedIndex = String(index + 1).padStart(2, '0');
 
   panel.innerHTML = `
-    <div class="app-panel-content">
-      <div class="app-index">${paddedIndex}</div>
-      <h3 class="app-title">${project.title}</h3>
-      <p class="app-desc">${project.description}</p>
-      <div class="app-meta">
-        <span>${project.status}</span>
-        <a href="${project.url}" target="_blank" rel="noreferrer" class="app-view-link" data-hover>
-          View Project <i data-lucide="arrow-up-right" style="margin-left: 8px; width: 16px;"></i>
-        </a>
+    <div class="app-panel-content" id="app-${index}">
+      <div class="app-text-column">
+        <div class="app-index">${paddedIndex}</div>
+        <h3 class="app-title">${project.title}</h3>
+        <p class="app-desc">${project.description}</p>
+        <div class="app-meta">
+          <span>${project.status}</span>
+          <a href="${project.url}" target="_blank" rel="noreferrer" class="app-view-link" data-hover>
+            View Project <i data-lucide="arrow-up-right" style="margin-left: 8px; width: 16px;"></i>
+          </a>
+        </div>
+      </div>
+      <div class="app-visual-column">
+        <div class="glass-browser">
+          <div class="glass-header">
+            <div class="glass-dot"></div><div class="glass-dot"></div><div class="glass-dot"></div>
+          </div>
+          <div class="glass-body">
+            <div class="glass-skeleton"></div>
+            <div class="glass-skeleton"></div>
+            <div class="glass-skeleton"></div>
+          </div>
+        </div>
       </div>
     </div>
   `;
+
   return panel;
 }
 
@@ -105,18 +121,22 @@ function renderCollections(data) {
     });
   }
 
-  // Shelf (Premium Horizontal Track)
-  const shelfTrack = document.getElementById("shelf-track");
-  shelfTrack.innerHTML = "";
+  // Bento Box Reading Tile
+  const bentoReading = document.getElementById("bento-reading");
+  if (bentoReading && data.books) {
+    let readingHTML = `<div class="bento-kicker">CURRENTLY READING</div><div class="bento-book-covers">`;
 
-  if (data.books && data.books.currently_reading) {
-    shelfTrack.appendChild(createBookPremiumCard(data.books.currently_reading, 0, true));
+    if (data.books.currently_reading) {
+      readingHTML += `<div class="book-cover"><span>${data.books.currently_reading.title}</span></div>`;
+    }
+    const allBooks = data.books.read || [];
+    if (allBooks.length > 0) {
+      readingHTML += `<div class="book-cover" style="opacity: 0.5;"><span>${allBooks[0].title}</span></div>`;
+    }
+
+    readingHTML += `</div>`;
+    bentoReading.innerHTML = readingHTML;
   }
-
-  const allBooks = data.books.read || [];
-  allBooks.forEach((book, index) => {
-    shelfTrack.appendChild(createBookPremiumCard(book, index));
-  });
 }
 
 // Lenis & GSAP will be appended in the next step

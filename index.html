@@ -13,6 +13,8 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Lenis for Smooth Scrolling -->
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.34/dist/lenis.min.js"></script>
     <!-- GSAP & ScrollTrigger -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -24,6 +26,13 @@
     <!-- Custom Cursor -->
     <div class="custom-cursor"></div>
 
+    <!-- Global Anchor -->
+    <a href="#top" class="global-anchor" data-hover>
+      <span>INSIDE A HEAD</span>
+      <span class="anchor-sub">STUDIO</span>
+    </a>
+
+
     <header class="site-header">
       <div class="header-inner">
         <nav class="nav-links">
@@ -33,6 +42,16 @@
         </nav>
       </div>
     </header>
+
+    <!-- Dot Navigation -->
+    <div class="dot-nav">
+      <div class="dot" data-target="#top"></div>
+      <div class="dot" data-target="#app-0"></div>
+      <div class="dot" data-target="#app-1"></div>
+      <div class="dot" data-target="#app-2"></div>
+      <div class="dot" data-target="#logbook"></div>
+    </div>
+
 
     <div class="layout">
       <main>
@@ -68,10 +87,12 @@
         <!-- The Design System (The Engine Room) -->
         <section class="engine-room-section section-snap" id="design-system">
           <div class="engine-room-content">
-            <h2 class="engine-title">SYSTEM ARCHITECTURE</h2>
-            <p class="engine-copy">Powered by Geist UI. Explore the foundational principles, typography, and semantic components that power every app in the Inside a Head studio.</p>
+            <div>
+              <h2 class="engine-title">SYSTEM ARCHITECTURE</h2>
+              <p class="engine-copy">Powered by Geist UI. Explore the foundational principles, typography, and semantic components that power every app in the studio.</p>
+            </div>
             <a href="https://design-system-dm.vercel.app/" class="button button-massive ds-cta" target="_blank" rel="noreferrer" data-hover>
-              Explore the Design System <i data-lucide="arrow-right" style="margin-left: 16px; width: 24px; height: 24px;"></i>
+              Explore <i data-lucide="arrow-right" style="margin-left: 16px; width: 24px; height: 24px;"></i>
             </a>
           </div>
         </section>
@@ -84,16 +105,51 @@
           <div id="logbook-list" class="logbook-list">
              <!-- Logbook entries go here -->
           </div>
+          <div class="logbook-footer" style="margin-top: 4vw; text-align: right;">
+            <a href="#" class="button button-massive" data-hover style="padding: 16px 32px; font-size: 1rem;">View Full Logbook →</a>
+          </div>
         </section>
 
-        <!-- The Shelf -->
-        <section class="shelf-horizontal-section section-snap" id="shelf">
-          <div class="shelf-pin-wrapper">
-            <h2 class="shelf-huge-title">THE SHELF</h2>
-            <div class="shelf-track-container">
-              <div class="shelf-track" id="shelf-track">
-                <!-- Books injected by script.js -->
+        <!-- The Shelf: Bento Box / Museum of My Mess -->
+        <section class="bento-section section-snap" id="shelf">
+          <div class="bento-wrapper">
+            <h2 class="shelf-huge-title">MUSEUM OF MY MESS</h2>
+            <div class="bento-grid">
+
+              <!-- Tile 1: Tall Portrait (Currently Reading) -->
+              <div class="bento-tile tile-tall" id="bento-reading">
+                 <!-- Populated by script.js -->
               </div>
+
+              <!-- Tile 2: Square (Athletics) -->
+              <div class="bento-tile tile-square bento-athletics">
+                <div class="bento-kicker">ATHLETICS</div>
+                <div class="athletics-data">
+                  <div class="ath-row">
+                    <span class="ath-label">HALF MARATHON</span>
+                    <span class="ath-value">1:38:42</span>
+                  </div>
+                  <div class="ath-row">
+                    <span class="ath-label">5K PR</span>
+                    <span class="ath-value">20:15</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tile 3: Wide Landscape (Infrastructure) -->
+              <div class="bento-tile tile-wide bento-infra">
+                <div class="bento-kicker">INFRASTRUCTURE</div>
+                <div class="infra-schematic">
+                  <div class="node n1"></div><div class="line l1"></div><div class="node n2"></div><div class="line l2"></div><div class="node n3"></div>
+                </div>
+              </div>
+
+              <!-- Tile 4: Small Square (Personal) -->
+              <div class="bento-tile tile-small bento-personal">
+                <div class="bento-kicker">PERSONAL</div>
+                <div class="film-still-placeholder"></div>
+              </div>
+
             </div>
           </div>
         </section>
@@ -105,6 +161,7 @@
           <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
           <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
           <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
+          <a href="#" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
         </div>
         <div class="footer-bottom-meta">
           <p>© 2026 INSIDE A HEAD STUDIO.</p>

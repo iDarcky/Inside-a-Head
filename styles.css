@@ -326,7 +326,7 @@ h1, h2, h3 {
 .engine-room-section {
   position: relative;
   width: 100vw;
-  padding: 15vw 5vw;
+  padding: 10vw 5vw;
   background-color: #000;
   border-top: 1px solid var(--geist-border);
   overflow: hidden;
@@ -358,6 +358,10 @@ h1, h2, h3 {
   z-index: 1;
   max-width: 1400px;
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4vw;
 }
 
 .engine-title {
@@ -367,10 +371,10 @@ h1, h2, h3 {
 }
 
 .engine-copy {
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
   color: var(--accents-6);
-  max-width: 1000px;
-  margin-bottom: 80px;
+  max-width: 600px;
+  margin-bottom: 0;
 }
 
 .button-massive {
@@ -467,107 +471,6 @@ h1, h2, h3 {
   .logbook-content {
     width: 100%;
   }
-}
-
-
-/* Shelf Horizontal Scroll */
-.shelf-horizontal-section {
-  position: relative;
-  background-color: #050505;
-  /* GSAP will pin this section */
-}
-
-.shelf-pin-wrapper {
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 5vw;
-  overflow: hidden;
-}
-
-.shelf-huge-title {
-  font-size: var(--fs-h2);
-  margin-bottom: 80px;
-  text-transform: uppercase;
-  color: var(--accents-3);
-}
-
-
-.shelf-track-container {
-  width: 100%;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  padding-bottom: 24px;
-}
-.shelf-track-container::-webkit-scrollbar {
-  height: 8px;
-}
-.shelf-track-container::-webkit-scrollbar-track {
-  background: var(--geist-border);
-  border-radius: 8px;
-}
-.shelf-track-container::-webkit-scrollbar-thumb {
-  background: var(--accents-6);
-  border-radius: 8px;
-}
-
-
-
-
-.shelf-track {
-  display: flex;
-  gap: 4vw;
-  width: max-content;
-  padding-right: 10vw;
-}
-
-.book-premium-card {
-  width: 350px;
-  height: 450px;
-  background-color: #111;
-  border: 1px solid var(--accents-2);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 40px;
-  text-decoration: none;
-  color: inherit;
-  transition: border-color var(--fast-transition), background-color var(--fast-transition);
-}
-
-.book-premium-card:hover {
-  border-color: #444;
-  background-color: #1a1a1a;
-}
-
-.book-kicker {
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.875rem;
-  color: var(--accents-5);
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.book-premium-title {
-  font-size: 2rem;
-  line-height: 1.1;
-  margin: 24px 0;
-  font-weight: 700;
-}
-
-.book-premium-author {
-  font-size: 1.1rem;
-  color: var(--accents-6);
-}
-
-.book-premium-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.875rem;
-  color: var(--accents-4);
 }
 
 
@@ -767,11 +670,301 @@ body, .layout {
 }
 
 /* CSS Scroll Snapping */
-html {
-  scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
+
+
+/* Global Anchor */
+.global-anchor {
+  position: fixed;
+  top: 24px;
+  left: 40px;
+  z-index: 1001;
+  font-family: 'Geist Mono', monospace;
+  font-weight: 700;
+  color: var(--geist-foreground);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  flex-direction: column;
+  mix-blend-mode: difference;
+  transition: opacity var(--fast-transition);
 }
-.section-snap {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+
+.global-anchor:hover {
+  opacity: 0.5;
+}
+
+.anchor-sub {
+  color: var(--accents-6);
+  align-self: center;
+  margin-top: 2px;
+}
+
+/* Dot Navigation */
+.dot-nav {
+  position: fixed;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  mix-blend-mode: difference;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accents-5);
+  transition: transform var(--fast-transition), background-color var(--fast-transition);
+}
+
+.dot.active {
+  transform: scale(1.5);
+  background-color: var(--geist-foreground);
+}
+
+@media (max-width: 768px) {
+  .global-anchor {
+    top: 16px;
+    left: 20px;
+  }
+  .dot-nav {
+    display: none;
+  }
+}
+
+/* App Panel Left/Right Layout & Glassmorphism */
+.app-panel-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4vw;
+  max-width: 1400px;
+  width: 100%;
+}
+
+.app-text-column {
+  flex: 1;
+  max-width: 600px;
+}
+
+.app-visual-column {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  perspective: 1000px; /* For 3D floating effect */
+}
+
+/* The Angled Floating Glass Browser Placeholder */
+.glass-browser {
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 4/3;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+  transform: rotateY(-15deg) rotateX(5deg);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  /* Mask fading into dark background */
+  -webkit-mask-image: linear-gradient(to bottom right, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom right, black 40%, transparent 100%);
+}
+
+.glass-header {
+  height: 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 6px;
+}
+
+.glass-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accents-3);
+}
+
+.glass-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.glass-skeleton {
+  height: 12px;
+  background-color: rgba(255,255,255,0.05);
+  border-radius: 4px;
+}
+.glass-skeleton:nth-child(1) { width: 40%; height: 24px; }
+.glass-skeleton:nth-child(2) { width: 80%; }
+.glass-skeleton:nth-child(3) { width: 60%; }
+
+@media (max-width: 1024px) {
+  .app-panel-content {
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+  }
+  .app-text-column {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+  }
+  .app-visual-column {
+    display: none; /* Hide complex 3D placeholder on small mobile to save space */
+  }
+}
+
+/* Shelf Bento Box */
+.bento-section {
+  width: 100vw;
+  padding: 10vw 5vw;
+  background-color: #050505;
+  position: relative;
+  z-index: 10;
+}
+
+.bento-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.shelf-huge-title {
+  font-size: var(--fs-h2);
+  margin-bottom: 80px;
+  text-transform: uppercase;
+  color: var(--accents-3);
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 250px;
+  gap: 1px; /* 1px gaps */
+  background-color: var(--geist-border);
+  border: 1px solid var(--geist-border);
+}
+
+.bento-tile {
+  background-color: #0a0a0a;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.bento-tile:hover {
+  background-color: #111;
+}
+
+.tile-tall {
+  grid-column: span 1;
+  grid-row: span 2;
+}
+
+.tile-square {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.tile-wide {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+.tile-small {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.bento-kicker {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accents-5);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Specific Tile Styles */
+.athletics-data {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+}
+.ath-row {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 8px;
+}
+.ath-label { color: var(--accents-6); font-size: 0.875rem; }
+.ath-value { font-family: 'Geist Mono', monospace; font-size: 1.25rem; font-weight: bold; }
+
+.infra-schematic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: auto;
+  opacity: 0.5;
+}
+.node { width: 16px; height: 16px; border-radius: 50%; background-color: var(--accents-7); }
+.line { height: 1px; flex: 1; background-color: var(--accents-4); }
+
+.film-still-placeholder {
+  width: 100%;
+  height: 100%;
+  margin-top: 16px;
+  background: linear-gradient(145deg, #222, #111);
+  border-radius: 4px;
+}
+
+/* Responsive Bento */
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .tile-tall { grid-column: span 2; grid-row: span 1; }
+  .tile-wide { grid-column: span 2; }
+}
+
+@media (max-width: 640px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+  .bento-tile { grid-column: span 1 !important; grid-row: span 1 !important; }
+}
+
+/* Book Cover Placeholders in Tall Tile */
+.bento-book-covers {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+.book-cover {
+  height: 120px;
+  background: linear-gradient(145deg, #1a1a1a, #050505);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: flex-end;
+  padding: 12px;
+}
+.book-cover span {
+  font-size: 0.875rem;
+  font-weight: bold;
+  line-height: 1.1;
 }

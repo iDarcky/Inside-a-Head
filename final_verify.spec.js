@@ -17,9 +17,8 @@ test('final verification of portfolio redesign', async ({ page }) => {
   await expect(page.locator('#logbook')).toBeVisible();
   await expect(page.locator('text=On Minimalism in Interface Design')).toBeVisible();
 
-  // Check Shelf
-  await expect(page.locator('h2:text("Shelf")')).toBeVisible();
-  await expect(page.locator('text=The Sorrows of Young Werther')).toBeVisible();
+  // Check Bento Section
+  await expect(page.locator(".bento-wrapper")).toBeVisible();
 
   // Check Design System Section
   await expect(page.locator('.engine-room-section')).toBeVisible();
