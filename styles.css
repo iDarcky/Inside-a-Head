@@ -326,6 +326,10 @@ h1, h2, h3 {
 .engine-room-section {
   position: relative;
   width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 10vw 5vw;
   background-color: #000;
   border-top: 1px solid var(--geist-border);
@@ -402,6 +406,10 @@ h1, h2, h3 {
 /* Logbook Cinematic */
 .logbook-cinematic {
   width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 10vw 5vw;
   background-color: #000;
   position: relative;
@@ -477,9 +485,11 @@ h1, h2, h3 {
 /* Massive Footer */
 .footer-massive {
   width: 100vw;
+  height: 100vh;
   background-color: #000;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 10vw 5vw 40px;
   border-top: 1px solid var(--geist-border);
 }
@@ -596,7 +606,7 @@ body, .layout {
   }
 
   .engine-room-section {
-    padding: 20vw 5vw;
+    padding: 10vw 5vw;
   }
 
   .engine-copy {
@@ -720,6 +730,7 @@ body, .layout {
   height: 6px;
   border-radius: 50%;
   background-color: var(--accents-5);
+  cursor: pointer;
   transition: transform var(--fast-transition), background-color var(--fast-transition);
 }
 
@@ -828,6 +839,10 @@ body, .layout {
 /* Shelf Bento Box */
 .bento-section {
   width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   padding: 10vw 5vw;
   background-color: #050505;
   position: relative;

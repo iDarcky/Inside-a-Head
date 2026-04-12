@@ -2,13 +2,58 @@ async function loadContent() {
   const response = await fetch("content.json");
   if (!response.ok) {
     throw new Error("Could not load content.json");
-  }
+
+
+  // 5. Intersection Observer for Dot Navigation
+  const dots = document.querySelectorAll('.dot-nav .dot');
+  const sections = document.querySelectorAll('.section-snap');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5 // Trigger when 50% of the section is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active class from all dots
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Add active class to corresponding dot
+        const id = '#' + entry.target.id;
+        const activeDot = document.querySelector(`.dot-nav .dot[data-target="${id}"]`);
+        if (activeDot) {
+          activeDot.classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  // 6. Dot Navigation Click Event
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetId = dot.getAttribute('data-target');
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+
+}
   return response.json();
 }
 
 function createAppPanel(project, index) {
   const panel = document.createElement("div");
   panel.className = "app-panel section-snap";
+  panel.id = `app-${index}`;
 
   // Placeholder charcoal tints
   const colors = ['#1a0f30', '#121f1a', '#300a0a'];
@@ -19,7 +64,7 @@ function createAppPanel(project, index) {
   const paddedIndex = String(index + 1).padStart(2, '0');
 
   panel.innerHTML = `
-    <div class="app-panel-content" id="app-${index}">
+    <div class="app-panel-content">
       <div class="app-text-column">
         <div class="app-index">${paddedIndex}</div>
         <h3 class="app-title">${project.title}</h3>
@@ -310,4 +355,173 @@ function initKineticEngine() {
 
 
 
-  }
+
+
+  // 5. Intersection Observer for Dot Navigation
+  const dots = document.querySelectorAll('.dot-nav .dot');
+  const sections = document.querySelectorAll('.section-snap');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5 // Trigger when 50% of the section is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active class from all dots
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Add active class to corresponding dot
+        const id = '#' + entry.target.id;
+        const activeDot = document.querySelector(`.dot-nav .dot[data-target="${id}"]`);
+        if (activeDot) {
+          activeDot.classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  // 6. Dot Navigation Click Event
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetId = dot.getAttribute('data-target');
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+
+
+  // 5. Intersection Observer for Dot Navigation
+  const dots = document.querySelectorAll('.dot-nav .dot');
+  const sections = document.querySelectorAll('.section-snap');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5 // Trigger when 50% of the section is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active class from all dots
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Add active class to corresponding dot
+        const id = '#' + entry.target.id;
+        const activeDot = document.querySelector(`.dot-nav .dot[data-target="${id}"]`);
+        if (activeDot) {
+          activeDot.classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  // 6. Dot Navigation Click Event
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetId = dot.getAttribute('data-target');
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+
+  // 5. Intersection Observer for Dot Navigation
+  const dots = document.querySelectorAll('.dot-nav .dot');
+  const sections = document.querySelectorAll('.section-snap');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5 // Trigger when 50% of the section is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active class from all dots
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Add active class to corresponding dot
+        const id = '#' + entry.target.id;
+        const activeDot = document.querySelector(`.dot-nav .dot[data-target="${id}"]`);
+        if (activeDot) {
+          activeDot.classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  // 6. Dot Navigation Click Event
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetId = dot.getAttribute('data-target');
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // 5. Intersection Observer for Dot Navigation
+  const dots = document.querySelectorAll('.dot-nav .dot');
+  const sections = document.querySelectorAll('.section-snap');
+
+  const observerOptions = {
+    root: null,
+    rootMargin: '0px',
+    threshold: 0.5 // Trigger when 50% of the section is visible
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Remove active class from all dots
+        dots.forEach(dot => dot.classList.remove('active'));
+
+        // Add active class to corresponding dot
+        const id = '#' + entry.target.id;
+        const activeDot = document.querySelector(`.dot-nav .dot[data-target="${id}"]`);
+        if (activeDot) {
+          activeDot.classList.add('active');
+        }
+      }
+    });
+  }, observerOptions);
+
+  sections.forEach(section => {
+    observer.observe(section);
+  });
+
+  // 6. Dot Navigation Click Event
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const targetId = dot.getAttribute('data-target');
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        targetSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+}
