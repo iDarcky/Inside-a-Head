@@ -1,4 +1,8 @@
-<!DOCTYPE html>
+const fs = require('fs');
+
+const oldHtml = fs.readFileSync('index.html', 'utf8');
+
+const newHtml = `<!DOCTYPE html>
 <html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
@@ -107,4 +111,7 @@
       lucide.createIcons();
     </script>
   </body>
-</html>
+</html>`;
+
+fs.writeFileSync('index.html', newHtml);
+console.log('index.html updated successfully');

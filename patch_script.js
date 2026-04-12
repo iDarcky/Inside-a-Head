@@ -1,4 +1,6 @@
-async function loadContent() {
+const fs = require('fs');
+
+const script = `async function loadContent() {
   const response = await fetch("content.json");
   if (!response.ok) {
     throw new Error("Could not load content.json");
@@ -24,7 +26,7 @@ function createAppCard(project, index) {
   const paddedIndex = String(index + 1).padStart(2, '0');
 
   const title = document.createElement("h3");
-  title.textContent = `${paddedIndex}_${project.title.replace(/\s+/g, '')}`;
+  title.textContent = \`\${paddedIndex}_\${project.title.replace(/\s+/g, '')}\`;
 
   const desc = document.createElement("p");
   desc.textContent = project.description;
@@ -51,13 +53,13 @@ function createLogbookEntry(entry) {
 
   const dateStr = new Date(entry.date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
 
-  link.innerHTML = `
-    <div class="logbook-date">${dateStr}</div>
+  link.innerHTML = \`
+    <div class="logbook-date">\${dateStr}</div>
     <div class="logbook-content">
-      <h3>${entry.title}</h3>
-      <p>${entry.excerpt}</p>
+      <h3>\${entry.title}</h3>
+      <p>\${entry.excerpt}</p>
     </div>
-  `;
+  \`;
   return link;
 }
 
@@ -67,16 +69,16 @@ function createBookCompactItem(book, index) {
 
   const rating = "★".repeat(book.rating) + "☆".repeat(5 - book.rating);
 
-  item.innerHTML = `
+  item.innerHTML = \`
     <div class="book-compact-index">
-      ${String(index + 1).padStart(2, '0')}
+      \${String(index + 1).padStart(2, '0')}
     </div>
     <div>
-      <span class="book-compact-title">${book.title}</span>
-      <span class="book-compact-author"> by ${book.author}</span>
+      <span class="book-compact-title">\${book.title}</span>
+      <span class="book-compact-author"> by \${book.author}</span>
     </div>
-    <div class="book-rating">${rating}</div>
-  `;
+    <div class="book-rating">\${rating}</div>
+  \`;
   return item;
 }
 
@@ -90,7 +92,7 @@ function renderProfile(profile) {
   if (profile.links) {
     const linkedinLink = profile.links.find(l => l.label === "LinkedIn");
     const githubLink = profile.links.find(l => l.label === "GitHub");
-    if (linkedinLink && linkedinBtn) linkedinBtn.href = linkedinLink.url; else console.log("Missing linkedin");
+    if (linkedinLink && linkedinBtn) linkedinBtn.href = linkedinLink.url;
     if (githubLink && githubBtn) githubBtn.href = githubLink.url;
   }
 }
@@ -149,13 +151,13 @@ function renderCollections(data) {
   // Currently Reading
   if (data.books && data.books.currently_reading) {
     let readingCard = document.getElementById("reading-card");
-    readingCard.innerHTML = `
+    readingCard.innerHTML = \`
       <i data-lucide="book-open" style="color: var(--geist-success); margin-top: 2px;"></i>
       <div>
-        <strong style="display: block; line-height: 1.2; margin-bottom: 4px;">${data.books.currently_reading.title}</strong>
-        <span style="font-size: 0.875rem; color: var(--accents-5);">${data.books.currently_reading.author}</span>
+        <strong style="display: block; line-height: 1.2; margin-bottom: 4px;">\${data.books.currently_reading.title}</strong>
+        <span style="font-size: 0.875rem; color: var(--accents-5);">\${data.books.currently_reading.author}</span>
       </div>
-    `;
+    \`;
 
     if (readingCard.parentElement.tagName !== 'A') {
         const link = document.createElement("a");
@@ -199,8 +201,12 @@ async function init() {
     const fallback = document.createElement("p");
     fallback.textContent = "Content could not be loaded.";
     document.querySelector("main").prepend(fallback);
-    console.error("LOAD ERROR:", error.stack || error);
+    console.error(error);
   }
 }
 
 init();
+`;
+
+fs.writeFileSync('script.js', script);
+console.log('script.js updated successfully');
