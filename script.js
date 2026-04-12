@@ -269,13 +269,7 @@ function initKineticEngine() {
           start: "top top",
           end: "bottom top",
           scrub: true,
-          pinSpacing: false,
-          snap: {
-              snapTo: [0, 1],
-              duration: {min: 0.2, max: 0.5},
-              delay: 0.1,
-              ease: "power1.inOut"
-          }
+          pinSpacing: false
         }
       });
     }
@@ -316,4 +310,72 @@ function initKineticEngine() {
 
 
 
-  }
+
+  // --- Dot Navigation Logic ---
+  const dots = document.querySelectorAll('.dot-nav .dot');
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = dot.getAttribute('data-target') || dot.getAttribute('href');
+      if (targetId) {
+        gsap.to(window, {
+            duration: 1,
+            scrollTo: { y: targetId, autoKill: false },
+            ease: "power3.inOut"
+        });
+      }
+    });
+  });
+
+  // Track active dot
+  const sectionIds = ['#top', '#app-0', '#app-1', '#app-2', '#logbook'];
+  sectionIds.forEach((id, index) => {
+    ScrollTrigger.create({
+      trigger: id,
+      start: 'top 50%',
+      end: 'bottom 50%',
+      onToggle: self => {
+        if (self.isActive) {
+          dots.forEach(d => d.classList.remove('active'));
+          if (dots[index]) dots[index].classList.add('active');
+        }
+      }
+    });
+  });
+
+  // --- Global Snapping ---
+  // A robust way to snap to sections without breaking pins is to snap based on the progress of all .section-snap elements
+  let getSnapProgress = () => {
+    const maxScroll = ScrollTrigger.maxScroll(window);
+    const elements = document.querySelectorAll('.section-snap');
+    const positions = [];
+
+    elements.forEach(el => {
+        // Create a temporary trigger to get the exact start position
+        const st = ScrollTrigger.create({ trigger: el, start: 'top top' });
+        positions.push(st.start / maxScroll);
+        st.kill();
+    });
+
+    return positions;
+  };
+
+  ScrollTrigger.create({
+    trigger: document.body,
+    start: "top top",
+    end: "bottom bottom",
+    snap: {
+      snapTo: (progress) => {
+         const snaps = getSnapProgress();
+         if (snaps.length === 0) return progress;
+         // Find nearest snap point
+         return snaps.reduce((prev, curr) => Math.abs(curr - progress) < Math.abs(prev - progress) ? curr : prev);
+      },
+      duration: {min: 0.2, max: 0.8},
+      delay: 0.15,
+      ease: "power2.inOut"
+    }
+  });
+
+}

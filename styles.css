@@ -721,6 +721,19 @@ body, .layout {
   border-radius: 50%;
   background-color: var(--accents-5);
   transition: transform var(--fast-transition), background-color var(--fast-transition);
+  /* Increase touch target */
+  position: relative;
+}
+
+.dot::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  bottom: -15px;
+  left: -15px;
+  right: -15px;
+  border-radius: 50%;
+  cursor: pointer;
 }
 
 .dot.active {
