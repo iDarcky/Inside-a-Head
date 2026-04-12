@@ -1,61 +1,66 @@
 {
   "profile": {
     "name": "Daniel",
-    "role": "Musician and Developer",
-    "bio": "I build tools and experiences around music, software, and creative workflows.",
+    "role": "Product Manager & Musician",
+    "bio": "Building products and playing music. Currently focused on human-centric software and creative workflows.",
+    "who_am_i": "I'm a Product Manager with a background in music, combining analytical thinking with creative expression. I love building things that solve real problems while maintaining a high bar for design and user experience.",
+    "what_i_do": [
+      "Product Strategy & Roadmap planning",
+      "User Research & Data-driven insights",
+      "Musical Composition & Production",
+      "Frontend Development (React, TypeScript)"
+    ],
     "avatarAlt": "Portrait of Daniel",
     "links": [
-      { "label": "GitHub", "url": "https://github.com/" },
-      { "label": "LinkedIn", "url": "https://www.linkedin.com/" },
+      { "label": "GitHub", "url": "https://github.com/iDarcky" },
+      { "label": "LinkedIn", "url": "https://www.linkedin.com/in/danielnmaghis/" },
       { "label": "Email", "url": "mailto:hello@example.com" }
     ]
   },
   "projects": [
     {
-      "title": "Chord Vault",
-      "description": "A focused workspace for organizing chord progressions and songwriting ideas.",
-      "stack": ["TypeScript", "React", "Audio"],
-      "url": "https://example.com/chord-vault",
-      "date": "2026-03",
-      "status": "Active"
+      "title": "The Retro Circuit",
+      "description": "A specialized comparison engine for retro gaming hardware. Built with Next.js, Supabase, and Tailwind CSS, following a Swiss Industrial design philosophy.",
+      "stack": ["Next.js", "TypeScript", "Supabase", "Tailwind CSS"],
+      "url": "https://theretrocircuit.com/",
+      "date": "2025",
+      "status": "Live"
     },
     {
-      "title": "Setlist Companion",
-      "description": "A mobile-friendly utility for managing live sets and tempo notes.",
-      "stack": ["JavaScript", "PWA"],
-      "url": "https://example.com/setlist-companion",
-      "date": "2025-11",
+      "title": "Setlists MD",
+      "description": "A focused workspace for organizing setlists and musical ideas using Markdown. Streamlining the workflow for musicians and performers.",
+      "stack": ["JavaScript", "Vite", "Markdown"],
+      "url": "https://setlists-md.vercel.app/",
+      "date": "2026",
       "status": "Maintained"
-    }
-  ],
-  "posts": [
-    {
-      "title": "Designing Music Tools That Feel Fast",
-      "excerpt": "A practical look at reducing friction in creative software interfaces.",
-      "date": "2026-03-21",
-      "readTime": "5 min read",
-      "slug": "designing-music-tools-that-feel-fast"
     },
     {
-      "title": "What I Learned Shipping Tiny Features Weekly",
-      "excerpt": "Consistency beats complexity when projects need momentum.",
-      "date": "2026-02-15",
-      "readTime": "4 min read",
-      "slug": "shipping-tiny-features-weekly"
+      "title": "RedLine Running",
+      "description": "A high-performance running application built to track and analyze athletic performance with precision.",
+      "stack": ["TypeScript", "React", "AI Studio"],
+      "url": "https://running-app-brown.vercel.app/",
+      "date": "2025",
+      "status": "Active"
     }
   ],
-  "activity": [
-    {
-      "category": "Watching",
-      "label": "A new sci-fi series",
-      "timestamp": "3 days ago",
-      "url": "https://example.com/activity/watch"
+  "books": {
+    "currently_reading": {
+      "title": "The Sorrows of Young Werther",
+      "author": "Johann Wolfgang von Goethe",
+      "url": "https://www.goodreads.com/book/show/16640.The_Sorrows_of_Young_Werther"
     },
-    {
-      "category": "Listening",
-      "label": "Minimal ambient playlist",
-      "timestamp": "1 week ago",
-      "url": "https://example.com/activity/listen"
-    }
-  ]
+    "read": [
+      { "title": "From the Editorial Page of the Falchester Weekly Review", "author": "Marie Brennan", "rating": 4 },
+      { "title": "The Voyage of the Basilisk", "author": "Marie Brennan", "rating": 3 },
+      { "title": "The Old Man and the Sea", "author": "Ernest Hemingway", "rating": 3 },
+      { "title": "The Magician's Nephew", "author": "C.S. Lewis", "rating": 3 },
+      { "title": "The Last Battle", "author": "C.S. Lewis", "rating": 4 },
+      { "title": "Prince Caspian", "author": "C.S. Lewis", "rating": 4 },
+      { "title": "The Subtle Art of Not Giving a F*ck", "author": "Mark Manson", "rating": 5 },
+      { "title": "Selling 101", "author": "Zig Ziglar", "rating": 4 },
+      { "title": "Inteligența emoțională", "author": "Daniel Goleman", "rating": 3 },
+      { "title": "The Shallows", "author": "Nicholas Carr", "rating": 5 }
+    ],
+    "goodreads_url": "https://www.goodreads.com/user/show/106429003-daniel-maghis"
+  }
 }
