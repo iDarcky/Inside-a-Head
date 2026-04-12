@@ -6,74 +6,73 @@ async function loadContent() {
   return response.json();
 }
 
-function createAppCard(project, index) {
-  const card = document.createElement("a");
-  card.className = "app-card";
-  card.href = project.url;
-  card.target = "_blank";
-  card.rel = "noreferrer";
+function createAppPanel(project, index) {
+  const panel = document.createElement("div");
+  panel.className = "app-panel";
 
-  // Add 4 borders for hover effect
-  card.innerHTML += '<div class="border-top"></div><div class="border-bottom"></div>';
+  // Placeholder charcoal tints
+  const colors = ['#0a0f14', '#0a140f', '#140a0a'];
+  const bgColor = colors[index % colors.length];
+  panel.setAttribute('data-bg', bgColor);
 
   const paddedIndex = String(index + 1).padStart(2, '0');
 
-  const title = document.createElement("h3");
-  title.textContent = `${paddedIndex}_${project.title.replace(/\s+/g, '')}`;
-
-  const desc = document.createElement("p");
-  desc.textContent = project.description;
-
-  const footer = document.createElement("div");
-  footer.className = "app-card-footer";
-
-  const status = document.createElement("span");
-  status.textContent = project.status;
-
-  const viewProject = document.createElement("span");
-  viewProject.className = "view-project";
-  viewProject.innerHTML = 'View Project <i data-lucide="arrow-up-right" style="margin-left: 4px; width: 14px;"></i>';
-
-  footer.append(status, viewProject);
-  card.append(title, desc, footer);
-  return card;
+  panel.innerHTML = `
+    <div class="app-panel-content">
+      <div class="app-index">${paddedIndex}</div>
+      <h3 class="app-title">${project.title}</h3>
+      <p class="app-desc">${project.description}</p>
+      <div class="app-meta">
+        <span>${project.status}</span>
+        <a href="${project.url}" target="_blank" rel="noreferrer" class="app-view-link" data-hover>
+          View Project <i data-lucide="arrow-up-right" style="margin-left: 8px; width: 16px;"></i>
+        </a>
+      </div>
+    </div>
+  `;
+  return panel;
 }
 
 function createLogbookEntry(entry) {
   const link = document.createElement("a");
   link.className = "logbook-entry";
   link.href = entry.url;
+  link.setAttribute('data-hover', '');
 
   const dateStr = new Date(entry.date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
 
   link.innerHTML = `
     <div class="logbook-date">${dateStr}</div>
     <div class="logbook-content">
-      <h3>${entry.title}</h3>
-      <p>${entry.excerpt}</p>
+      <h3 class="logbook-title-parallax">${entry.title}</h3>
     </div>
-    <div class="logbook-divider"></div>
   `;
   return link;
 }
 
-function createBookCompactItem(book, index) {
-  const item = document.createElement("div");
-  item.className = "book-compact-item";
+function createBookPremiumCard(book, index, isCurrent = false) {
+  const card = document.createElement("a");
+  card.className = "book-premium-card";
+  card.href = book.url || "#";
+  card.target = "_blank";
+  card.rel = "noreferrer";
+  card.setAttribute('data-hover', '');
 
-  const rating = "★".repeat(book.rating) + "☆".repeat(5 - book.rating);
+  const rating = book.rating ? "★".repeat(book.rating) + "☆".repeat(5 - book.rating) : "Currently Reading";
+  const kicker = isCurrent ? "CURRENTLY READING" : `READ // ${String(index + 1).padStart(2, '0')}`;
 
-  item.innerHTML = `
-    <div class="book-compact-index">
-      ${String(index + 1).padStart(2, '0')}
-    </div>
+  card.innerHTML = `
     <div>
-      <span class="book-compact-title">${book.title}</span>
-      <span class="book-compact-author"> by ${book.author}</span>
+      <div class="book-kicker">${kicker}</div>
+      <h4 class="book-premium-title">${book.title}</h4>
+      <div class="book-premium-author">by ${book.author}</div>
     </div>
-    <div class="book-rating">${rating}</div>
+    <div class="book-premium-footer">
+      <span>${rating}</span>
+      <i data-lucide="arrow-up-right"></i>
+    </div>
   `;
-  return item;
+  return card;
 }
 
 function renderProfile(profile) {
@@ -89,17 +88,12 @@ function renderProfile(profile) {
 }
 
 function renderCollections(data) {
-  // Studio (Projects)
-  const projectsGrid = document.getElementById("projects-grid");
-  projectsGrid.innerHTML = "";
-
-  // Add shimmering background explicitly here
-  const studioBg = document.createElement('div');
-  studioBg.className = 'studio-grid-bg';
-  document.getElementById('studio').prepend(studioBg);
+  // Studio Panels
+  const studioStack = document.getElementById("studio");
+  studioStack.innerHTML = "";
 
   data.projects.forEach((project, idx) =>
-    projectsGrid.appendChild(createAppCard(project, idx))
+    studioStack.appendChild(createAppPanel(project, idx))
   );
 
   // Logbook
@@ -111,188 +105,204 @@ function renderCollections(data) {
     });
   }
 
-  // Shelf (Books)
-  const booksList = document.getElementById("books-list");
-  booksList.innerHTML = "";
+  // Shelf (Premium Horizontal Track)
+  const shelfTrack = document.getElementById("shelf-track");
+  shelfTrack.innerHTML = "";
+
+  if (data.books && data.books.currently_reading) {
+    shelfTrack.appendChild(createBookPremiumCard(data.books.currently_reading, 0, true));
+  }
 
   const allBooks = data.books.read || [];
-  const initialCount = 5;
-
-  function displayBooks(count) {
-    booksList.innerHTML = "";
-    allBooks.slice(0, count).forEach((book, index) => {
-      booksList.appendChild(createBookCompactItem(book, index));
-    });
-  }
-
-  displayBooks(initialCount);
-
-  const seeAllBtn = document.getElementById("see-all-books");
-  if (allBooks.length > initialCount) {
-    seeAllBtn.style.display = "inline-flex";
-    seeAllBtn.addEventListener("click", (e) => {
-      e.preventDefault();
-      if (seeAllBtn.textContent.includes("See all")) {
-        displayBooks(10);
-        seeAllBtn.innerHTML = 'Show less <i data-lucide="chevron-up" style="margin-left: 8px; width: 16px;"></i>';
-      } else {
-        displayBooks(initialCount);
-        seeAllBtn.innerHTML = 'See all <i data-lucide="chevron-down" style="margin-left: 8px; width: 16px;"></i>';
-      }
-      lucide.createIcons({ elements: seeAllBtn.querySelectorAll('[data-lucide]') });
-      // Re-trigger scrollTrigger to recalculate bounds after DOM shift
-      ScrollTrigger.refresh();
-    });
-  } else {
-    seeAllBtn.style.display = "none";
-  }
-
-  // Currently Reading
-  if (data.books && data.books.currently_reading) {
-    let readingCard = document.getElementById("reading-card");
-    readingCard.innerHTML = `
-      <i data-lucide="book-open" style="color: var(--geist-foreground); margin-top: 2px;"></i>
-      <div>
-        <strong style="display: block; line-height: 1.2; margin-bottom: 4px; font-size: 1.1rem;">${data.books.currently_reading.title}</strong>
-        <span style="font-size: 0.875rem; color: var(--accents-5);">${data.books.currently_reading.author}</span>
-      </div>
-    `;
-
-    if (readingCard.parentElement.tagName !== 'A') {
-        const link = document.createElement("a");
-        link.href = data.books.currently_reading.url;
-        link.target = "_blank";
-        link.rel = "noreferrer";
-        link.className = "book-compact-card";
-        link.innerHTML = readingCard.innerHTML;
-        readingCard.parentNode.replaceChild(link, readingCard);
-    }
-  }
-}
-
-function initTheme() {
-  const themeToggle = document.getElementById("theme-toggle");
-  const currentTheme = localStorage.getItem("theme") || "light";
-  document.documentElement.setAttribute("data-theme", currentTheme);
-
-  if (themeToggle) {
-    themeToggle.addEventListener("click", () => {
-      const theme = document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light";
-      document.documentElement.setAttribute("data-theme", theme);
-      localStorage.setItem("theme", theme);
-    });
-  }
-}
-
-function initAnimations() {
-  if (typeof gsap === 'undefined') return;
-  gsap.registerPlugin(ScrollTrigger);
-
-  // 1. Intro Visual Parallax
-  gsap.to(".intro-logo-overlay", {
-    yPercent: 30,
-    ease: "none",
-    scrollTrigger: {
-      trigger: ".intro-visual-container",
-      start: "top top",
-      end: "bottom top",
-      scrub: true
-    }
-  });
-
-  // 2. Studio App Cards Staggered Entry
-  gsap.from(".app-card", {
-    scrollTrigger: {
-      trigger: ".studio-section",
-      start: "top 75%",
-    },
-    y: 50,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.15,
-    ease: "power3.out"
-  });
-
-  // 3. Logbook Kinetic Parallax and Staggered Entry
-  const logbookEntries = gsap.utils.toArray('.logbook-entry');
-  logbookEntries.forEach(entry => {
-    // Divider animation on entry
-    gsap.to(entry.querySelector('.logbook-divider'), {
-      width: '100%',
-      duration: 1,
-      ease: "power3.inOut",
-      scrollTrigger: {
-        trigger: entry,
-        start: "top 85%"
-      }
-    });
-
-    // Content entry staggered
-    gsap.from(entry.querySelectorAll('.logbook-date, .logbook-content'), {
-      opacity: 0,
-      y: 20,
-      duration: 0.6,
-      stagger: 0.1,
-      scrollTrigger: {
-        trigger: entry,
-        start: "top 85%"
-      }
-    });
-
-    // Scrubbing horizontal parallax (Dates move faster/opposite to content)
-    gsap.to(entry.querySelector('.logbook-date'), {
-      x: -20,
-      ease: "none",
-      scrollTrigger: {
-        trigger: entry,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-
-    gsap.to(entry.querySelector('.logbook-content'), {
-      x: 10,
-      ease: "none",
-      scrollTrigger: {
-        trigger: entry,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-  });
-
-  // 4. Shelf Expanding Entry
-  gsap.from(".book-compact-card, .book-compact-item", {
-    scale: 0.95,
-    opacity: 0,
-    duration: 0.8,
-    stagger: 0.1,
-    ease: "back.out(1.2)",
-    scrollTrigger: {
-      trigger: ".shelf-section",
-      start: "top 80%"
-    }
+  allBooks.forEach((book, index) => {
+    shelfTrack.appendChild(createBookPremiumCard(book, index));
   });
 }
+
+// Lenis & GSAP will be appended in the next step
 
 async function init() {
-  initTheme();
   try {
     const data = await loadContent();
     renderProfile(data.profile);
     renderCollections(data);
     lucide.createIcons();
 
-    // Give DOM a tick to render elements before attaching ScrollTrigger
-    setTimeout(initAnimations, 100);
+    // Give DOM a tick to render elements
+    setTimeout(() => {
+        if (typeof initKineticEngine === 'function') {
+            initKineticEngine();
+        }
+    }, 100);
   } catch (error) {
-    const fallback = document.createElement("p");
-    fallback.textContent = "Content could not be loaded.";
-    document.querySelector("main").prepend(fallback);
     console.error("LOAD ERROR:", error.stack || error);
   }
 }
 
 init();
+
+function initKineticEngine() {
+  if (typeof gsap === 'undefined' || typeof Lenis === 'undefined') return;
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  // 1. Initialize Lenis for Smooth Scrolling
+  const lenis = new Lenis({
+    duration: 1.2,
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smooth: true,
+    mouseMultiplier: 1,
+    smoothTouch: false,
+    touchMultiplier: 2,
+    infinite: false,
+  });
+
+  function raf(time) {
+    lenis.raf(time);
+    requestAnimationFrame(raf);
+  }
+  requestAnimationFrame(raf);
+
+  // Sync GSAP ScrollTrigger with Lenis
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => {
+    lenis.raf(time * 1000);
+  });
+  gsap.ticker.lagSmoothing(0, 0);
+
+  // 2. Custom Cursor & Hero Mouse Parallax
+  const cursor = document.querySelector('.custom-cursor');
+  const heroText = document.querySelector('.hero-massive-text');
+  const heroLogo = document.querySelector('.intro-logo-overlay');
+  const heroPortrait = document.querySelector('.intro-portrait');
+
+  // GSAP quickTo for highly performant cursor tracking
+  let xTo = gsap.quickTo(cursor, "left", {duration: 0.1, ease: "power3"});
+  let yTo = gsap.quickTo(cursor, "top", {duration: 0.1, ease: "power3"});
+
+  window.addEventListener("mousemove", (e) => {
+    // Move Cursor
+    xTo(e.clientX);
+    yTo(e.clientY);
+
+    // Calculate normalized mouse position (-1 to 1)
+    const xNorm = (e.clientX / window.innerWidth) * 2 - 1;
+    const yNorm = (e.clientY / window.innerHeight) * 2 - 1;
+
+    // Mouse Parallax Logic
+    if (heroText) gsap.to(heroText, { x: xNorm * 30, y: yNorm * 30, duration: 1, ease: "power2.out" });
+    if (heroLogo) gsap.to(heroLogo, { x: xNorm * -20, y: yNorm * -20, duration: 1, ease: "power2.out" });
+    if (heroPortrait) gsap.to(heroPortrait, { x: xNorm * -10, y: yNorm * -10, duration: 1, ease: "power2.out" });
+  });
+
+  // Cursor Hover States
+  const hoverElements = document.querySelectorAll('[data-hover], a, button');
+  hoverElements.forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('active'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+  });
+
+
+  // 3. Studio Stack Overlap & Background Interpolation
+  const panels = gsap.utils.toArray('.app-panel');
+  panels.forEach((panel, i) => {
+    const bgColor = panel.getAttribute('data-bg') || '#000000';
+
+    // Background Color Interpolation on body
+    ScrollTrigger.create({
+      trigger: panel,
+      start: "top center",
+      end: "bottom center",
+      onEnter: () => gsap.to('body', { backgroundColor: bgColor, duration: 0.8 }),
+      onEnterBack: () => gsap.to('body', { backgroundColor: bgColor, duration: 0.8 }),
+      onLeave: () => {
+          if (i === panels.length - 1) {
+              gsap.to('body', { backgroundColor: '#000000', duration: 0.8 }); // Reset after stack
+          }
+      },
+      onLeaveBack: () => {
+          if (i === 0) {
+              gsap.to('body', { backgroundColor: '#000000', duration: 0.8 }); // Reset before stack
+          }
+      }
+    });
+
+    // Overlap Scale Effect (only for panels before the last one)
+    if (i < panels.length - 1) {
+      gsap.to(panel, {
+        scale: 0.9,
+        opacity: 0.3,
+        ease: "none",
+        scrollTrigger: {
+          trigger: panel,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+          pinSpacing: false
+        }
+      });
+    }
+  });
+
+
+  // 4. Logbook Cinematic Horizontal Stagger
+  const logbookEntries = gsap.utils.toArray('.logbook-entry');
+  logbookEntries.forEach(entry => {
+    const date = entry.querySelector('.logbook-date');
+    const title = entry.querySelector('.logbook-title-parallax');
+
+    // Entry Fade/Slide
+    gsap.from([date, title], {
+      x: 100,
+      opacity: 0,
+      duration: 1.2,
+      stagger: 0.1,
+      ease: "power4.out",
+      scrollTrigger: {
+        trigger: entry,
+        start: "top 90%",
+      }
+    });
+
+    // Horizontal Scroll Scrub Parallax
+    gsap.to(title, {
+      x: 50,
+      ease: "none",
+      scrollTrigger: {
+        trigger: entry,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+  });
+
+
+  // 5. Shelf Horizontal Scroll
+  const shelfSection = document.querySelector('.shelf-horizontal-section');
+  const shelfTrack = document.querySelector('.shelf-track');
+
+  if (shelfSection && shelfTrack) {
+    function getScrollAmount() {
+      let trackWidth = shelfTrack.scrollWidth;
+      return -(trackWidth - window.innerWidth + 100); // 100 padding allowance
+    }
+
+    const tween = gsap.to(shelfTrack, {
+      x: getScrollAmount,
+      ease: "none"
+    });
+
+    ScrollTrigger.create({
+      trigger: shelfSection,
+      start: "top top",
+      end: () => '+=' + (getScrollAmount() * -1),
+      pin: true,
+      animation: tween,
+      scrub: 1,
+      invalidateOnRefresh: true
+    });
+  }
+}

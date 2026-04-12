@@ -1,4 +1,6 @@
+const fs = require('fs');
 
+const css = `
 @import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap');
 
 :root {
@@ -605,3 +607,7 @@ h1, h2, h3 {
 .back-to-top:hover {
   color: #fff;
 }
+
+`;
+
+fs.writeFileSync('styles.css', css);

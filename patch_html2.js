@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+const fs = require('fs');
+
+const html = `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
@@ -115,4 +117,6 @@
 
     <script src="script.js"></script>
   </body>
-</html>
+</html>`;
+
+fs.writeFileSync('index.html', html);

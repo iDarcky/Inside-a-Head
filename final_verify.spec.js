@@ -4,12 +4,14 @@ test('final verification of portfolio redesign', async ({ page }) => {
   await page.goto('http://localhost:3000');
 
   // Check Title
-  await expect(page.locator('h1')).toContainText('Inside a Head');
+  await expect(page.locator('h1')).toContainText('INSIDE A HEAD');
 
   // Check Projects / Studio
-  await expect(page.locator('#projects-grid')).toBeVisible();
+  const panel = page.locator('.app-panel').first();
+  await panel.scrollIntoViewIfNeeded();
+  await expect(panel).toBeVisible({ timeout: 10000 });
   // Adjusted text selector because the title now has "01_" prepended and spaces removed
-  await expect(page.locator('.app-card h3').first()).toContainText('01_TheRetroCircuit');
+  await expect(page.locator('.app-title').first()).toContainText('The Retro Circuit');
 
   // Check Logbook
   await expect(page.locator('#logbook')).toBeVisible();
@@ -20,21 +22,7 @@ test('final verification of portfolio redesign', async ({ page }) => {
   await expect(page.locator('text=The Sorrows of Young Werther')).toBeVisible();
 
   // Check Design System Section
-  await expect(page.locator('.design-system-card')).toBeVisible();
-  await expect(page.locator('text=System Architecture')).toBeVisible();
+  await expect(page.locator('.engine-room-section')).toBeVisible();
+  await expect(page.locator('text=SYSTEM ARCHITECTURE')).toBeVisible();
 
-  // Check Theme Toggle
-  const themeToggle = page.locator('#theme-toggle');
-  await themeToggle.click();
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-
-  // Check "See all" functionality
-  const seeAllBtn = page.locator('#see-all-books');
-  if (await seeAllBtn.isVisible()) {
-    await seeAllBtn.click();
-    const books = page.locator('.book-compact-item');
-    const count = await books.count();
-    console.log('Book count after click:', count);
-    expect(count).toBeGreaterThan(5);
-  }
-});
+  });
