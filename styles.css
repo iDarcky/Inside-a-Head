@@ -45,9 +45,16 @@ body {
   cursor: none !important; /* Hide default cursor globally */
 }
 
-a, button, [data-hover] {
+
+a, button, [data-hover], ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
   cursor: none !important;
 }
+
+/* Force elements to inherit none */
+* {
+  cursor: none !important;
+}
+
 
 .custom-cursor {
   position: fixed;
@@ -761,6 +768,7 @@ body, .layout {
 
 /* CSS Scroll Snapping */
 html {
+  scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
 }
 .section-snap {

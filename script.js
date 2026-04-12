@@ -142,36 +142,15 @@ async function init() {
 init();
 
 function initKineticEngine() {
-  if (typeof gsap === 'undefined' || typeof Lenis === 'undefined') return;
+  if (typeof gsap === 'undefined') return;
 
   gsap.registerPlugin(ScrollTrigger);
 
   // 1. Initialize Lenis for Smooth Scrolling
-  const lenis = new Lenis({
-    duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Snappy ease
-    wheelMultiplier: 1.2, // https://www.desmos.com/calculator/brs54l4xou
-    direction: 'vertical',
-    gestureDirection: 'vertical',
-    smooth: true,
-    mouseMultiplier: 1,
-    smoothTouch: false,
-    touchMultiplier: 2,
-    infinite: false,
-  });
 
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
 
-  // Sync GSAP ScrollTrigger with Lenis
-  lenis.on('scroll', ScrollTrigger.update);
-  gsap.ticker.add((time) => {
-    lenis.raf(time * 1000);
-  });
-  gsap.ticker.lagSmoothing(0, 0);
+
+
 
   // 2. Custom Cursor & Hero Mouse Parallax
   const cursor = document.querySelector('.custom-cursor');
@@ -312,21 +291,4 @@ function initKineticEngine() {
 
 
 
-  // Full-page Section Snapping
-  ScrollTrigger.create({
-    start: 0,
-    end: "max",
-    snap: {
-      snapTo: [0,
-               ...panels.map(p => p.offsetTop / (document.body.scrollHeight - window.innerHeight)),
-               document.querySelector('.engine-room-section').offsetTop / (document.body.scrollHeight - window.innerHeight),
-               document.querySelector('.logbook-cinematic').offsetTop / (document.body.scrollHeight - window.innerHeight),
-               document.querySelector('.shelf-horizontal-section').offsetTop / (document.body.scrollHeight - window.innerHeight)
-              ].filter(n => n >= 0 && n <= 1), // Calculate normalized array of section offsets
-      duration: {min: 0.2, max: 0.6},
-      delay: 0.1,
-      ease: "power1.inOut"
-    }
-  });
-
-}
+  }
