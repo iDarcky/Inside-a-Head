@@ -51,22 +51,23 @@ a, button, [data-hover] {
 
 .custom-cursor {
   position: fixed;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
   top: 0;
   left: 0;
   width: 12px;
   height: 12px;
   background-color: #fff;
-  border-radius: 50%;
+  border-radius: 0;
   pointer-events: none;
   z-index: 9999;
   mix-blend-mode: difference;
-  transform: translate(-50%, -50%);
+  transform: translate(-2px, -2px) rotate(-15deg); /* offset tip to match pointer exactly */
   transition: width 0.2s, height 0.2s;
 }
 
 .custom-cursor.active {
-  width: 48px;
-  height: 48px;
+  width: 24px;
+  height: 24px;
 }
 
 
@@ -485,16 +486,27 @@ h1, h2, h3 {
   color: var(--accents-3);
 }
 
+
 .shelf-track-container {
   width: 100%;
-  /* Hide scrollbar */
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 24px;
+}
+.shelf-track-container::-webkit-scrollbar {
+  height: 8px;
+}
+.shelf-track-container::-webkit-scrollbar-track {
+  background: var(--geist-border);
+  border-radius: 8px;
+}
+.shelf-track-container::-webkit-scrollbar-thumb {
+  background: var(--accents-6);
+  border-radius: 8px;
 }
 
-.shelf-track-container::-webkit-scrollbar {
-  display: none;
-}
+
+
 
 .shelf-track {
   display: flex;
@@ -745,4 +757,13 @@ body, .layout {
 }
 [data-theme='dark'] .ds-cta::after {
   background: linear-gradient(90deg, transparent, rgba(0,0,0,0.2), transparent);
+}
+
+/* CSS Scroll Snapping */
+html {
+  scroll-snap-type: y mandatory;
+}
+.section-snap {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }

@@ -11,7 +11,7 @@ function createAppPanel(project, index) {
   panel.className = "app-panel";
 
   // Placeholder charcoal tints
-  const colors = ['#0a0f14', '#0a140f', '#140a0a'];
+  const colors = ['#1a0f30', '#121f1a', '#300a0a'];
   const bgColor = colors[index % colors.length];
   panel.setAttribute('data-bg', bgColor);
 
@@ -311,29 +311,22 @@ function initKineticEngine() {
   });
 
 
-  // 5. Shelf Horizontal Scroll
-  const shelfSection = document.querySelector('.shelf-horizontal-section');
-  const shelfTrack = document.querySelector('.shelf-track');
 
-  if (shelfSection && shelfTrack) {
-    function getScrollAmount() {
-      let trackWidth = shelfTrack.scrollWidth;
-      return -(trackWidth - window.innerWidth + 100); // 100 padding allowance
+  // Full-page Section Snapping
+  ScrollTrigger.create({
+    start: 0,
+    end: "max",
+    snap: {
+      snapTo: [0,
+               ...panels.map(p => p.offsetTop / (document.body.scrollHeight - window.innerHeight)),
+               document.querySelector('.engine-room-section').offsetTop / (document.body.scrollHeight - window.innerHeight),
+               document.querySelector('.logbook-cinematic').offsetTop / (document.body.scrollHeight - window.innerHeight),
+               document.querySelector('.shelf-horizontal-section').offsetTop / (document.body.scrollHeight - window.innerHeight)
+              ].filter(n => n >= 0 && n <= 1), // Calculate normalized array of section offsets
+      duration: {min: 0.2, max: 0.6},
+      delay: 0.1,
+      ease: "power1.inOut"
     }
+  });
 
-    const tween = gsap.to(shelfTrack, {
-      x: getScrollAmount,
-      ease: "none"
-    });
-
-    ScrollTrigger.create({
-      trigger: shelfSection,
-      start: "top top",
-      end: () => '+=' + (getScrollAmount() * -1),
-      pin: true,
-      animation: tween,
-      scrub: 1,
-      invalidateOnRefresh: true
-    });
-  }
 }
