@@ -8,7 +8,7 @@ async function loadContent() {
 
 function createAppPanel(project, index) {
   const panel = document.createElement("div");
-  panel.className = "app-panel";
+  panel.className = "app-panel section-snap";
 
   // Placeholder charcoal tints
   const colors = ['#1a0f30', '#121f1a', '#300a0a'];
@@ -126,12 +126,11 @@ function renderCollections(data) {
   if (bentoReading && data.books) {
     let readingHTML = `<div class="bento-kicker">CURRENTLY READING</div><div class="bento-book-covers">`;
 
+
     if (data.books.currently_reading) {
-      readingHTML += `<div class="book-cover"><span>${data.books.currently_reading.title}</span></div>`;
-    }
-    const allBooks = data.books.read || [];
-    if (allBooks.length > 0) {
-      readingHTML += `<div class="book-cover" style="opacity: 0.5;"><span>${allBooks[0].title}</span></div>`;
+      readingHTML += `<div class="book-cover" style="height: 100%; background: url('https://images.theconversation.com/files/620924/original/file-20240923-18-7oph3j.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip') center/cover; position: relative;">
+        <span style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 8px;">${data.books.currently_reading.title}</span>
+      </div>`;
     }
 
     readingHTML += `</div>`;

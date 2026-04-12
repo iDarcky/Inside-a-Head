@@ -835,8 +835,8 @@ body, .layout {
 }
 
 .bento-wrapper {
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 100vw;
+  margin: 0;
 }
 
 .shelf-huge-title {
@@ -967,4 +967,24 @@ body, .layout {
   font-size: 0.875rem;
   font-weight: bold;
   line-height: 1.1;
+}
+
+
+/* Native CSS Scroll Snapping */
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
+
+.section-snap {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.bento-title-parallax {
+  transition: -webkit-text-stroke var(--fast-transition), color var(--fast-transition);
+}
+.bento-title-parallax:hover {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--accents-3);
 }
