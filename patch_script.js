@@ -1,18 +1,14 @@
 const fs = require('fs');
 
-const script = `async function loadContent() {
+let script = fs.readFileSync('script.js', 'utf8');
+
+// We'll replace the old render logic to also init GSAP after DOM injection
+const newScript = `async function loadContent() {
   const response = await fetch("content.json");
   if (!response.ok) {
     throw new Error("Could not load content.json");
   }
   return response.json();
-}
-
-function createTag(tag) {
-  const span = document.createElement("span");
-  span.className = "tag";
-  span.textContent = tag;
-  return span;
 }
 
 function createAppCard(project, index) {
@@ -22,11 +18,13 @@ function createAppCard(project, index) {
   card.target = "_blank";
   card.rel = "noreferrer";
 
-  // Prepend padded index (e.g. "01_")
+  // Add 4 borders for hover effect
+  card.innerHTML += '<div class="border-top"></div><div class="border-bottom"></div>';
+
   const paddedIndex = String(index + 1).padStart(2, '0');
 
   const title = document.createElement("h3");
-  title.textContent = \`\${paddedIndex}_\${project.title.replace(/\s+/g, '')}\`;
+  title.textContent = \`\${paddedIndex}_\${project.title.replace(/\\s+/g, '')}\`;
 
   const desc = document.createElement("p");
   desc.textContent = project.description;
@@ -51,7 +49,7 @@ function createLogbookEntry(entry) {
   link.className = "logbook-entry";
   link.href = entry.url;
 
-  const dateStr = new Date(entry.date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+  const dateStr = new Date(entry.date).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\\//g, '.');
 
   link.innerHTML = \`
     <div class="logbook-date">\${dateStr}</div>
@@ -59,6 +57,7 @@ function createLogbookEntry(entry) {
       <h3>\${entry.title}</h3>
       <p>\${entry.excerpt}</p>
     </div>
+    <div class="logbook-divider"></div>
   \`;
   return link;
 }
@@ -83,9 +82,6 @@ function createBookCompactItem(book, index) {
 }
 
 function renderProfile(profile) {
-  document.getElementById("hero-title").textContent = "Inside a Head.";
-  document.getElementById("profile-bio").textContent = profile.bio;
-
   const linkedinBtn = document.getElementById("linkedin-btn");
   const githubBtn = document.getElementById("github-btn");
 
@@ -101,6 +97,12 @@ function renderCollections(data) {
   // Studio (Projects)
   const projectsGrid = document.getElementById("projects-grid");
   projectsGrid.innerHTML = "";
+
+  // Add shimmering background explicitly here
+  const studioBg = document.createElement('div');
+  studioBg.className = 'studio-grid-bg';
+  document.getElementById('studio').prepend(studioBg);
+
   data.projects.forEach((project, idx) =>
     projectsGrid.appendChild(createAppCard(project, idx))
   );
@@ -143,6 +145,8 @@ function renderCollections(data) {
         seeAllBtn.innerHTML = 'See all <i data-lucide="chevron-down" style="margin-left: 8px; width: 16px;"></i>';
       }
       lucide.createIcons({ elements: seeAllBtn.querySelectorAll('[data-lucide]') });
+      // Re-trigger scrollTrigger to recalculate bounds after DOM shift
+      ScrollTrigger.refresh();
     });
   } else {
     seeAllBtn.style.display = "none";
@@ -152,9 +156,9 @@ function renderCollections(data) {
   if (data.books && data.books.currently_reading) {
     let readingCard = document.getElementById("reading-card");
     readingCard.innerHTML = \`
-      <i data-lucide="book-open" style="color: var(--geist-success); margin-top: 2px;"></i>
+      <i data-lucide="book-open" style="color: var(--geist-foreground); margin-top: 2px;"></i>
       <div>
-        <strong style="display: block; line-height: 1.2; margin-bottom: 4px;">\${data.books.currently_reading.title}</strong>
+        <strong style="display: block; line-height: 1.2; margin-bottom: 4px; font-size: 1.1rem;">\${data.books.currently_reading.title}</strong>
         <span style="font-size: 0.875rem; color: var(--accents-5);">\${data.books.currently_reading.author}</span>
       </div>
     \`;
@@ -164,13 +168,8 @@ function renderCollections(data) {
         link.href = data.books.currently_reading.url;
         link.target = "_blank";
         link.rel = "noreferrer";
-        link.style.textDecoration = "none";
-        link.style.color = "inherit";
         link.className = "book-compact-card";
-
-        // Move innerHTML over
         link.innerHTML = readingCard.innerHTML;
-
         readingCard.parentNode.replaceChild(link, readingCard);
     }
   }
@@ -190,6 +189,99 @@ function initTheme() {
   }
 }
 
+function initAnimations() {
+  if (typeof gsap === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // 1. Intro Visual Parallax
+  gsap.to(".intro-logo-overlay", {
+    yPercent: 30,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".intro-visual-container",
+      start: "top top",
+      end: "bottom top",
+      scrub: true
+    }
+  });
+
+  // 2. Studio App Cards Staggered Entry
+  gsap.from(".app-card", {
+    scrollTrigger: {
+      trigger: ".studio-section",
+      start: "top 75%",
+    },
+    y: 50,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.15,
+    ease: "power3.out"
+  });
+
+  // 3. Logbook Kinetic Parallax and Staggered Entry
+  const logbookEntries = gsap.utils.toArray('.logbook-entry');
+  logbookEntries.forEach(entry => {
+    // Divider animation on entry
+    gsap.to(entry.querySelector('.logbook-divider'), {
+      width: '100%',
+      duration: 1,
+      ease: "power3.inOut",
+      scrollTrigger: {
+        trigger: entry,
+        start: "top 85%"
+      }
+    });
+
+    // Content entry staggered
+    gsap.from(entry.querySelectorAll('.logbook-date, .logbook-content'), {
+      opacity: 0,
+      y: 20,
+      duration: 0.6,
+      stagger: 0.1,
+      scrollTrigger: {
+        trigger: entry,
+        start: "top 85%"
+      }
+    });
+
+    // Scrubbing horizontal parallax (Dates move faster/opposite to content)
+    gsap.to(entry.querySelector('.logbook-date'), {
+      x: -20,
+      ease: "none",
+      scrollTrigger: {
+        trigger: entry,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+
+    gsap.to(entry.querySelector('.logbook-content'), {
+      x: 10,
+      ease: "none",
+      scrollTrigger: {
+        trigger: entry,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: true
+      }
+    });
+  });
+
+  // 4. Shelf Expanding Entry
+  gsap.from(".book-compact-card, .book-compact-item", {
+    scale: 0.95,
+    opacity: 0,
+    duration: 0.8,
+    stagger: 0.1,
+    ease: "back.out(1.2)",
+    scrollTrigger: {
+      trigger: ".shelf-section",
+      start: "top 80%"
+    }
+  });
+}
+
 async function init() {
   initTheme();
   try {
@@ -197,16 +289,18 @@ async function init() {
     renderProfile(data.profile);
     renderCollections(data);
     lucide.createIcons();
+
+    // Give DOM a tick to render elements before attaching ScrollTrigger
+    setTimeout(initAnimations, 100);
   } catch (error) {
     const fallback = document.createElement("p");
     fallback.textContent = "Content could not be loaded.";
     document.querySelector("main").prepend(fallback);
-    console.error(error);
+    console.error("LOAD ERROR:", error.stack || error);
   }
 }
 
 init();
 `;
 
-fs.writeFileSync('script.js', script);
-console.log('script.js updated successfully');
+fs.writeFileSync('script.js', newScript);
