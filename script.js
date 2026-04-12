@@ -149,7 +149,8 @@ function initKineticEngine() {
   // 1. Initialize Lenis for Smooth Scrolling
   const lenis = new Lenis({
     duration: 1.2,
-    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // https://www.desmos.com/calculator/brs54l4xou
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Snappy ease
+    wheelMultiplier: 1.2, // https://www.desmos.com/calculator/brs54l4xou
     direction: 'vertical',
     gestureDirection: 'vertical',
     smooth: true,
@@ -205,6 +206,35 @@ function initKineticEngine() {
   });
 
 
+
+  // 2.5 Magnetic Button
+  const magneticButton = document.querySelector('.ds-cta');
+  if (magneticButton) {
+    magneticButton.addEventListener('mousemove', (e) => {
+      const rect = magneticButton.getBoundingClientRect();
+      const h = rect.width / 2;
+      const w = rect.height / 2;
+      const x = e.clientX - rect.left - h;
+      const y = e.clientY - rect.top - w;
+
+      gsap.to(magneticButton, {
+        x: x * 0.3,
+        y: y * 0.3,
+        duration: 0.4,
+        ease: "power3.out"
+      });
+    });
+
+    magneticButton.addEventListener('mouseleave', () => {
+      gsap.to(magneticButton, {
+        x: 0,
+        y: 0,
+        duration: 0.7,
+        ease: "elastic.out(1, 0.3)"
+      });
+    });
+  }
+
   // 3. Studio Stack Overlap & Background Interpolation
   const panels = gsap.utils.toArray('.app-panel');
   panels.forEach((panel, i) => {
@@ -232,8 +262,9 @@ function initKineticEngine() {
     // Overlap Scale Effect (only for panels before the last one)
     if (i < panels.length - 1) {
       gsap.to(panel, {
-        scale: 0.9,
-        opacity: 0.3,
+        scale: 0.85,
+        y: -50,
+        opacity: 0.1,
         ease: "none",
         scrollTrigger: {
           trigger: panel,
