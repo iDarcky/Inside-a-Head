@@ -9,7 +9,6 @@ async function loadContent() {
 function createAppPanel(project, index) {
   const panel = document.createElement("div");
   panel.className = "app-panel section-snap";
-  panel.id = `app-${index}`;
 
   // Placeholder charcoal tints
   const colors = ['#1a0f30', '#121f1a', '#300a0a'];
@@ -20,7 +19,7 @@ function createAppPanel(project, index) {
   const paddedIndex = String(index + 1).padStart(2, '0');
 
   panel.innerHTML = `
-    <div class="app-panel-content">
+    <div class="app-panel-content" id="app-${index}">
       <div class="app-text-column">
         <div class="app-index">${paddedIndex}</div>
         <h3 class="app-title">${project.title}</h3>
@@ -164,7 +163,13 @@ init();
 function initKineticEngine() {
   if (typeof gsap === 'undefined') return;
 
-  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+  // 1. Initialize Lenis for Smooth Scrolling
+
+
+
+
 
   // 2. Custom Cursor & Hero Mouse Parallax
   const cursor = document.querySelector('.custom-cursor');
@@ -172,26 +177,33 @@ function initKineticEngine() {
   const heroLogo = document.querySelector('.intro-logo-overlay');
   const heroPortrait = document.querySelector('.intro-portrait');
 
+  // GSAP quickTo for highly performant cursor tracking
   let xTo = gsap.quickTo(cursor, "left", {duration: 0.1, ease: "power3"});
   let yTo = gsap.quickTo(cursor, "top", {duration: 0.1, ease: "power3"});
 
   window.addEventListener("mousemove", (e) => {
+    // Move Cursor
     xTo(e.clientX);
     yTo(e.clientY);
 
+    // Calculate normalized mouse position (-1 to 1)
     const xNorm = (e.clientX / window.innerWidth) * 2 - 1;
     const yNorm = (e.clientY / window.innerHeight) * 2 - 1;
 
+    // Mouse Parallax Logic
     if (heroText) gsap.to(heroText, { x: xNorm * 30, y: yNorm * 30, duration: 1, ease: "power2.out" });
     if (heroLogo) gsap.to(heroLogo, { x: xNorm * -20, y: yNorm * -20, duration: 1, ease: "power2.out" });
     if (heroPortrait) gsap.to(heroPortrait, { x: xNorm * -10, y: yNorm * -10, duration: 1, ease: "power2.out" });
   });
 
+  // Cursor Hover States
   const hoverElements = document.querySelectorAll('[data-hover], a, button');
   hoverElements.forEach(el => {
     el.addEventListener('mouseenter', () => cursor.classList.add('active'));
     el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
   });
+
+
 
   // 2.5 Magnetic Button
   const magneticButton = document.querySelector('.ds-cta');
@@ -221,10 +233,12 @@ function initKineticEngine() {
     });
   }
 
-  // 3. Background Interpolation
+  // 3. Studio Stack Overlap & Background Interpolation
   const panels = gsap.utils.toArray('.app-panel');
   panels.forEach((panel, i) => {
     const bgColor = panel.getAttribute('data-bg') || '#000000';
+
+    // Background Color Interpolation on body
     ScrollTrigger.create({
       trigger: panel,
       start: "top center",
@@ -233,16 +247,40 @@ function initKineticEngine() {
       onEnterBack: () => gsap.to('body', { backgroundColor: bgColor, duration: 0.8 }),
       onLeave: () => {
           if (i === panels.length - 1) {
-              gsap.to('body', { backgroundColor: '#000000', duration: 0.8 });
+              gsap.to('body', { backgroundColor: '#000000', duration: 0.8 }); // Reset after stack
           }
       },
       onLeaveBack: () => {
           if (i === 0) {
-              gsap.to('body', { backgroundColor: '#000000', duration: 0.8 });
+              gsap.to('body', { backgroundColor: '#000000', duration: 0.8 }); // Reset before stack
           }
       }
     });
+
+    // Overlap Scale Effect (only for panels before the last one)
+    if (i < panels.length - 1) {
+      gsap.to(panel, {
+        scale: 0.85,
+        y: -50,
+        opacity: 0.1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: panel,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+          pinSpacing: false,
+          snap: {
+              snapTo: [0, 1],
+              duration: {min: 0.2, max: 0.5},
+              delay: 0.1,
+              ease: "power1.inOut"
+          }
+        }
+      });
+    }
   });
+
 
   // 4. Logbook Cinematic Horizontal Stagger
   const logbookEntries = gsap.utils.toArray('.logbook-entry');
@@ -250,6 +288,7 @@ function initKineticEngine() {
     const date = entry.querySelector('.logbook-date');
     const title = entry.querySelector('.logbook-title-parallax');
 
+    // Entry Fade/Slide
     gsap.from([date, title], {
       x: 100,
       opacity: 0,
@@ -262,6 +301,7 @@ function initKineticEngine() {
       }
     });
 
+    // Horizontal Scroll Scrub Parallax
     gsap.to(title, {
       x: 50,
       ease: "none",
@@ -274,62 +314,6 @@ function initKineticEngine() {
     });
   });
 
-  // 5. Intersection Observer for Dot Navigation
-  const dots = document.querySelectorAll('.dot-nav .dot');
-  const sections = document.querySelectorAll('.section-snap');
-
-  const observerOptions = {
-    root: null,
-    rootMargin: '0px',
-    threshold: 0.5
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        dots.forEach(dot => dot.classList.remove('active'));
-        const id = '#' + entry.target.id;
-        const activeDot = document.querySelector(`.dot-nav .dot[data-target="${id}"]`);
-        if (activeDot) {
-          activeDot.classList.add('active');
-        }
-      }
-    });
-  }, observerOptions);
-
-  sections.forEach(section => {
-    observer.observe(section);
-  });
-
-  // 6. Dot Navigation Click Event
-  dots.forEach(dot => {
-    dot.addEventListener('click', () => {
-      const targetId = dot.getAttribute('data-target');
-      const targetSection = document.querySelector(targetId);
-      if (targetSection) {
-        targetSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-  });
 
 
-  // 7. Mobile Menu Toggle Logic
-  const menuBtn = document.querySelector('.mobile-menu-btn');
-  const menuOverlay = document.querySelector('.mobile-menu-overlay');
-  const mobileLinks = document.querySelectorAll('.mobile-nav-link');
-
-  if (menuBtn && menuOverlay) {
-    const toggleMenu = () => {
-      menuBtn.classList.toggle('open');
-      menuOverlay.classList.toggle('active');
-      document.body.style.overflow = menuOverlay.classList.contains('active') ? 'hidden' : '';
-    };
-
-    menuBtn.addEventListener('click', toggleMenu);
-
-    mobileLinks.forEach(link => {
-      link.addEventListener('click', toggleMenu);
-    });
   }
-
-}

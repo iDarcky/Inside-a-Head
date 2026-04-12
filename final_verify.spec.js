@@ -6,8 +6,15 @@ test('final verification of portfolio redesign', async ({ page }) => {
   // Check Title
   await expect(page.locator('h1')).toContainText('INSIDE A HEAD');
 
-  // Check Projects / Studio
+    // Check Dot Nav
+  await expect(page.locator('.dot-nav')).toBeVisible();
 
+  // Check Projects / Studio
+  const panel = page.locator('.app-panel').first();
+  await panel.scrollIntoViewIfNeeded();
+  await expect(panel).toBeVisible({ timeout: 10000 });
+  // Adjusted text selector because the title now has "01_" prepended and spaces removed
+  await expect(page.locator('.app-title').first()).toContainText('The Retro Circuit');
 
   // Check Logbook
   await expect(page.locator('#logbook')).toBeVisible();
