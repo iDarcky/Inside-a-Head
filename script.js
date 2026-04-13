@@ -165,12 +165,6 @@ function initKineticEngine() {
 
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
 
-  // 1. Initialize Lenis for Smooth Scrolling
-
-
-
-
-
   // 2. Custom Cursor & Hero Mouse Parallax
   const cursor = document.querySelector('.custom-cursor');
   const heroText = document.querySelector('.hero-massive-text');
@@ -233,7 +227,7 @@ function initKineticEngine() {
     });
   }
 
-  // 3. Studio Stack Overlap & Background Interpolation
+  // 3. Studio Stack Background Interpolation
   const panels = gsap.utils.toArray('.app-panel');
   panels.forEach((panel, i) => {
     const bgColor = panel.getAttribute('data-bg') || '#000000';
@@ -256,23 +250,6 @@ function initKineticEngine() {
           }
       }
     });
-
-    // Overlap Scale Effect (only for panels before the last one)
-    if (i < panels.length - 1) {
-      gsap.to(panel, {
-        scale: 0.85,
-        y: -50,
-        opacity: 0.1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: panel,
-          start: "top top",
-          end: "bottom top",
-          scrub: true,
-          pinSpacing: false
-        }
-      });
-    }
   });
 
 
@@ -329,7 +306,7 @@ function initKineticEngine() {
   });
 
   // Track active dot
-  const sectionIds = ['#top', '#app-0', '#app-1', '#app-2', '#logbook'];
+  const sectionIds = ['#top', '#app-0', '#app-1', '#app-2', '#design-system', '#logbook', '#shelf', '#social'];
   sectionIds.forEach((id, index) => {
     ScrollTrigger.create({
       trigger: id,
