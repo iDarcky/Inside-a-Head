@@ -986,12 +986,12 @@ body, .layout {
 /* Native CSS Scroll Snapping */
 html {
   scroll-behavior: smooth;
-
+  scroll-snap-type: y mandatory;
 }
 
 .section-snap {
-
-
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .bento-title-parallax {

@@ -344,38 +344,6 @@ function initKineticEngine() {
     });
   });
 
-  // --- Global Snapping ---
-  // A robust way to snap to sections without breaking pins is to snap based on the progress of all .section-snap elements
-  let getSnapProgress = () => {
-    const maxScroll = ScrollTrigger.maxScroll(window);
-    const elements = document.querySelectorAll('.section-snap');
-    const positions = [];
 
-    elements.forEach(el => {
-        // Create a temporary trigger to get the exact start position
-        const st = ScrollTrigger.create({ trigger: el, start: 'top top' });
-        positions.push(st.start / maxScroll);
-        st.kill();
-    });
-
-    return positions;
-  };
-
-  ScrollTrigger.create({
-    trigger: document.body,
-    start: "top top",
-    end: "bottom bottom",
-    snap: {
-      snapTo: (progress) => {
-         const snaps = getSnapProgress();
-         if (snaps.length === 0) return progress;
-         // Find nearest snap point
-         return snaps.reduce((prev, curr) => Math.abs(curr - progress) < Math.abs(prev - progress) ? curr : prev);
-      },
-      duration: {min: 0.2, max: 0.8},
-      delay: 0.15,
-      ease: "power2.inOut"
-    }
-  });
 
 }
