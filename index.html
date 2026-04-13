@@ -54,7 +54,7 @@
 
 
     <div class="layout">
-      <main>
+      <main class="snap-container">
 
         <section class="hero-immersive section-snap" id="top">
           <div class="hero-parallax-wrapper">
@@ -80,9 +80,7 @@
         </section>
 
         <!-- The Studio (The Vertical Sticky Stack) -->
-        <section class="studio-stack section-snap" id="studio">
-          <!-- Panels injected by script.js -->
-        </section>
+        <div id="studio-anchor" style="display: none;"></div>
 
         <!-- The Design System (The Engine Room) -->
         <section class="engine-room-section section-snap" id="design-system">
@@ -156,20 +154,20 @@
           </div>
         </section>
 
-      </main>
+        <footer class="footer-massive section-snap" id="social">
+          <div class="footer-huge-links">
+            <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
+            <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
+            <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
+            <a href="#" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
+          </div>
+          <div class="footer-bottom-meta">
+            <p>© 2026 INSIDE A HEAD STUDIO.</p>
+            <a href="#top" class="back-to-top" data-hover>BACK TO TOP ↑</a>
+          </div>
+        </footer>
 
-      <footer class="footer-massive section-snap" id="social">
-        <div class="footer-huge-links">
-          <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
-          <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
-          <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
-          <a href="#" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
-        </div>
-        <div class="footer-bottom-meta">
-          <p>© 2026 INSIDE A HEAD STUDIO.</p>
-          <a href="#top" class="back-to-top" data-hover>BACK TO TOP ↑</a>
-        </div>
-      </footer>
+      </main>
     </div>
 
     <script src="script.js"></script>

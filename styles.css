@@ -999,6 +999,15 @@ html {
   scroll-snap-type: y mandatory;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.layout, main.snap-container, main {
+  display: contents;
+}
+
 .section-snap {
   scroll-snap-align: start;
   scroll-snap-stop: always;

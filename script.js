@@ -105,12 +105,12 @@ function renderProfile(profile) {
 
 function renderCollections(data) {
   // Studio Panels
-  const studioStack = document.getElementById("studio");
-  studioStack.innerHTML = "";
+  const studioAnchor = document.getElementById("studio-anchor");
 
-  data.projects.forEach((project, idx) =>
-    studioStack.appendChild(createAppPanel(project, idx))
-  );
+  data.projects.forEach((project, idx) => {
+    const panel = createAppPanel(project, idx);
+    studioAnchor.parentNode.insertBefore(panel, studioAnchor);
+  });
 
   // Logbook
   const logbookList = document.getElementById("logbook-list");
