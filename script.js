@@ -17,9 +17,10 @@ function createAppPanel(project, index) {
 
 
   const paddedIndex = String(index + 1).padStart(2, '0');
+  const reverseClass = index % 2 !== 0 ? 'reverse' : '';
 
   panel.innerHTML = `
-    <div class="app-panel-content" id="app-${index}">
+    <div class="app-panel-content ${reverseClass}" id="app-${index}">
       <div class="app-text-column">
         <div class="app-index">${paddedIndex}</div>
         <h3 class="app-title">${project.title}</h3>
@@ -32,16 +33,25 @@ function createAppPanel(project, index) {
         </div>
       </div>
       <div class="app-visual-column">
-        <div class="glass-browser">
-          <div class="glass-header">
-            <div class="glass-dot"></div><div class="glass-dot"></div><div class="glass-dot"></div>
+        ${project.device === 'iphone' ? `
+          <div class="glass-iphone">
+            <div class="iphone-notch"></div>
+            <div class="iphone-screen" ${project.image ? `style="background: url('${project.image}') top center/cover no-repeat;"` : ''}></div>
           </div>
-          <div class="glass-body">
-            <div class="glass-skeleton"></div>
-            <div class="glass-skeleton"></div>
-            <div class="glass-skeleton"></div>
+        ` : `
+          <div class="glass-browser">
+            <div class="glass-header">
+              <div class="glass-dot"></div><div class="glass-dot"></div><div class="glass-dot"></div>
+            </div>
+            <div class="glass-body" ${project.image ? `style="background: url('${project.image}') top left/cover no-repeat; height: 100%; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;"` : ''}>
+              ${project.image ? '' : `
+              <div class="glass-skeleton"></div>
+              <div class="glass-skeleton"></div>
+              <div class="glass-skeleton"></div>
+              `}
+            </div>
           </div>
-        </div>
+        `}
       </div>
     </div>
   `;
@@ -103,7 +113,7 @@ function renderProfile(profile) {
   }
 }
 
-function renderCollections(data) {
+async function renderCollections(data) {
   // Studio Panels
   const studioAnchor = document.getElementById("studio-anchor");
 
@@ -128,7 +138,7 @@ function renderCollections(data) {
 
 
     if (data.books.currently_reading) {
-      readingHTML += `<div class="book-cover" style="height: 100%; background: url('https://images.theconversation.com/files/620924/original/file-20240923-18-7oph3j.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip') center/cover; position: relative;">
+      readingHTML += `<div class="book-cover" style="flex: 1; min-height: 300px; background: url('https://images.theconversation.com/files/620924/original/file-20240923-18-7oph3j.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip') center/cover no-repeat; position: relative;">
         <span style="position: absolute; bottom: 12px; left: 12px; background: rgba(0,0,0,0.7); padding: 4px 8px;">${data.books.currently_reading.title}</span>
       </div>`;
     }
@@ -136,6 +146,74 @@ function renderCollections(data) {
     readingHTML += `</div>`;
     bentoReading.innerHTML = readingHTML;
   }
+
+  // Populate GitHub Matrix (Option B: Real Data)
+  const githubMatrix = document.querySelector(".github-matrix");
+  if (githubMatrix) {
+    githubMatrix.innerHTML = ""; // Clear existing
+    try {
+      const ghResp = await fetch("https://github-contributions-api.deno.dev/iDarcky");
+      if (ghResp.ok) {
+        const ghData = await ghResp.json();
+        
+        // Update Total Count
+        const countEl = document.getElementById("gh-total-count");
+        if (countEl) {
+          let total = 0;
+          if (ghData.totalContributions) {
+            total = ghData.totalContributions;
+          } else if (ghData.total) {
+            total = Object.values(ghData.total).reduce((a, b) => a + (typeof b === 'number' ? b : 0), 0);
+          }
+          countEl.textContent = `${total.toLocaleString()} contributions in the last year`;
+        }
+
+        // Set to 245 days (35 weeks) to perfectly fit a 2-span tile in a 5nd col grid
+        const flattened = ghData.contributions.flat().slice(-245);
+        flattened.forEach(day => {
+          const box = document.createElement("div");
+          box.className = "gh-box";
+          // Map API intensity (0-4) to our lvl classes
+          if (day.intensity > 0) {
+            box.classList.add(`lvl-${day.intensity}`);
+          }
+          githubMatrix.appendChild(box);
+        });
+      } else {
+        throw new Error("API response not ok");
+      }
+    } catch (e) {
+      console.warn("GitHub fetch failed, simulating:", e);
+      // Fallback to simulation if API fails (245 dots)
+      for (let i = 0; i < 245; i++) {
+        const box = document.createElement("div");
+        box.className = "gh-box";
+        const rand = Math.random();
+        if (rand > 0.9) box.classList.add("lvl-4");
+        else if (rand > 0.75) box.classList.add("lvl-3");
+        else if (rand > 0.5) box.classList.add("lvl-2");
+        else if (rand > 0.3) box.classList.add("lvl-1");
+        githubMatrix.appendChild(box);
+      }
+    }
+  }
+
+  // Init Geist Clock
+  const updateClock = () => {
+    const now = new Date();
+    const h = String(now.getHours()).padStart(2, '0');
+    const m = String(now.getMinutes()).padStart(2, '0');
+    const s = String(now.getSeconds()).padStart(2, '0');
+    
+    const timeEl = document.getElementById('geist-time');
+    const secEl = document.getElementById('geist-seconds');
+    
+    if (timeEl) timeEl.textContent = `${h}:${m}`;
+    if (secEl) secEl.textContent = s;
+  };
+  
+  updateClock();
+  setInterval(updateClock, 1000); // update every second
 }
 
 // Lenis & GSAP will be appended in the next step
@@ -250,6 +328,36 @@ function initKineticEngine() {
           }
       }
     });
+
+    // Sub-animation: Bi-directional Motion to text elements
+    const textEls = panel.querySelectorAll('.app-index, .app-title, .app-desc, .app-meta');
+    if (textEls.length > 0) {
+      gsap.set(textEls, { opacity: 0, y: 60 });
+      
+      ScrollTrigger.create({
+        trigger: panel,
+        start: "top 75%",
+        end: "bottom 25%",
+        onEnter: () => {
+          gsap.fromTo(textEls, 
+            { opacity: 0, y: 60 },
+            { opacity: 1, y: 0, duration: 0.8, stagger: 0.15, ease: "power3.out", overwrite: true }
+          );
+        },
+        onLeave: () => {
+          gsap.to(textEls, { opacity: 0, y: -60, duration: 0.5, stagger: 0.1, ease: "power3.in", overwrite: true });
+        },
+        onEnterBack: () => {
+          gsap.fromTo(textEls, 
+            { opacity: 0, y: -60 },
+            { opacity: 1, y: 0, duration: 0.8, stagger: -0.15, ease: "power3.out", overwrite: true }
+          );
+        },
+        onLeaveBack: () => {
+          gsap.to(textEls, { opacity: 0, y: 60, duration: 0.5, stagger: -0.1, ease: "power3.in", overwrite: true });
+        }
+      });
+    }
   });
 
 
@@ -259,28 +367,30 @@ function initKineticEngine() {
     const date = entry.querySelector('.logbook-date');
     const title = entry.querySelector('.logbook-title-parallax');
 
-    // Entry Fade/Slide
-    gsap.from([date, title], {
-      x: 100,
-      opacity: 0,
-      duration: 1.2,
-      stagger: 0.1,
-      ease: "power4.out",
-      scrollTrigger: {
-        trigger: entry,
-        start: "top 90%",
-      }
-    });
+    // Bi-directional entry scroll animation settling left (x: 0)
+    gsap.set([date, title], { x: 50, opacity: 0 });
 
-    // Horizontal Scroll Scrub Parallax
-    gsap.to(title, {
-      x: 50,
-      ease: "none",
-      scrollTrigger: {
-        trigger: entry,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
+    ScrollTrigger.create({
+      trigger: entry,
+      start: "top 85%",
+      end: "bottom 15%",
+      onEnter: () => {
+        gsap.fromTo([date, title], 
+          { x: 50, opacity: 0 },
+          { x: 0, opacity: 1, duration: 1, stagger: 0.1, ease: "power4.out", overwrite: true }
+        );
+      },
+      onLeave: () => {
+        gsap.to([date, title], { x: -50, opacity: 0, duration: 0.6, stagger: 0.05, ease: "power4.in", overwrite: true });
+      },
+      onEnterBack: () => {
+        gsap.fromTo([date, title], 
+          { x: -50, opacity: 0 },
+          { x: 0, opacity: 1, duration: 1, stagger: -0.1, ease: "power4.out", overwrite: true }
+        );
+      },
+      onLeaveBack: () => {
+        gsap.to([date, title], { x: 50, opacity: 0, duration: 0.6, stagger: -0.05, ease: "power4.in", overwrite: true });
       }
     });
   });
@@ -321,6 +431,91 @@ function initKineticEngine() {
     });
   });
 
+  // --- Mobile Hamburger Menu Logic ---
+  const hamburgerBtn = document.querySelector('.hamburger-btn');
+  const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
+  const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+  let touchStartX = 0;
+  let touchEndX = 0;
 
+  function toggleMobileMenu() {
+    hamburgerBtn.classList.toggle('active');
+    mobileMenuOverlay.classList.toggle('active');
+    document.body.classList.toggle('menu-open');
+  }
+
+  function closeMobileMenu() {
+    hamburgerBtn.classList.remove('active');
+    mobileMenuOverlay.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  }
+
+  if (hamburgerBtn && mobileMenuOverlay) {
+    hamburgerBtn.addEventListener('click', toggleMobileMenu);
+
+    // Close menu when a link is clicked
+    mobileNavLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        closeMobileMenu();
+        // Allow smooth scroll to handle navigation if hash exists
+        const targetId = link.getAttribute('href');
+        if (targetId && targetId.startsWith('#')) {
+            e.preventDefault();
+            setTimeout(() => {
+                const targetEl = document.querySelector(targetId);
+                if (targetEl) {
+                  // For mobile, scrollIntoView triggers native CSS scroll snap beautifully
+                  targetEl.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 300); // Wait for menu close transition to start
+        }
+      });
+    });
+
+    // Swipe right to close gesture
+    mobileMenuOverlay.addEventListener('touchstart', e => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, {passive: true});
+
+    mobileMenuOverlay.addEventListener('touchend', e => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, {passive: true});
+  }
+
+  function handleSwipe() {
+    // If swiped right by more than 50px
+    if (touchEndX - touchStartX > 50) {
+      if (mobileMenuOverlay.classList.contains('active')) {
+        closeMobileMenu();
+      }
+    }
+  }
+
+  // --- Manifesto Overlay Logic ---
+  const manifestoBtn = document.getElementById('manifesto-btn');
+  const manifestoOverlay = document.getElementById('manifesto-overlay');
+  const manifestoClose = document.getElementById('manifesto-close');
+
+  if (manifestoBtn && manifestoOverlay && manifestoClose) {
+    manifestoBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      manifestoOverlay.classList.add('active');
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    });
+
+    manifestoClose.addEventListener('click', () => {
+      manifestoOverlay.classList.remove('active');
+      document.body.style.overflow = ''; 
+    });
+
+    // Close on escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && manifestoOverlay.classList.contains('active')) {
+        manifestoOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    });
+  }
 
 }

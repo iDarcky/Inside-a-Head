@@ -35,10 +35,35 @@
         <nav class="nav-links">
           <a href="#top" class="nav-link" data-hover>Studio</a>
           <a href="#logbook" class="nav-link" data-hover>Logbook</a>
-          <a href="#shelf" class="nav-link" data-hover>Shelf</a>
+          <a href="#shelf-builds" class="nav-link" data-hover>Shelf</a>
         </nav>
+        <!-- Mobile Hamburger Button -->
+        <button class="hamburger-btn" aria-label="Toggle menu">
+          <div class="hamburger-box">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+          </div>
+        </button>
       </div>
     </header>
+
+    <!-- Full-Screen Hamburger Menu Overlay -->
+    <div class="mobile-menu-overlay">
+      <nav class="mobile-nav-links">
+        <a href="#top" class="mobile-nav-link">Studio</a>
+        <!-- <a href="#app-0" class="mobile-nav-link">Apps</a> -->
+        <a href="#design-system" class="mobile-nav-link">Engine</a>
+        <a href="#logbook" class="mobile-nav-link">Logbook</a>
+        <a href="#shelf-builds" class="mobile-nav-link">Shelf</a>
+      </nav>
+      <div class="mobile-menu-footer">
+        <div class="mobile-socials">
+          <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer">GITHUB</a>
+          <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer">LINKEDIN</a>
+        </div>
+      </div>
+    </div>
 
     <!-- Dot Navigation -->
     <div class="dot-nav">
@@ -48,7 +73,8 @@
       <div class="dot" data-target="#app-2"></div>
       <div class="dot" data-target="#design-system"></div>
       <div class="dot" data-target="#logbook"></div>
-      <div class="dot" data-target="#shelf"></div>
+      <div class="dot" data-target="#shelf-builds"></div>
+      <div class="dot" data-target="#shelf-media"></div>
       <div class="dot" data-target="#social"></div>
     </div>
 
@@ -64,7 +90,7 @@
               <div class="intro-portrait"></div>
               <div class="intro-logo-overlay">
                 <svg viewBox="0 0 100 100" class="iah-logo">
-                  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="48" font-weight="bold" fill="currentColor" letter-spacing="-5">IAH</text>
+                  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="28" font-weight="bold" fill="currentColor" letter-spacing="-2">STUDIO</text>
                 </svg>
               </div>
             </div>
@@ -108,54 +134,87 @@
           </div>
         </section>
 
-        <!-- The Shelf: Bento Box / Museum of My Mess -->
-        <section class="bento-section section-snap" id="shelf">
+        <!-- The Shelf Part 1: Build Metrics & Status -->
+        <section class="bento-section section-snap" id="shelf-builds">
           <div class="bento-wrapper">
-            <div class="logbook-header-wrapper" style="margin-bottom: 10vw;">
+            <div class="logbook-header-wrapper">
               <h2 class="logbook-huge-title bento-title-parallax">MUSEUM OF MY MESS</h2>
             </div>
-            <div class="bento-grid">
-
-              <!-- Tile 1: Tall Portrait (Currently Reading) -->
-              <div class="bento-tile tile-tall" id="bento-reading">
-                 <!-- Populated by script.js -->
+            <div class="bento-grid bento-grid-builds">
+              <!-- Tile: Clock -->
+              <div class="bento-tile bento-clock">
+                <div class="bento-kicker">LOCAL TIME</div>
+                <div class="geist-wrapper">
+                  <span id="geist-time" class="geist-time">00:00</span>
+                  <span id="geist-seconds" class="geist-seconds">00</span>
+                </div>
+                <div class="clock-location">BUCHAREST, RO</div>
               </div>
 
-              <!-- Tile 2: Square (Athletics) -->
-              <div class="bento-tile tile-square bento-athletics">
+              <!-- Tile: Extra -->
+              <div class="bento-tile bento-empty">
+                 <div class="bento-kicker">FUTURE SLOTS</div>
+                 <div class="empty-state">
+                    <i data-lucide="plus" style="width: 24px; opacity: 0.1;"></i>
+                 </div>
+              </div>
+
+              <!-- Tile: Book (Named Area: book) -->
+              <div class="bento-tile bento-reading" id="bento-reading"></div>
+
+              <!-- Tile: GitHub (Named Area: gh) -->
+              <div class="bento-tile bento-github">
+                <div class="github-header">
+                  <div class="bento-kicker">BUILD METRICS</div>
+                  <div class="gh-counter" id="gh-total-count">... contributions</div>
+                </div>
+                <div class="github-container">
+                  <div class="gh-labels-y"><span>Mon</span><span>Wed</span><span>Fri</span></div>
+                  <div class="github-matrix"></div>
+                </div>
+                <div class="github-footer">
+                  <div class="github-meta"><span>github.com/iDarcky</span><i data-lucide="github" style="width: 14px;"></i></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- The Shelf Part 2: Gear & Media -->
+        <section class="bento-section section-snap" id="shelf-media">
+          <div class="bento-wrapper">
+            <div class="logbook-header-wrapper">
+              <div class="bento-kicker" style="color: var(--accents-5); letter-spacing: 0.3em; margin-bottom: 16px;">THE GEAR // THE MESS</div>
+              <h2 class="logbook-huge-title bento-title-parallax" style="font-size: clamp(2rem, 5vw, 4rem); color: var(--accents-4);">COLLECTED FRAGMENTS</h2>
+            </div>
+            <div class="bento-grid bento-grid-media">
+              <!-- Tile: Spotify (Named Area: audio) -->
+              <div class="bento-tile bento-audio" style="padding: 0;">
+                <iframe src="https://open.spotify.com/embed/track/5lNmaZfu3SQMuzl1hH2wzA?utm_source=generator" style="border-radius:16px; border: none; width: 100%; height: 100%;" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </div>
+
+              <!-- Tile: Gear (Named Area: shoe) -->
+              <div class="bento-tile bento-shoe">
+                <div class="bento-kicker">CURRENT GEAR</div>
+                <img src="https://cdn1.npcdn.net/images/c66082ec8dffeee531fb002baa744f91_1758184573.webp?md5id=2169a2cc59e83ed5c094702f589fdd1d&new_width=1000&new_height=1000&w=1755845547&from=png&type=9" class="shoe-img" alt="Adidas Evo SL" />
+                <div class="shoe-name">ADIDAS EVO SL</div>
+              </div>
+
+              <!-- Tile: Athletics (Named Area: athletics) -->
+              <div class="bento-tile bento-athletics">
                 <div class="bento-kicker">ATHLETICS</div>
                 <div class="athletics-data">
-                  <div class="ath-row">
-                    <span class="ath-label">HALF MARATHON</span>
-                    <span class="ath-value">1:38:42</span>
-                  </div>
-                  <div class="ath-row">
-                    <span class="ath-label">5K PR</span>
-                    <span class="ath-value">20:15</span>
-                  </div>
+                  <div class="ath-row"><span class="ath-label">HALF MARATHON</span><span class="ath-value">1:38:42</span></div>
+                  <div class="ath-row"><span class="ath-label">5K PR</span><span class="ath-value">20:15</span></div>
                 </div>
               </div>
-
-              <!-- Tile 3: Wide Landscape (Infrastructure) -->
-              <div class="bento-tile tile-wide bento-infra">
-                <div class="bento-kicker">INFRASTRUCTURE</div>
-                <div class="infra-schematic">
-                  <div class="node n1"></div><div class="line l1"></div><div class="node n2"></div><div class="line l2"></div><div class="node n3"></div>
-                </div>
-              </div>
-
-              <!-- Tile 4: Small Square (Personal) -->
-              <div class="bento-tile tile-small bento-personal">
-                <div class="bento-kicker">PERSONAL</div>
-                <div class="film-still-placeholder"></div>
-              </div>
-
             </div>
           </div>
         </section>
 
         <footer class="footer-massive section-snap" id="social">
           <div class="footer-huge-links">
+            <a href="#" id="manifesto-btn" data-hover>MANIFESTO</a>
             <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
             <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
             <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
@@ -168,6 +227,22 @@
         </footer>
 
       </main>
+    </div>
+
+    <!-- Manifesto Overlay -->
+    <div class="manifesto-overlay" id="manifesto-overlay">
+      <div class="manifesto-content">
+        <button class="manifesto-close" id="manifesto-close" aria-label="Close manifesto">
+          <i data-lucide="x" style="width: 32px; height: 32px;"></i>
+        </button>
+        <span class="manifesto-kicker">THE NORTH STAR</span>
+        <h2 class="manifesto-title">IDEAS AND MESSY.</h2>
+        <div class="manifesto-body">
+          <p>This is not a portfolio. A portfolio is static. This is an active studio—a living organism where idealism meets execution.</p>
+          <p>We embrace the tension between the structured architecture of a design system and the chaotic beauty of raw creativity. Behind every pristine user interface is a "Museum of Mess"—abandoned hobbies, wild ideas, and the vulnerable human side of creation.</p>
+          <p>There is always a way to succeed. But you have to start building.</p>
+        </div>
+      </div>
     </div>
 
     <script src="script.js"></script>

@@ -23,6 +23,7 @@
     {
       "title": "The Retro Circuit",
       "description": "A specialized comparison engine for retro gaming hardware. Built with Next.js, Supabase, and Tailwind CSS, following a Swiss Industrial design philosophy.",
+      "image": "retro-circuit.png",
       "stack": [
         "Next.js",
         "TypeScript",
@@ -36,6 +37,7 @@
     {
       "title": "Setlists MD",
       "description": "A focused workspace for organizing setlists and musical ideas using Markdown. Streamlining the workflow for musicians and performers.",
+      "image": "setlists-md.png",
       "stack": [
         "JavaScript",
         "Vite",
@@ -48,6 +50,8 @@
     {
       "title": "RedLine Running",
       "description": "A high-performance running application built to track and analyze athletic performance with precision.",
+      "image": "redline-running.png",
+      "device": "iphone",
       "stack": [
         "TypeScript",
         "React",
