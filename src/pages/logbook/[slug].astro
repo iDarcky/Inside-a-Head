@@ -1,0 +1,51 @@
+---
+import MagazineLayout from '../../layouts/MagazineLayout.astro';
+import PortableText from '../../components/PortableText.astro';
+import { sanityClient, urlFor } from '../../utils/sanity';
+
+export async function getStaticPaths() {
+  const entries = await sanityClient.fetch(`*[_type == "logbookEntry"]{ "slug": slug.current }`);
+  return entries.map((entry: any) => ({
+    params: { slug: entry.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const entry = await sanityClient.fetch(`*[_type == "logbookEntry" && slug.current == $slug][0]`, { slug });
+
+if (!entry) {
+  return Astro.redirect('/404');
+}
+---
+
+<MagazineLayout title={entry.title}>
+  {entry.heroImage && (
+    <div class="project-hero-wrapper">
+      <img src={urlFor(entry.heroImage).url()} alt={entry.title} class="project-hero-img" />
+    </div>
+  )}
+
+  <article class="article-layout">
+    <header class="article-header">
+      <h1 class="article-title">{entry.title}</h1>
+      <div class="article-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">DATE</span>
+          <span class="meta-value">{entry.publishedAt ? new Date(entry.publishedAt).toLocaleDateString() : 'N/A'}</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="article-body">
+      {entry.body ? <PortableText portableText={entry.body} /> : <p>No content available.</p>}
+    </section>
+
+    <footer class="magazine-footer-nav">
+      <a href="/#logbook" class="footer-nav-link" data-hover style="text-align: right; width: 100%;">
+        <span class="nav-label">RETURN TO</span>
+        Logbook
+      </a>
+    </footer>
+    <a href="/#top" class="footer-back-studio" data-hover>&larr; Back to Studio Index</a>
+  </article>
+</MagazineLayout>

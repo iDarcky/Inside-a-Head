@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
 :root {
   /* Hardlocked Dark Mode Monochromatic Palette */
@@ -224,11 +224,38 @@ h1, h2, h3 {
   z-index: 2;
 }
 
-.scroll-indicator {
+.hero-copy.centered-text {
+  bottom: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+  max-width: 800px;
+  color: var(--accents-7);
+}
+
+.scroll-indicator-wrapper {
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  z-index: 2;
+}
+
+.scroll-indicator-text {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--accents-6);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.scroll-indicator {
+  position: relative;
   width: 1px;
   height: 10vh;
   background-color: rgba(255,255,255,0.2);
@@ -589,8 +616,17 @@ body, .layout {
     bottom: 5vh;
     left: 20px;
     right: 20px;
-    font-size: 1rem;
+    font-size: 1.2rem;
     text-align: center;
+  }
+
+  .hero-copy.centered-text {
+    bottom: 10vh;
+    top: auto;
+    left: 20px;
+    right: 20px;
+    transform: none;
+    font-size: clamp(1rem, 5vw, 1.2rem);
   }
 
   .app-panel {
@@ -1690,5 +1726,458 @@ body.menu-open {
 @media (max-width: 768px) {
   .manifesto-close {
     top: -48px;
+  }
+}
+
+/* =========================================
+   MAGAZINE EDITORIAL LAYOUT (PROJECT PAGES)
+   ========================================= */
+
+[data-theme="charcoal-red"] {
+  --geist-background: #300a0a;
+}
+[data-theme="charcoal-green"] {
+  --geist-background: #121f1a;
+}
+[data-theme="charcoal-violet"] {
+  --geist-background: #1a0f30;
+}
+
+body.magazine-layout {
+  background-color: var(--geist-background);
+}
+
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s, opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.4s;
+}
+
+.mobile-menu-overlay.active .mobile-menu-footer {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobile-socials a {
+  color: var(--accents-6);
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.875rem;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-right: 16px;
+  transition: color var(--fast-transition);
+}
+
+.mobile-socials a:hover {
+  color: #fff;
+}
+
+/* Hamburger Button */
+.hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: none !important;
+  z-index: 2001;
+  position: relative;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.hamburger-box {
+  width: 24px;
+  height: 16px;
+  position: relative;
+}
+
+.hamburger-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #fff;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+  left: 0;
+}
+
+.hamburger-line:nth-child(1) { top: 0; }
+.hamburger-line:nth-child(2) { top: 7px; }
+.hamburger-line:nth-child(3) { top: 14px; }
+
+.hamburger-btn.active .hamburger-line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.hamburger-btn.active .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+.hamburger-btn.active .hamburger-line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+body.menu-open {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+  .nav-links, .dot-nav {
+    display: none !important;
+  }
+}
+
+/* Manifesto Overlay Styles */
+.manifesto-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  background-color: var(--geist-background);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5vw;
+  color: var(--geist-foreground);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+}
+
+.manifesto-overlay.active {
+  pointer-events: auto;
+  visibility: visible;
+  opacity: 1;
+}
+
+.manifesto-content {
+  max-width: 800px;
+  width: 100%;
+  position: relative;
+  transform: translateY(40px);
+  opacity: 0;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s, opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+.manifesto-overlay.active .manifesto-content {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.manifesto-close {
+  position: absolute;
+  top: -64px;
+  right: 0;
+  background: transparent;
+  border: none;
+  color: var(--accents-6);
+  padding: 8px;
+  transition: color var(--fast-transition), transform var(--fast-transition);
+}
+
+.manifesto-close:hover {
+  color: #fff;
+  transform: scale(0.9);
+}
+
+.manifesto-kicker {
+  display: block;
+  font-family: 'Geist Mono', monospace;
+  font-size: 1rem;
+  color: var(--accents-5);
+  margin-bottom: 24px;
+  letter-spacing: 0.1em;
+}
+
+.manifesto-title {
+  font-size: clamp(3rem, 8vw, 6rem);
+  line-height: 0.9;
+  margin-bottom: 48px;
+  letter-spacing: -0.04em;
+}
+
+.manifesto-body {
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  color: var(--accents-7);
+  line-height: 1.5;
+}
+
+.manifesto-body p {
+  margin-bottom: 24px;
+}
+
+@media (max-width: 768px) {
+  .manifesto-close {
+    top: -48px;
+  }
+}
+
+/* =========================================
+   MAGAZINE EDITORIAL LAYOUT (PROJECT PAGES)
+   ========================================= */
+
+[data-theme="charcoal-red"] {
+  --geist-background: #300a0a;
+}
+[data-theme="charcoal-green"] {
+  --geist-background: #121f1a;
+}
+[data-theme="charcoal-violet"] {
+  --geist-background: #1a0f30;
+}
+
+body.magazine-layout {
+  background-color: var(--geist-background);
+}
+
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background-color: #fff;
+  z-index: 9999;
+  width: 0%;
+}
+
+.project-hero-wrapper {
+  position: relative;
+  width: 100vw;
+  height: 45vh;
+  max-height: 400px;
+  overflow: hidden;
+  margin-left: calc(-50vw + 50%);
+  margin-bottom: 2vh;
+}
+
+.project-hero-img {
+  width: 100%;
+  height: 130%; /* extra height for parallax */
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  top: -15%;
+}
+
+.article-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 5vh 5vw;
+}
+
+.article-header {
+  margin-bottom: 32px;
+}
+
+.article-title {
+  font-size: clamp(3rem, 8vw, 8rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  letter-spacing: -0.04em;
+}
+
+.article-meta-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  border-top: 1px solid rgba(255,255,255,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding: 24px 0;
+  margin-bottom: 40px;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accents-6);
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.meta-label {
+  color: var(--accents-5);
+  font-size: 0.75rem;
+}
+
+.meta-value {
+  color: #fff;
+}
+
+.article-body {
+  font-family: 'Lora', Georgia, serif;
+  font-size: clamp(1.1rem, 2vw, 1.4rem);
+  line-height: 1.8;
+  color: var(--accents-8);
+  max-width: 85ch; /* Wider */
+  margin: 0 auto;
+}
+
+/* Drop Cap */
+.article-body > p:first-of-type::first-letter {
+  float: left;
+  font-size: 5.5rem;
+  line-height: 0.8;
+  padding-right: 12px;
+  padding-top: 12px;
+  font-family: 'Geist', sans-serif;
+  font-weight: 800;
+  color: #fff;
+}
+
+.article-body p {
+  margin-bottom: 2rem;
+}
+
+.article-body h2 {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  color: #fff;
+  margin-top: 4rem;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+}
+
+.article-body h3 {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  color: #fff;
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.article-body blockquote {
+  font-family: 'Lora', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  line-height: 1.4;
+  color: #fff;
+  border-left: 4px solid #fff;
+  padding-left: 2rem;
+  margin: 4rem 0;
+}
+
+.magazine-footer-nav {
+  margin-top: 10vh;
+  border-top: 1px solid var(--geist-border);
+  padding: 5vh 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-nav-link {
+  font-family: 'Geist', sans-serif;
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--accents-5);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color var(--fast-transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-nav-link .nav-label {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.footer-nav-link:hover {
+  color: #fff;
+}
+
+.footer-back-studio {
+  display: block;
+  text-align: center;
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accents-6);
+  text-decoration: none;
+}
+.footer-back-studio:hover {
+  color: #fff;
+}
+
+/* Custom Project Header */
+.project-header {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  z-index: 2005 !important;
+  mix-blend-mode: normal !important;
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.project-header .header-inner {
+  padding: 24px calc(40px + 1vw) 24px 40px !important;
+  justify-content: space-between;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.project-logo {
+  font-family: 'Geist Mono', monospace;
+  font-weight: 700;
+  color: var(--geist-foreground);
+  text-decoration: none;
+  font-size: 0.875rem;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: flex;
+  flex-direction: column;
+  transition: opacity var(--fast-transition);
+}
+
+.project-logo:hover {
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .project-header .header-inner {
+    padding: 16px;
+  }
+  .project-header .nav-links {
+    display: none;
+  }
+  .project-hero-wrapper {
+    height: 30vh;
+    max-height: 250px;
+    margin-bottom: 2vh;
+  }
+  .article-layout {
+    padding-top: 24px;
   }
 }

@@ -1,0 +1,63 @@
+---
+import MagazineLayout from '../../layouts/MagazineLayout.astro';
+import PortableText from '../../components/PortableText.astro';
+import { sanityClient, urlFor } from '../../utils/sanity';
+
+export async function getStaticPaths() {
+  const entries = await sanityClient.fetch(`*[_type == "project"]{ "slug": slug.current }`);
+  return entries.map((entry: any) => ({
+    params: { slug: entry.slug },
+  }));
+}
+
+const { slug } = Astro.params;
+const project = await sanityClient.fetch(`*[_type == "project" && slug.current == $slug][0]`, { slug });
+
+if (!project) {
+  return Astro.redirect('/404');
+}
+---
+
+<MagazineLayout title={project.title}>
+  {project.heroImage && (
+    <div class="project-hero-wrapper">
+      <img src={urlFor(project.heroImage).url()} alt={project.title} class="project-hero-img" />
+    </div>
+  )}
+
+  <article class="article-layout">
+    <header class="article-header">
+      <h1 class="article-title">{project.title}</h1>
+      <div class="article-meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">ROLE</span>
+          <span class="meta-value">{project.role || 'N/A'}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">YEAR</span>
+          <span class="meta-value">{project.year || 'N/A'}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">STACK</span>
+          <span class="meta-value">{project.stack || 'N/A'}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">STATUS</span>
+          <span class="meta-value">{project.status || 'N/A'}</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="article-body">
+      {project.body ? <PortableText portableText={project.body} /> : <p>No content available.</p>}
+    </section>
+
+    <footer class="magazine-footer-nav">
+      <a href="/#top" class="footer-nav-link" data-hover style="text-align: right; width: 100%;">
+        <span class="nav-label">RETURN TO</span>
+        Studio
+      </a>
+    </footer>
+    <a href="/#top" class="footer-back-studio" data-hover>&larr; Back to Studio Index</a>
+  </article>
+</MagazineLayout>

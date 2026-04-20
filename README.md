@@ -1,45 +1,43 @@
-# Inside a Head | Digital Studio
+# Astro Starter Kit: Minimal
 
-> *Ideas and Messy. A living organism where idealism meets execution.*
+```sh
+npm create astro@latest -- --template minimal
+```
 
-Welcome to **Inside a Head**, the digital studio of Daniel—an *idealist builder*, *visionary PM*, and *musician*. 
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
-This is not a static portfolio of past accomplishments; it is an active, breathing incubator where ideas are synthesized, built, and shipped. It's a space that explores the tension between the structured architecture of a system and the chaotic beauty of raw creativity.
+## 🚀 Project Structure
 
-Inspired by the sharp precision of Vercel and the bold creativity of Monks, this space is designed to intrigue, inspire, and act as a foundation for future connections.
+Inside of your Astro project, you'll see the following folders and files:
 
----
+```text
+/
+├── public/
+├── src/
+│   └── pages/
+│       └── index.astro
+└── package.json
+```
 
-## 🧭 The Philosophy
+Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
 
-* **The Studio, Not a Portfolio:** Portfolios belong in the past. A studio is alive. It's where things are happening, evolving, and constantly in motion.
-* **Form & Function:** Design and functionality must co-exist. Every component is built with human interaction and vibe in mind.
-* **The Mess & The Architecture:** We embrace the contradiction. Behind every pristine user interface is a "Museum of Mess"—abandoned hobbies, wild ideas, and the vulnerable, human side of creation. There is always a way to succeed, even if getting there is messy.
+There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
 
----
+Any static assets, like images, can be placed in the `public/` directory.
 
-## 🏗️ Architecture & Engine
+## 🧞 Commands
 
-This project acts as the foundational "Engine Room" for all applications conceptualized in the studio. 
+All commands are run from the root of the project, from a terminal:
 
-- **Geist-Inspired UI:** Clean, sharp, and highly functional aesthetics.
-- **The "Museum of My Mess":** A Bento grid layout capturing the organized chaos of athletics, infrastructure, personal snapshots, and reading logs.
-- **Vibe-Coded:** Technical dogma takes a backseat to the ultimate result: how the space feels.
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 📓 The Logbook
+## 👀 Want to learn more?
 
-The logbook is a bit of everything. It's a continuous stream of thoughts, experiments, and daily builds—updated organically. It exists to document the human side of the journey, not just the polished destination. Keep an eye out for weekly updates.
-
-## 🌱 Future Trajectory
-**Inside a Head** is designed as a living organism. The North Star? To evolve from a personal digital garden into a collaborative agency that helps creators, builders, and dreamers bring their ideas to life through design, marketing, and management.
-
----
-
-## 🤝 Let's Connect
-
-"There are a lot of ideas out there, but you should actually start building."
-
-Did this space spark an idea? Are you intrigued by the mess? 
-**Let's connect and ideate together.**
-
-[GitHub](https://github.com/iDarcky) | [LinkedIn](https://www.linkedin.com/in/danielnmaghis/)
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

@@ -26,7 +26,7 @@ function createAppPanel(project, index) {
         <h3 class="app-title">${project.title}</h3>
         <p class="app-desc">${project.description}</p>
         <div class="app-meta">
-          <span>${project.status}</span>
+          <a href="/projects/${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}" class="app-view-link" data-hover>Learn more</a>
           <a href="${project.url}" target="_blank" rel="noreferrer" class="app-view-link" data-hover>
             View Project <i data-lucide="arrow-up-right" style="margin-left: 8px; width: 16px;"></i>
           </a>

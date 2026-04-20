@@ -1,0 +1,145 @@
+{
+  "profile": {
+    "name": "Daniel",
+    "role": "The digital studio of Daniel.",
+    "bio": "Product Manager, Musician, and Builder. Constructing human-centric software and creative workflows.",
+    "avatarAlt": "Portrait of Daniel",
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/iDarcky"
+      },
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/danielnmaghis/"
+      },
+      {
+        "label": "Email",
+        "url": "mailto:hello@example.com"
+      }
+    ]
+  },
+  "projects": [
+    {
+      "title": "The Retro Circuit",
+      "description": "A specialized comparison engine for retro gaming hardware. Built with Next.js, Supabase, and Tailwind CSS, following a Swiss Industrial design philosophy.",
+      "image": "retro-circuit.png",
+      "stack": [
+        "Next.js",
+        "TypeScript",
+        "Supabase",
+        "Tailwind CSS"
+      ],
+      "url": "https://theretrocircuit.com/",
+      "date": "2025",
+      "status": "Live"
+    },
+    {
+      "title": "Setlists MD",
+      "description": "A focused workspace for organizing setlists and musical ideas using Markdown. Streamlining the workflow for musicians and performers.",
+      "image": "setlists-md.png",
+      "stack": [
+        "JavaScript",
+        "Vite",
+        "Markdown"
+      ],
+      "url": "https://setlists-md.vercel.app/",
+      "date": "2026",
+      "status": "Maintained"
+    },
+    {
+      "title": "RedLine Running",
+      "description": "A high-performance running application built to track and analyze athletic performance with precision.",
+      "image": "redline-running.png",
+      "device": "iphone",
+      "stack": [
+        "TypeScript",
+        "React",
+        "AI Studio"
+      ],
+      "url": "https://running-app-brown.vercel.app/",
+      "date": "2025",
+      "status": "Active"
+    }
+  ],
+  "books": {
+    "currently_reading": {
+      "title": "The Sorrows of Young Werther",
+      "author": "Johann Wolfgang von Goethe",
+      "url": "https://www.goodreads.com/book/show/16640.The_Sorrows_of_Young_Werther"
+    },
+    "read": [
+      {
+        "title": "From the Editorial Page of the Falchester Weekly Review",
+        "author": "Marie Brennan",
+        "rating": 4
+      },
+      {
+        "title": "The Voyage of the Basilisk",
+        "author": "Marie Brennan",
+        "rating": 3
+      },
+      {
+        "title": "The Old Man and the Sea",
+        "author": "Ernest Hemingway",
+        "rating": 3
+      },
+      {
+        "title": "The Magician's Nephew",
+        "author": "C.S. Lewis",
+        "rating": 3
+      },
+      {
+        "title": "The Last Battle",
+        "author": "C.S. Lewis",
+        "rating": 4
+      },
+      {
+        "title": "Prince Caspian",
+        "author": "C.S. Lewis",
+        "rating": 4
+      },
+      {
+        "title": "The Subtle Art of Not Giving a F*ck",
+        "author": "Mark Manson",
+        "rating": 5
+      },
+      {
+        "title": "Selling 101",
+        "author": "Zig Ziglar",
+        "rating": 4
+      },
+      {
+        "title": "Inteligența emoțională",
+        "author": "Daniel Goleman",
+        "rating": 3
+      },
+      {
+        "title": "The Shallows",
+        "author": "Nicholas Carr",
+        "rating": 5
+      }
+    ],
+    "goodreads_url": "https://www.goodreads.com/user/show/106429003-daniel-maghis"
+  },
+  "logbook": [
+    {
+      "date": "2026-03-15",
+      "title": "On Minimalism in Interface Design",
+      "excerpt": "Exploring the boundaries of whitespace and typography in modern web applications. Why less often translates to a more focused user experience.",
+      "url": "#"
+    },
+    {
+      "date": "2026-02-28",
+      "title": "The Swiss Industrial Philosophy",
+      "excerpt": "Applying principles from classic Swiss design to component-based architectures. A look at grids, stark contrasts, and functional aesthetics.",
+      "url": "#"
+    },
+    {
+      "date": "2026-01-10",
+      "title": "Building Reliable Workflows",
+      "excerpt": "How to structure digital environments that adapt to creative processes rather than constraining them.",
+      "url": "#"
+    }
+  ]
+}
