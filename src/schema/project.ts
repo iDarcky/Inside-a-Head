@@ -46,6 +46,35 @@ export const project = {
       },
     },
     {
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      description: 'A short overview of the project for the homepage.',
+    },
+    {
+      name: 'device',
+      title: 'Device Frame',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Browser', value: 'browser' },
+          { title: 'iPhone', value: 'iphone' },
+        ],
+      },
+      initialValue: 'browser',
+    },
+    {
+      name: 'projectUrl',
+      title: 'External Project URL',
+      type: 'url',
+    },
+    {
+      name: 'themeHex',
+      title: 'Background Color (Hex)',
+      type: 'string',
+      description: 'e.g. #1a0f30 for deep purple, #121f1a for deep green, #300a0a for deep red.',
+    },
+    {
       name: 'body',
       title: 'Body',
       type: 'blockContent',

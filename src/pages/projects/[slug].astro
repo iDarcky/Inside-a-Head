@@ -16,9 +16,14 @@ const project = await sanityClient.fetch(`*[_type == "project" && slug.current =
 if (!project) {
   return Astro.redirect('/404');
 }
+
+// Fetch all projects to find the "Next" one
+const allProjects = await sanityClient.fetch(`*[_type == "project"] | order(year desc)`);
+const currentIndex = allProjects.findIndex((p: any) => p.slug.current === slug);
+const nextProject = allProjects[(currentIndex + 1) % allProjects.length];
 ---
 
-<MagazineLayout title={project.title}>
+<MagazineLayout title={project.title} backgroundColor={project.themeHex}>
   {project.heroImage && (
     <div class="project-hero-wrapper">
       <img src={urlFor(project.heroImage).url()} alt={project.title} class="project-hero-img" />
@@ -53,9 +58,9 @@ if (!project) {
     </section>
 
     <footer class="magazine-footer-nav">
-      <a href="/#top" class="footer-nav-link" data-hover style="text-align: right; width: 100%;">
-        <span class="nav-label">RETURN TO</span>
-        Studio
+      <a href={`/projects/${nextProject.slug.current}`} class="footer-nav-link" data-hover style="text-align: right; width: 100%;">
+        <span class="nav-label">NEXT PROJECT</span>
+        {nextProject.title}
       </a>
     </footer>
     <a href="/#top" class="footer-back-studio" data-hover>&larr; Back to Studio Index</a>

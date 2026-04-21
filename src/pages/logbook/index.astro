@@ -1,33 +1,93 @@
 ---
-import HomeLayout from '../../layouts/HomeLayout.astro';
+import MagazineLayout from '../../layouts/MagazineLayout.astro';
 import { sanityClient } from '../../utils/sanity';
 
 const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | order(publishedAt desc)`);
 ---
 
-<HomeLayout title="Logbook | Inside a Head">
-  <section class="hero-immersive section-snap" style="min-height: 50vh; display: flex; align-items: center; justify-content: center; text-align: center;">
-    <div>
-      <h1 class="hero-massive-text" style="font-size: clamp(3rem, 10vw, 8rem);">FULL LOGBOOK</h1>
-      <p class="hero-copy centered-text" style="margin-top: 2rem;">Every thought, fragment, and build note documented in the studio.</p>
-    </div>
-  </section>
+<MagazineLayout title="Logbook">
+  <main class="article-layout" style="padding-top: 30vh;">
+    <header class="article-header" style="margin-bottom: 5rem;">
+      <h1 class="article-title">STUDIO LOG</h1>
+      <p style="color: var(--accents-5); font-family: var(--font-mono); font-size: 0.9rem; margin-top: 1rem;">
+        CHRONOLOGICAL FRAGMENTS & DOCUMENTATION
+      </p>
+    </header>
 
-  <section class="logbook-cinematic section-snap" id="logbook" style="padding-top: 0;">
-    <div id="logbook-list" class="logbook-list">
+    <div class="log-archive">
       {logbookEntries.map((entry: any) => (
-        <a href={`/logbook/${entry.slug.current}`} class="logbook-item" data-hover>
-          <span class="logbook-date">{new Date(entry.publishedAt).toLocaleDateString()}</span>
-          <span class="logbook-title">{entry.title}</span>
+        <a href={`/logbook/${entry.slug.current}`} class="log-row" data-hover>
+          <span class="log-date">{new Date(entry.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' })}</span>
+          <span class="log-separator"></span>
+          <span class="log-title">{entry.title}</span>
         </a>
       ))}
       
       {logbookEntries.length === 0 && (
-        <p style="text-align: center; color: var(--accents-5); margin-top: 4rem;">No entries published yet. Head to the Studio to write something!</p>
+        <p style="text-align: center; color: var(--accents-4); padding: 4rem 0; border-top: 1px solid var(--accents-2);">
+          The log is currently empty.
+        </p>
       )}
     </div>
-    <div class="logbook-footer" style="margin-top: 8vw; text-align: center;">
-      <a href="/" class="button button-massive" data-hover style="padding: 16px 32px; font-size: 1rem;">&larr; Back to Studio Home</a>
-    </div>
-  </section>
-</HomeLayout>
+
+    <footer style="margin-top: 10rem; border-top: 1px solid var(--accents-2); padding-top: 2rem;">
+      <a href="/" class="app-view-link" data-hover style="width: fit-content; border: none;">
+        ← Back to Studio
+      </a>
+    </footer>
+  </main>
+</MagazineLayout>
+
+<style>
+  .log-archive {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--accents-2);
+  }
+  .log-row {
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--accents-1);
+    text-decoration: none;
+    color: var(--geist-foreground);
+    transition: all 0.3s ease;
+  }
+  .log-row:hover {
+    padding-left: 1rem;
+    background: rgba(255,255,255,0.02);
+  }
+  .log-date {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accents-4);
+    min-width: 120px;
+    text-transform: uppercase;
+  }
+  .log-separator {
+    flex-grow: 1;
+    height: 1px;
+    background: var(--accents-2);
+    margin: 0 2rem;
+    opacity: 0.3;
+  }
+  .log-title {
+    font-size: 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+  }
+  @media (max-width: 768px) {
+    .log-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .log-separator {
+      display: none;
+    }
+    .log-title {
+      font-size: 1.2rem;
+    }
+  }
+</style>
