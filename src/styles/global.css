@@ -2178,36 +2178,20 @@ body.magazine-layout {
   opacity: 0.5;
 }
 
-/* =========================================
-   STICKY FOOTER & LAYOUT FIXES
-   ========================================= */
-
-.page-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-content {
-  flex: 1 0 auto;
-}
-
-.flex-footer {
-  flex-shrink: 0;
-}
-
-/* Ensure the footer doesn't force 100vh on sub-pages */
-.magazine-layout .footer-massive {
-  height: auto !important;
-  min-height: auto !important;
-  padding-top: 60px;
-  padding-bottom: 20px;
-}
-
-/* Re-adjusting the editorial article layout for better balance */
-.magazine-layout .article-layout {
-  padding-top: 140px;
-  padding-bottom: 40px;
-  flex: 1;
+@media (max-width: 768px) {
+  .project-header .header-inner {
+    padding: 16px;
+  }
+  .project-header .nav-links {
+    display: none;
+  }
+  .project-hero-wrapper {
+    height: 30vh;
+    max-height: 250px;
+    margin-bottom: 2vh;
+  }
+  .article-layout {
+    padding-top: 24px;
+  }
 }
 

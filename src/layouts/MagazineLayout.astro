@@ -68,13 +68,9 @@ const { title, backgroundColor } = Astro.props;
     </div>
 
     <!-- The actual content injected here -->
-    <main class="flex-content">
-      <slot />
-    </main>
+    <slot />
     
-    <div class="flex-footer">
-      <Footer />
-    </div>
+    <Footer />
 
     <script is:inline src="/project.js"></script>
   </body>
