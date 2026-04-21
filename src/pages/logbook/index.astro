@@ -1,0 +1,33 @@
+---
+import HomeLayout from '../../layouts/HomeLayout.astro';
+import { sanityClient } from '../../utils/sanity';
+
+const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | order(publishedAt desc)`);
+---
+
+<HomeLayout title="Logbook | Inside a Head">
+  <section class="hero-immersive section-snap" style="min-height: 50vh; display: flex; align-items: center; justify-content: center; text-align: center;">
+    <div>
+      <h1 class="hero-massive-text" style="font-size: clamp(3rem, 10vw, 8rem);">FULL LOGBOOK</h1>
+      <p class="hero-copy centered-text" style="margin-top: 2rem;">Every thought, fragment, and build note documented in the studio.</p>
+    </div>
+  </section>
+
+  <section class="logbook-cinematic section-snap" id="logbook" style="padding-top: 0;">
+    <div id="logbook-list" class="logbook-list">
+      {logbookEntries.map((entry: any) => (
+        <a href={`/logbook/${entry.slug.current}`} class="logbook-item" data-hover>
+          <span class="logbook-date">{new Date(entry.publishedAt).toLocaleDateString()}</span>
+          <span class="logbook-title">{entry.title}</span>
+        </a>
+      ))}
+      
+      {logbookEntries.length === 0 && (
+        <p style="text-align: center; color: var(--accents-5); margin-top: 4rem;">No entries published yet. Head to the Studio to write something!</p>
+      )}
+    </div>
+    <div class="logbook-footer" style="margin-top: 8vw; text-align: center;">
+      <a href="/" class="button button-massive" data-hover style="padding: 16px 32px; font-size: 1rem;">&larr; Back to Studio Home</a>
+    </div>
+  </section>
+</HomeLayout>
