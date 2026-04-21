@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 2. Custom Cursor
   const cursor = document.querySelector('.custom-cursor');
-  if (cursor && !window.matchMedia("(pointer: coarse)").matches) {
+  if (cursor) {
     let xTo = gsap.quickTo(cursor, "left", {duration: 0.1, ease: "power3"});
     let yTo = gsap.quickTo(cursor, "top", {duration: 0.1, ease: "power3"});
 

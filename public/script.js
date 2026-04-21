@@ -492,30 +492,4 @@ function initKineticEngine() {
     }
   }
 
-  // --- Manifesto Overlay Logic ---
-  const manifestoBtn = document.getElementById('manifesto-btn');
-  const manifestoOverlay = document.getElementById('manifesto-overlay');
-  const manifestoClose = document.getElementById('manifesto-close');
-
-  if (manifestoBtn && manifestoOverlay && manifestoClose) {
-    manifestoBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      manifestoOverlay.classList.add('active');
-      document.body.style.overflow = 'hidden'; // Prevent background scrolling
-    });
-
-    manifestoClose.addEventListener('click', () => {
-      manifestoOverlay.classList.remove('active');
-      document.body.style.overflow = ''; 
-    });
-
-    // Close on escape key
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && manifestoOverlay.classList.contains('active')) {
-        manifestoOverlay.classList.remove('active');
-        document.body.style.overflow = '';
-      }
-    });
-  }
-
 }

@@ -21,9 +21,19 @@ if (!project) {
 const allProjects = await sanityClient.fetch(`*[_type == "project"] | order(year desc)`);
 const currentIndex = allProjects.findIndex((p: any) => p.slug.current === slug);
 const nextProject = allProjects[(currentIndex + 1) % allProjects.length];
+
+const colors = ['#1a0f30', '#121f1a', '#300a0a'];
+const projectColors: Record<string, string> = {
+  'the-retro-circuit': '#1a0f30',
+  'setlists-md': '#121f1a',
+  'setlist-md': '#121f1a', // Fallback for either slug spelling
+  'redline-running': '#300a0a'
+};
+
+const projectBgColor = project.themeHex || projectColors[project.slug.current] || colors[currentIndex % colors.length];
 ---
 
-<MagazineLayout title={project.title} backgroundColor={project.themeHex}>
+<MagazineLayout title={project.title} backgroundColor={projectBgColor}>
   {project.heroImage && (
     <div class="project-hero-wrapper">
       <img src={urlFor(project.heroImage).url()} alt={project.title} class="project-hero-img" />

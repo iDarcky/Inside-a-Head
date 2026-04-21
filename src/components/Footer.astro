@@ -1,0 +1,82 @@
+---
+// src/components/Footer.astro
+
+interface Props {
+  className?: string;
+  variant?: 'massive' | 'minimal';
+}
+
+const { className = "", variant = "minimal" } = Astro.props;
+---
+
+<footer class={`footer-massive ${className}`} id="social">
+  {variant === 'massive' && (
+    <div class="footer-huge-links">
+      <a href="#" id="manifesto-btn" data-hover>MANIFESTO</a>
+      <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
+      <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
+      <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
+      <a href="#" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
+    </div>
+  )}
+  <div class="footer-bottom-meta" style={variant === 'minimal' ? "border-top: none; padding-top: 1rem; padding-bottom: 2rem;" : ""}>
+    <p>© 2026 INSIDE A HEAD STUDIO.</p>
+    <a href="#top" class="back-to-top" data-hover>BACK TO TOP ↑</a>
+  </div>
+</footer>
+
+<!-- Manifesto Overlay -->
+<div class="manifesto-overlay" id="manifesto-overlay">
+  <div class="manifesto-content">
+    <button class="manifesto-close" id="manifesto-close" aria-label="Close manifesto">
+      <i data-lucide="x" style="width: 32px; height: 32px;"></i>
+    </button>
+    <span class="manifesto-kicker">THE NORTH STAR</span>
+    <h2 class="manifesto-title">IDEAS AND MESSY.</h2>
+    <div class="manifesto-body">
+      <p>This is not a portfolio. A portfolio is static. This is an active studio—a living organism where idealism meets execution.</p>
+      <p>We embrace the tension between the structured architecture of a design system and the chaotic beauty of raw creativity. Behind every pristine user interface is a "Museum of Mess"—abandoned hobbies, wild ideas, and the vulnerable human side of creation.</p>
+      <p>There is always a way to succeed. But you have to start building.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // We use standard <script> tags to run client-side JS bundled by Astro
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check if the manifesto logic has already been bound
+    if (window.manifestoBound) return;
+    window.manifestoBound = true;
+
+    const manifestoBtn = document.getElementById('manifesto-btn');
+    const manifestoOverlay = document.getElementById('manifesto-overlay');
+    const manifestoClose = document.getElementById('manifesto-close');
+
+    if (manifestoBtn && manifestoOverlay && manifestoClose) {
+      manifestoBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        manifestoOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      });
+
+      manifestoClose.addEventListener('click', () => {
+        manifestoOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+
+      manifestoOverlay.addEventListener('click', (e) => {
+        if (e.target === manifestoOverlay) {
+          manifestoOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && manifestoOverlay.classList.contains('active')) {
+          manifestoOverlay.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+    }
+  });
+</script>

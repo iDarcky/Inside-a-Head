@@ -6,7 +6,10 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
 ---
 
 <MagazineLayout title="Logbook">
-  <main class="article-layout" style="padding-top: 30vh;">
+  <main class="article-layout" style="padding-bottom: 10vh;">
+    <!-- Explicit spacer to clear the fixed Magazine header completely -->
+    <div style="height: 180px; width: 100%;"></div>
+
     <header class="article-header" style="margin-bottom: 5rem;">
       <h1 class="article-title">STUDIO LOG</h1>
       <p style="color: var(--accents-5); font-family: var(--font-mono); font-size: 0.9rem; margin-top: 1rem;">
@@ -14,80 +17,29 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
       </p>
     </header>
 
-    <div class="log-archive">
-      {logbookEntries.map((entry: any) => (
-        <a href={`/logbook/${entry.slug.current}`} class="log-row" data-hover>
-          <span class="log-date">{new Date(entry.publishedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: '2-digit' })}</span>
-          <span class="log-separator"></span>
-          <span class="log-title">{entry.title}</span>
-        </a>
-      ))}
+    <div class="logbook-list" style="border-top: 1px solid var(--geist-border);">
+      {logbookEntries.map((entry: any) => {
+        const dateStr = new Date(entry.publishedAt).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+        return (
+          <a href={`/logbook/${entry.slug.current}`} class="logbook-entry" data-hover>
+            <div class="logbook-date">{dateStr}</div>
+            <div class="logbook-content">
+              <h3 class="logbook-title-parallax">{entry.title}</h3>
+            </div>
+          </a>
+        );
+      })}
       
       {logbookEntries.length === 0 && (
-        <p style="text-align: center; color: var(--accents-4); padding: 4rem 0; border-top: 1px solid var(--accents-2);">
+        <p style="text-align: center; color: var(--accents-4); padding: 4rem 0;">
           The log is currently empty.
         </p>
       )}
     </div>
 
-    <footer style="margin-top: 10rem; border-top: 1px solid var(--accents-2); padding-top: 2rem;">
-      <a href="/" class="app-view-link" data-hover style="width: fit-content; border: none;">
-        ← Back to Studio
-      </a>
-    </footer>
+    <!-- Centered inline-block link prevents the cursor bounding box from stretching full width -->
+    <div style="text-align: center; margin-top: 15vh;">
+      <a href="/#top" class="footer-back-studio" data-hover style="display: inline-block; margin-top: 0; margin-bottom: 0;">&larr; Back to Studio</a>
+    </div>
   </main>
 </MagazineLayout>
-
-<style>
-  .log-archive {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--accents-2);
-  }
-  .log-row {
-    display: flex;
-    align-items: center;
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--accents-1);
-    text-decoration: none;
-    color: var(--geist-foreground);
-    transition: all 0.3s ease;
-  }
-  .log-row:hover {
-    padding-left: 1rem;
-    background: rgba(255,255,255,0.02);
-  }
-  .log-date {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--accents-4);
-    min-width: 120px;
-    text-transform: uppercase;
-  }
-  .log-separator {
-    flex-grow: 1;
-    height: 1px;
-    background: var(--accents-2);
-    margin: 0 2rem;
-    opacity: 0.3;
-  }
-  .log-title {
-    font-size: 1.5rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: -0.02em;
-  }
-  @media (max-width: 768px) {
-    .log-row {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
-    .log-separator {
-      display: none;
-    }
-    .log-title {
-      font-size: 1.2rem;
-    }
-  }
-</style>

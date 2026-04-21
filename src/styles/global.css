@@ -1974,7 +1974,7 @@ body.magazine-layout {
 .article-layout {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 5vh 5vw;
+  padding: 12vh 5vw 15vh;
 }
 
 .article-header {
@@ -1992,16 +1992,16 @@ body.magazine-layout {
 .article-meta-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
-  border-top: 1px solid rgba(255,255,255,0.2);
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  padding: 24px 0;
-  margin-bottom: 40px;
+  gap: 60px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 32px 0;
+  margin-bottom: 60px;
   font-family: 'Geist Mono', monospace;
-  font-size: 0.875rem;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--accents-6);
+  letter-spacing: 0.2em;
+  color: var(--accents-5);
 }
 
 .meta-item {
@@ -2074,9 +2074,9 @@ body.magazine-layout {
 }
 
 .magazine-footer-nav {
-  margin-top: 10vh;
+  margin-top: 15vh;
   border-top: 1px solid var(--geist-border);
-  padding: 5vh 0;
+  padding: 8vh 0;
   display: flex;
   justify-content: space-between;
   align-items: center;

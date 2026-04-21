@@ -1,5 +1,6 @@
 ---
 import HomeLayout from '../layouts/HomeLayout.astro';
+import Footer from '../components/Footer.astro';
 import { sanityClient } from '../utils/sanity';
 
 const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | order(publishedAt desc)`);
@@ -144,17 +145,5 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
     </div>
   </section>
 
-  <footer class="footer-massive section-snap" id="social">
-    <div class="footer-huge-links">
-      <a href="#" id="manifesto-btn" data-hover>MANIFESTO</a>
-      <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
-      <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
-      <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
-      <a href="#" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
-    </div>
-    <div class="footer-bottom-meta">
-      <p>© 2026 INSIDE A HEAD STUDIO.</p>
-      <a href="#top" class="back-to-top" data-hover>BACK TO TOP ↑</a>
-    </div>
-  </footer>
+  <Footer className="section-snap" variant="massive" />
 </HomeLayout>
