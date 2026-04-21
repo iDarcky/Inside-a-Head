@@ -45,18 +45,6 @@ body {
 }
 
 /* Page Layout Wrappers */
-.page-wrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-.flex-content {
-  flex: 1 0 auto;
-}
-.flex-footer {
-  flex-shrink: 0;
-}
-
 
 a, button, [data-hover], ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
   cursor: none !important;
@@ -1491,7 +1479,7 @@ body {
   padding: 0;
 }
 
-.snap-container {
+.layout, main.snap-container, main {
   display: contents;
 }
 
