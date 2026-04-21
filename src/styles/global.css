@@ -44,6 +44,19 @@ body {
   cursor: none !important; /* Hide default cursor globally */
 }
 
+/* Page Layout Wrappers */
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.flex-content {
+  flex: 1 0 auto;
+}
+.flex-footer {
+  flex-shrink: 0;
+}
+
 
 a, button, [data-hover], ::-webkit-scrollbar, ::-webkit-scrollbar-track, ::-webkit-scrollbar-thumb {
   cursor: none !important;
@@ -1478,7 +1491,7 @@ body {
   padding: 0;
 }
 
-.layout, main.snap-container, main {
+.snap-container {
   display: contents;
 }
 
@@ -1974,7 +1987,7 @@ body.magazine-layout {
 .article-layout {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 12vh 5vw 15vh;
+  padding: 80px 5vw 40px;
 }
 
 .article-header {
@@ -2074,9 +2087,9 @@ body.magazine-layout {
 }
 
 .magazine-footer-nav {
-  margin-top: 15vh;
+  margin-top: 60px;
   border-top: 1px solid var(--geist-border);
-  padding: 8vh 0;
+  padding: 40px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -2165,19 +2178,36 @@ body.magazine-layout {
   opacity: 0.5;
 }
 
-@media (max-width: 768px) {
-  .project-header .header-inner {
-    padding: 16px;
-  }
-  .project-header .nav-links {
-    display: none;
-  }
-  .project-hero-wrapper {
-    height: 30vh;
-    max-height: 250px;
-    margin-bottom: 2vh;
-  }
-  .article-layout {
-    padding-top: 24px;
-  }
+/* =========================================
+   STICKY FOOTER & LAYOUT FIXES
+   ========================================= */
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
+
+.flex-content {
+  flex: 1 0 auto;
+}
+
+.flex-footer {
+  flex-shrink: 0;
+}
+
+/* Ensure the footer doesn't force 100vh on sub-pages */
+.magazine-layout .footer-massive {
+  height: auto !important;
+  min-height: auto !important;
+  padding-top: 60px;
+  padding-bottom: 20px;
+}
+
+/* Re-adjusting the editorial article layout for better balance */
+.magazine-layout .article-layout {
+  padding-top: 140px;
+  padding-bottom: 40px;
+  flex: 1;
+}
+
