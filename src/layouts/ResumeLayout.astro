@@ -27,7 +27,9 @@ const { title, backgroundColor } = Astro.props;
     <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     <style>
       .resume-header {
-        position: relative !important;
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 2005 !important;
         background: var(--background) !important;
         border-bottom: 1px solid var(--accents-2) !important;
         backdrop-filter: none !important;
