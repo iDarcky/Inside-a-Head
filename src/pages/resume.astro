@@ -1,0 +1,380 @@
+---
+import MagazineLayout from '../layouts/MagazineLayout.astro';
+---
+
+<MagazineLayout title="Resume | Daniel N. Maghiș">
+  <style>
+    .resume-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 120px 1.5rem 8rem 1.5rem;
+    }
+
+    .hero-section {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .hero-section h1 {
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      margin-bottom: 0.5rem;
+      line-height: 1.1;
+    }
+
+    .hero-section h2 {
+      font-size: 1.25rem;
+      color: var(--accents-5);
+      font-weight: 400;
+      margin-bottom: 2rem;
+    }
+
+    .hero-section p {
+      max-width: 600px;
+      margin: 0 auto 2.5rem auto;
+      color: var(--accents-6);
+      line-height: 1.6;
+    }
+
+    .contact-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .contact-links a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 600;
+      color: var(--foreground);
+      text-decoration: none;
+      font-size: 0.875rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+
+    .contact-links a:hover {
+      color: var(--accents-5);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.875rem;
+      color: var(--accents-5);
+    }
+
+    .social-links a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .social-links a:hover {
+      color: var(--foreground);
+    }
+
+    .resume-section {
+      margin-bottom: 5rem;
+    }
+
+    .resume-section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--accents-2);
+      padding-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .resume-item {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    @media (min-width: 768px) {
+      .resume-item {
+        grid-template-columns: 200px 1fr;
+        gap: 2rem;
+      }
+    }
+
+    .resume-date {
+      color: var(--accents-5);
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.9rem;
+      padding-top: 0.25rem;
+    }
+
+    .resume-content h4 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 0.5rem 0;
+      color: var(--foreground);
+    }
+
+    .resume-content .meta {
+      color: var(--foreground);
+      font-weight: 500;
+      margin: 0 0 1.25rem 0;
+      font-size: 1rem;
+    }
+
+    .resume-content .meta span {
+      color: var(--accents-5);
+      font-weight: 400;
+    }
+
+    .resume-content ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      color: var(--accents-6);
+      line-height: 1.6;
+    }
+
+    .resume-content li {
+      margin-bottom: 0.75rem;
+      display: flex;
+    }
+
+    .resume-content li::before {
+      content: "—";
+      color: var(--accents-4);
+      margin-right: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-family: 'Geist Mono', monospace;
+      padding: 0.25rem 0.5rem;
+      background: var(--accents-1);
+      border: 1px solid var(--accents-2);
+      border-radius: 4px;
+      color: var(--foreground);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    @media (min-width: 768px) {
+      .skills-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+      }
+    }
+
+    .skill-category h4 {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accents-5);
+      margin-bottom: 0.75rem;
+    }
+
+    .skill-category p, .skill-category ul {
+      line-height: 1.6;
+      color: var(--foreground);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .skill-category ul li {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--accents-1);
+      padding-bottom: 0.25rem;
+    }
+
+    .skill-category ul li span.cert-org {
+      color: var(--accents-5);
+    }
+  </style>
+
+  <main>
+    <div class="resume-container">
+
+      <!-- Hero Header -->
+      <section class="hero-section">
+        <h1>Daniel N. Maghiș</h1>
+        <h2>Product Manager</h2>
+        <p>
+          Product Manager with 4+ years of enterprise SaaS experience. At ATOSS Software AG I drove product discovery, roadmapping, and cross-functional delivery for workforce management solutions. Also shipped a full-stack personal project (The Retro Circuit) from zero to MVP in 3 months as sole PM.
+        </p>
+
+        <div class="contact-links">
+          <a href="mailto:maghisdaniel@gmail.com">
+            <i data-lucide="mail" style="width: 18px; height: 18px;"></i> Email Me
+          </a>
+          <a href="/daniel-n-maghis-resume.pdf" target="_blank" rel="noopener noreferrer">
+            <i data-lucide="download" style="width: 18px; height: 18px;"></i> Download Resume
+          </a>
+        </div>
+
+        <div class="social-links">
+          <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer">LinkedIn</a>
+          <span>&bull;</span>
+          <span>Timișoara</span>
+          <span>&bull;</span>
+          <span>0735646723</span>
+        </div>
+      </section>
+
+      <!-- Professional Journey -->
+      <section class="resume-section">
+        <h3 class="resume-section-title">Professional Journey</h3>
+
+        <div class="resume-item">
+          <div class="resume-date">05/2021 – 01/2025</div>
+          <div class="resume-content">
+            <h4>Junior Technical Product Manager</h4>
+            <p class="meta">ATOSS Software AG <span>&bull; Timișoara &bull; Full-time</span></p>
+            <ul>
+              <li>Owned end-to-end product lifecycle for enterprise workforce management features across 5+ major releases.</li>
+              <li>Partnered with engineering and UX to define specs and acceptance criteria, reducing story-cycle time.</li>
+              <li>Built and maintained roadmaps in Jira/Confluence, aligning engineering, sales, and customer success priorities.</li>
+              <li>Ran user interviews and requirement workshops with enterprise clients, translating insights into actionable epics.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="resume-item">
+          <div class="resume-date">01/2016 – 01/2018</div>
+          <div class="resume-content">
+            <h4>Assistant Manager</h4>
+            <p class="meta">Scripture Union Romania <span>&bull; Timișoara &bull; Part-time</span></p>
+            <ul>
+              <li>Led cross-functional volunteer teams of 20+ people across social and educational programs for 100+ youth.</li>
+              <li>Organized 3 international youth camps per year, owning full logistics and stakeholder communication.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section class="resume-section">
+        <h3 class="resume-section-title">Projects</h3>
+
+        <div class="resume-item">
+          <div class="resume-date">2024</div>
+          <div class="resume-content">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 0.5rem;">
+              <h4 style="margin: 0;">The Retro Circuit</h4>
+              <a href="https://theretrocircuit.com/" target="_blank" rel="noreferrer" style="font-family: 'Geist Mono', monospace; font-size: 0.85rem; color: var(--accents-5); text-decoration: none; display: flex; align-items: center; gap: 4px;">
+                theretrocircuit.com <i data-lucide="external-link" style="width: 12px; height: 12px;"></i>
+              </a>
+            </div>
+            <p class="meta">Founder & Sole Developer</p>
+            <ul>
+              <li>Identified market fragmentation in retro gaming hardware: consumers lacked a reliable way to compare complex device variants. Designed and shipped a specialized comparison engine from zero to MVP in 3 months.</li>
+              <li>Leveraged Google AI Studio as an engineering counterpart — writing precise specs, defining architecture constraints, and managing a CI/CD pipeline (Next.js 16, Supabase/PostgreSQL, Vercel) without writing code natively.</li>
+              <li>Architected a relational data schema (Manufacturers → Consoles → Variants) to eliminate 'signal noise' — enabling SKU-level comparisons rather than generic product aggregations.</li>
+              <li>Built a restricted Admin Command Center with RBAC and validation rules, enabling non-technical content management and scaling the product catalog without database intervention.</li>
+            </ul>
+            <div class="tags">
+              {['Next.js', 'Supabase', 'SQL', 'Resend', 'Jira'].map(tech => (
+                <span class="tag">{tech}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="resume-section">
+        <h3 class="resume-section-title">Education</h3>
+
+        <div class="resume-item">
+          <div class="resume-date">2019 – 2021</div>
+          <div class="resume-content">
+            <h4>Master of Business Management</h4>
+            <p class="meta">Universitatea de Vest Timișoara</p>
+          </div>
+        </div>
+
+        <div class="resume-item">
+          <div class="resume-date">2016 – 2019</div>
+          <div class="resume-content">
+            <h4>Bachelor of Business Management</h4>
+            <p class="meta">Universitatea de Vest Timișoara</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Professional Skillset -->
+      <section class="resume-section">
+        <h3 class="resume-section-title">Professional Skillset</h3>
+
+        <div class="skills-grid">
+
+          <!-- Skills column -->
+          <div style="display: flex; flex-direction: column; gap: 2rem;">
+            <div class="skill-category">
+              <h4>Product</h4>
+              <p>Roadmapping, Product Discovery, User Story Writing, OKRs, A/B Testing, Agile/Scrum, Zero-to-One Delivery</p>
+            </div>
+            <div class="skill-category">
+              <h4>Technical</h4>
+              <p>AI-Assisted Development, Relational DB Modeling, Architecture Strategy, Next.js / React, Supabase, Vercel</p>
+            </div>
+            <div class="skill-category">
+              <h4>Languages</h4>
+              <p>Romanian (Native), English (Fluent), German (Basic)</p>
+            </div>
+          </div>
+
+          <!-- Certifications & Volunteering column -->
+          <div style="display: flex; flex-direction: column; gap: 2.5rem;">
+            <div class="skill-category">
+              <h4>Certifications</h4>
+              <ul>
+                <li><strong>Product Strategy (PSC)</strong> <span class="cert-org">Product School</span></li>
+                <li><strong>Product Discovery</strong> <span class="cert-org">Product School</span></li>
+                <li><strong>Product Experimentation</strong> <span class="cert-org">Product School</span></li>
+                <li><strong>Product-Led Growth</strong> <span class="cert-org">Product School</span></li>
+              </ul>
+            </div>
+
+            <div class="skill-category">
+              <h4>Volunteering & Leadership</h4>
+              <div style="margin-bottom: 1.5rem;">
+                <p style="font-weight: 600; margin-bottom: 0.25rem;">BBPT</p>
+                <p style="color: var(--accents-5); font-size: 0.9rem; margin-bottom: 0.5rem;">Social Media Lead</p>
+                <p style="color: var(--accents-6); font-size: 0.95rem;">Led social media strategy (Facebook/Instagram) and implemented software for media production and lyric projection.</p>
+              </div>
+              <div>
+                <p style="font-weight: 600; margin-bottom: 0.25rem;">Scripture Union</p>
+                <p style="color: var(--accents-5); font-size: 0.9rem; margin-bottom: 0.5rem;">Team Leader & Coordinator</p>
+                <p style="color: var(--accents-6); font-size: 0.95rem;">Recruited and led 20+ volunteers; coordinated international camps, youth programs, and NGO outreach initiatives.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+</MagazineLayout>
