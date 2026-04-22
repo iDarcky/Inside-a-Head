@@ -8,7 +8,6 @@ import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  output: 'hybrid',
   integrations: [
     sanity({
       projectId: "gwlcf911",
