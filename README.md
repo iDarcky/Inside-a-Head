@@ -1,43 +1,28 @@
-# Astro Starter Kit: Minimal
+# Inside a Head 🧠
+**The Digital Studio of Daniel.**
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Welcome to the internal blueprint of my personal studio. This repository houses the code, design systems, and logbooks that power the "Inside a Head" ecosystem—a space dedicated to exploring the intersection of software, aesthetic design, and building in public.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🏗️ The Vision
+**Inside a Head** isn't just a portfolio. It’s an ongoing experiment in digital product development. It’s a studio where I build tools like *Setlists MD*, explore retro gaming hardware, and document everything along the way.
 
-## 🚀 Project Structure
+## 🛠️ The Philosophy
+- **Aesthetic First:** If it doesn't feel right, it doesn't exist. We lean heavily on high-fidelity designs, custom GSAP animations, and Swiss industrial design principles.
+- **Build in Public:** Every mistake, iteration, and breakthrough is documented in the **Logbook**.
+- **Vibe-Coded:** Technical dogma takes a backseat to the ultimate result: how the space feels.
 
-Inside of your Astro project, you'll see the following folders and files:
+## 📓 The Logbook
+The logbook is a bit of everything. It's a continuous stream of thoughts, experiments, and daily builds—updated organically. It exists to document the human side of the journey, not just the polished destination. Keep an eye out for weekly updates.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## 🌱 Future Trajectory
+**Inside a Head** is designed as a living organism. The North Star? To evolve from a personal digital garden into a collaborative agency that helps creators, builders, and dreamers bring their ideas to life through design, marketing, and management.
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+---
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## 🤝 Let's Connect
+"There are a lot of ideas out there, but you should actually start building."
 
-Any static assets, like images, can be placed in the `public/` directory.
+Did this space spark an idea? Are you intrigued by the mess? 
+**Let's connect and ideate together.**
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+[GitHub](https://github.com/iDarcky) | [LinkedIn](https://www.linkedin.com/in/danielnmaghis/)

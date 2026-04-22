@@ -10,7 +10,28 @@ export default defineConfig({
   dataset: 'production',
   basePath: '/studio',
 
-  plugins: [structureTool()],
+  plugins: [
+    structureTool({
+      structure: (S) =>
+        S.list()
+          .title('Content')
+          .items([
+            // Singleton for Site Settings
+            S.listItem()
+              .title('Site Settings')
+              .child(
+                S.document()
+                  .schemaType('siteSettings')
+                  .documentId('siteSettings')
+              ),
+            S.divider(),
+            // Regular document types
+            ...S.documentTypeListItems().filter(
+              (listItem: any) => !['siteSettings'].includes(listItem.getId())
+            ),
+          ]),
+    }),
+  ],
 
   schema: {
     types: schemaTypes,

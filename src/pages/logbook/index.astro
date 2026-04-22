@@ -3,9 +3,15 @@ export const prerender = false;
 import MagazineLayout from "../../layouts/MagazineLayout.astro";
 import { sanityClient } from "../../utils/sanity";
 
-const logbookEntries = await sanityClient.fetch(
-  `*[_type == "logbookEntry"] | order(publishedAt desc)`,
-);
+let logbookEntries = [];
+
+try {
+  logbookEntries = await sanityClient.fetch(
+    `*[_type == "logbookEntry"] | order(publishedAt desc)`,
+  );
+} catch (error) {
+  console.error("Failed to fetch logbook entries:", error);
+}
 ---
 
 <MagazineLayout title="Logbook">

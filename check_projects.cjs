@@ -7,8 +7,8 @@ const client = createClient({
   apiVersion: '2024-04-20',
 });
 
-client.fetch('*[_type == "logbookEntry"]').then(res => {
-  console.log('COUNT:', res.length);
+client.fetch('*[_type == "project"]{title, description, slug}').then(res => {
+  console.log('PROJECTS:', JSON.stringify(res, null, 2));
   process.exit(0);
 }).catch(err => {
   console.error(err);

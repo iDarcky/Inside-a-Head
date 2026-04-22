@@ -2,12 +2,30 @@
 export const prerender = false;
 import HomeLayout from '../layouts/HomeLayout.astro';
 import Footer from '../components/Footer.astro';
+import ProjectPanel from '../components/ProjectPanel.astro';
+import ReadingTile from '../components/ReadingTile.astro';
 import { sanityClient } from '../utils/sanity';
 
-const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | order(publishedAt desc) [0..2]`);
+let logbookEntries = [];
+let projects = [];
+let siteSettings = null;
+
+try {
+  [logbookEntries, projects, siteSettings] = await Promise.all([
+    sanityClient.fetch(`*[_type == "logbookEntry"] | order(publishedAt desc) [0..2]`),
+    sanityClient.fetch(`*[_type == "project"] | order(order asc)`),
+    sanityClient.fetch(`*[_type == "siteSettings"][0]`)
+  ]);
+} catch (error) {
+  console.error("Failed to fetch data from Sanity:", error);
+}
+
+const siteTitle = siteSettings?.siteTitle || "Inside a Head | Digital Studio";
+const siteDescription = siteSettings?.siteDescription || "The digital studio of Daniel. Product Manager, Musician, and Builder.";
+const bio = siteSettings?.bio || "hi, daniel here. welcome to inside a head. a personal studio for tech experiments and exploring aesthetic design. documenting the learning process, and making room for the personal mess.";
 ---
 
-<HomeLayout title="Inside a Head | Digital Studio">
+<HomeLayout title={siteTitle} description={siteDescription} projects={projects}>
   <section class="hero-immersive section-snap" id="top">
     <div class="hero-parallax-wrapper">
       <h1 id="hero-title" class="hero-massive-text">INSIDE A HEAD</h1>
@@ -22,7 +40,7 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
       </div>
 
       <p class="hero-copy centered-text" id="profile-bio">
-        hi, daniel here. welcome to inside a head. a personal studio for tech experiments and exploring aesthetic design. documenting the learning process, and making room for the personal mess.
+        {bio}
       </p>
     </div>
 
@@ -34,7 +52,9 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
     </div>
   </section>
 
-  <div id="studio-anchor"></div>
+  {projects.map((project: any, index: number) => (
+    <ProjectPanel project={project} index={index} />
+  ))}
 
   <!-- The Design System (The Engine Room) -->
   <section class="engine-room-section section-snap" id="design-system">
@@ -90,11 +110,8 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
           <div class="clock-location">BUCHAREST, RO</div>
         </div>
 
-        <!-- Tile: Extra -->
-        <!-- Removed empty placeholder -->
-
-        <!-- Tile: Book (Named Area: book) -->
-        <div class="bento-tile bento-reading" id="bento-reading"></div>
+        <!-- Tile: Reading Tile (SSR from Sanity) -->
+        <ReadingTile currentlyReading={siteSettings?.currentlyReading} />
 
         <!-- Tile: GitHub (Named Area: gh) -->
         <div class="bento-tile bento-github">

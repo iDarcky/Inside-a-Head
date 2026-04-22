@@ -5,16 +5,24 @@ import PortableText from '../../components/PortableText.astro';
 import { sanityClient, urlFor } from '../../utils/sanity';
 
 const { slug } = Astro.params;
-const project = await sanityClient.fetch(`*[_type == "project" && slug.current == $slug][0]`, { slug });
+let project = null;
+let allProjects = [];
+
+try {
+  [project, allProjects] = await Promise.all([
+    sanityClient.fetch(`*[_type == "project" && slug.current == $slug][0]`, { slug }),
+    sanityClient.fetch(`*[_type == "project"] | order(order asc)`)
+  ]);
+} catch (error) {
+  console.error("Failed to fetch project data:", error);
+}
 
 if (!project) {
   return Astro.redirect('/404');
 }
 
-// Fetch all projects to find the "Next" one
-const allProjects = await sanityClient.fetch(`*[_type == "project"] | order(year desc)`);
 const currentIndex = allProjects.findIndex((p: any) => p.slug.current === slug);
-const nextProject = allProjects[(currentIndex + 1) % allProjects.length];
+const nextProject = allProjects.length > 0 ? allProjects[(currentIndex + 1) % allProjects.length] : null;
 
 const colors = ['#1a0f30', '#121f1a', '#300a0a'];
 const projectColors: Record<string, string> = {
@@ -27,10 +35,10 @@ const projectColors: Record<string, string> = {
 const projectBgColor = project.themeHex || projectColors[project.slug.current] || colors[currentIndex % colors.length];
 ---
 
-<MagazineLayout title={project.title} backgroundColor={projectBgColor}>
-  {project.heroImage && (
+<MagazineLayout title={project.title} description={project.description} backgroundColor={projectBgColor}>
+  {project.pageHeroImage && (
     <div class="project-hero-wrapper">
-      <img src={urlFor(project.heroImage).url()} alt={project.title} class="project-hero-img" />
+      <img src={urlFor(project.pageHeroImage).url()} alt={project.title} class="project-hero-img" />
     </div>
   )}
 
@@ -61,12 +69,14 @@ const projectBgColor = project.themeHex || projectColors[project.slug.current] |
       {project.body ? <PortableText portableText={project.body} /> : <p>No content available.</p>}
     </section>
 
-    <footer class="magazine-footer-nav">
-      <a href={`/projects/${nextProject.slug.current}`} class="footer-nav-link" data-hover style="text-align: right; width: 100%;">
-        <span class="nav-label">NEXT PROJECT</span>
-        {nextProject.title}
-      </a>
-    </footer>
+    {nextProject && (
+      <footer class="magazine-footer-nav">
+        <a href={`/projects/${nextProject.slug.current}`} class="footer-nav-link" data-hover style="text-align: right; width: 100%;">
+          <span class="nav-label">NEXT PROJECT</span>
+          {nextProject.title}
+        </a>
+      </footer>
+    )}
     <a href="/#top" class="footer-back-studio" data-hover>&larr; Back to Studio Index</a>
   </article>
 </MagazineLayout>

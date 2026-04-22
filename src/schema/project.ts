@@ -4,6 +4,13 @@ export const project = {
   type: 'document',
   fields: [
     {
+      name: 'order',
+      title: 'Order',
+      type: 'number',
+      description: 'Used to sort projects on the homepage (e.g. 1, 2, 3).',
+      initialValue: 100,
+    },
+    {
       name: 'title',
       title: 'Title',
       type: 'string',
@@ -38,9 +45,19 @@ export const project = {
       type: 'string',
     },
     {
-      name: 'heroImage',
-      title: 'Hero Image',
+      name: 'homepageImage',
+      title: 'Homepage Stack Image',
       type: 'image',
+      description: 'The image shown inside the device frame on the homepage.',
+      options: {
+        hotspot: true,
+      },
+    },
+    {
+      name: 'pageHeroImage',
+      title: 'Project Page Hero',
+      type: 'image',
+      description: 'The massive parallax image at the top of the individual project page.',
       options: {
         hotspot: true,
       },

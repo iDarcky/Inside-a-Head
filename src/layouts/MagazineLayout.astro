@@ -1,15 +1,15 @@
 ---
-// src/layouts/MagazineLayout.astro
-
 import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
 import Footer from '../components/Footer.astro';
 
 interface Props {
   title: string;
   backgroundColor?: string;
+  description?: string;
 }
 
-const { title, backgroundColor } = Astro.props;
+const { title, backgroundColor, description = "Inside a Head - Project Detail" } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -17,17 +17,19 @@ const { title, backgroundColor } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
     <title>{title} | Inside a Head</title>
     
     <!-- Lucide Icons -->
-    <script is:inline src="https://unpkg.com/lucide@latest"></script>
+    <script is:inline src="https://unpkg.com/lucide@0.460.0"></script>
     
     <!-- GSAP & ScrollTrigger -->
     <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <ClientRouter />
   </head>
-  <body id="top" class="magazine-layout page-wrapper" style={backgroundColor ? `background-color: ${backgroundColor} !important;` : ''}>
-    <div class="custom-cursor"></div>
+  <body id="top" class="magazine-layout page-wrapper" data-project-bg={backgroundColor} style={backgroundColor ? `background-color: ${backgroundColor};` : ''}>
+    <div class="custom-cursor" transition:persist></div>
     
     <header class="project-header">
       <div class="header-inner">

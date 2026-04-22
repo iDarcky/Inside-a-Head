@@ -5,7 +5,13 @@ import PortableText from '../../components/PortableText.astro';
 import { sanityClient, urlFor } from '../../utils/sanity';
 
 const { slug } = Astro.params;
-const entry = await sanityClient.fetch(`*[_type == "logbookEntry" && slug.current == $slug][0]`, { slug });
+let entry = null;
+
+try {
+  entry = await sanityClient.fetch(`*[_type == "logbookEntry" && slug.current == $slug][0]`, { slug });
+} catch (error) {
+  console.error("Failed to fetch logbook entry:", error);
+}
 
 if (!entry) {
   return Astro.redirect('/404');

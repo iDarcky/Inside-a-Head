@@ -1,13 +1,31 @@
-document.addEventListener("DOMContentLoaded", () => {
-  lucide.createIcons();
-  
-  if (typeof gsap === 'undefined') return;
-  gsap.registerPlugin(ScrollTrigger);
+// public/project.js
+// Magazine layout scripts (Stable Version)
 
-  // 1. Reading Progress Bar
-  const progressBar = document.createElement('div');
-  progressBar.className = 'reading-progress';
-  document.body.appendChild(progressBar);
+function initProject() {
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+  if (typeof gsap === 'undefined') return;
+  
+  // Clean up existing triggers
+  ScrollTrigger.getAll().forEach(t => t.kill());
+  
+  if (!gsap.plugins.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+  }
+
+  // Ensure body background is correct
+  const projectBg = document.body.getAttribute('data-project-bg');
+  if (projectBg) {
+    gsap.to('body', { backgroundColor: projectBg, duration: 0.8, ease: "power2.out" });
+  }
+
+  let progressBar = document.querySelector('.reading-progress');
+  if (!progressBar) {
+    progressBar = document.createElement('div');
+    progressBar.className = 'reading-progress';
+    document.body.appendChild(progressBar);
+  }
+  
+  gsap.set(progressBar, { width: 0, opacity: 1, y: 0 }); // Reset for new page
   
   gsap.to(progressBar, {
     width: "100%",
@@ -20,31 +38,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 2. Custom Cursor
   const cursor = document.querySelector('.custom-cursor');
   if (cursor) {
-    let xTo = gsap.quickTo(cursor, "left", {duration: 0.1, ease: "power3"});
-    let yTo = gsap.quickTo(cursor, "top", {duration: 0.1, ease: "power3"});
+    if (window._cursorMove) {
+      window.removeEventListener("mousemove", window._cursorMove);
+    }
 
-    window.addEventListener("mousemove", (e) => {
+    const xTo = gsap.quickTo(cursor, "left", {duration: 0.1, ease: "power3"});
+    const yTo = gsap.quickTo(cursor, "top", {duration: 0.1, ease: "power3"});
+
+    let hasMoved = false;
+    window._cursorMove = (e) => {
+      if (!hasMoved) {
+        gsap.set(cursor, { opacity: 1 });
+        hasMoved = true;
+      }
       xTo(e.clientX);
       yTo(e.clientY);
-    });
+    };
+
+    window.addEventListener("mousemove", window._cursorMove);
 
     const hoverElements = document.querySelectorAll('[data-hover], a, button');
     hoverElements.forEach(el => {
       el.addEventListener('mouseenter', () => cursor.classList.add('active'));
       el.addEventListener('mouseleave', () => cursor.classList.remove('active'));
     });
-
-
   }
 
-  // 3. Parallax Hero Image
   const heroImg = document.querySelector('.project-hero-img');
   if (heroImg) {
     gsap.to(heroImg, {
-      yPercent: 30, // Move slower than scroll
+      yPercent: 30,
       ease: "none",
       scrollTrigger: {
         trigger: ".project-hero-wrapper",
@@ -55,70 +80,43 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   
-  // 4. Stagger Paragraphs Fade-in
-  const textCols = document.querySelectorAll('.article-body p, .article-body blockquote, .article-body h2, .article-body h3');
-  textCols.forEach(el => {
+  const textEls = document.querySelectorAll('.article-body p, .article-body blockquote, .article-body h2, .article-body h3');
+  textEls.forEach(el => {
     const rect = el.getBoundingClientRect();
     if (rect.top < window.innerHeight) {
       gsap.set(el, { opacity: 1, y: 0 });
     } else {
-      gsap.fromTo(el, 
-        { opacity: 0, y: 40 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 1.2, 
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: el,
-            start: "top 85%",
-            toggleActions: "play none none reverse"
-          }
-        }
-      );
+      gsap.fromTo(el, { opacity: 0, y: 40 }, { 
+        opacity: 1, y: 0, duration: 1.2, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 85%", toggleActions: "play none none reverse" }
+      });
     }
   });
   
-  // 5. Mobile Hamburger Logic
   const hamburgerBtn = document.querySelector('.hamburger-btn');
   const mobileMenuOverlay = document.querySelector('.mobile-menu-overlay');
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-  let touchStartX = 0;
-  let touchEndX = 0;
-
-  function toggleMobileMenu() {
-    hamburgerBtn.classList.toggle('active');
-    mobileMenuOverlay.classList.toggle('active');
-    document.body.classList.toggle('menu-open');
-  }
-
-  function closeMobileMenu() {
-    hamburgerBtn.classList.remove('active');
-    mobileMenuOverlay.classList.remove('active');
-    document.body.classList.remove('menu-open');
-  }
-
   if (hamburgerBtn && mobileMenuOverlay) {
-    hamburgerBtn.addEventListener('click', toggleMobileMenu);
-
-    mobileNavLinks.forEach(link => {
-      link.addEventListener('click', () => {
-        closeMobileMenu();
-      });
+    hamburgerBtn.addEventListener('click', () => {
+      hamburgerBtn.classList.toggle('active');
+      mobileMenuOverlay.classList.toggle('active');
+      document.body.classList.toggle('menu-open');
     });
-
-    mobileMenuOverlay.addEventListener('touchstart', e => {
-      touchStartX = e.changedTouches[0].screenX;
-    }, {passive: true});
-
-    mobileMenuOverlay.addEventListener('touchend', e => {
-      touchEndX = e.changedTouches[0].screenX;
-      if (touchEndX - touchStartX > 50) {
-        if (mobileMenuOverlay.classList.contains('active')) {
-          closeMobileMenu();
-        }
-      }
-    }, {passive: true});
+    mobileNavLinks.forEach(link => link.addEventListener('click', () => {
+      hamburgerBtn.classList.remove('active');
+      mobileMenuOverlay.classList.remove('active');
+      document.body.classList.remove('menu-open');
+    }));
   }
+}
 
-});
+document.addEventListener('astro:page-load', initProject);
+
+if (!window.projectTransitionAttached) {
+  if (document.readyState === 'complete') {
+    initProject();
+  } else {
+    window.addEventListener('load', initProject);
+  }
+  window.projectTransitionAttached = true;
+}
