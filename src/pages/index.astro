@@ -56,13 +56,8 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
     </div>
     <div id="logbook-list" class="logbook-list">
       {logbookEntries.map((entry: any) => {
-        const dateStr = new Date(entry.publishedAt)
-          .toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "2-digit",
-            day: "2-digit",
-          })
-          .replace(/\//g, ".");
+        const date = new Date(entry.publishedAt);
+        const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
         return (
           <a href={`/logbook/${entry.slug.current}`} class="logbook-item" data-hover>
             <span class="logbook-date">{dateStr}</span>
@@ -71,7 +66,7 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
         );
       })}
     </div>
-    <div class="logbook-footer" style="margin-top: 4vw; text-align: right;">
+<div class="logbook-footer" style="margin-top: 4vw; text-align: right;">
       <a href="/logbook" class="button button-massive" data-hover style="padding: 16px 32px; font-size: 1rem;">View Full Logbook →</a>
     </div>
   </section>

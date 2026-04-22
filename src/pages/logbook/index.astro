@@ -28,13 +28,8 @@ const logbookEntries = await sanityClient.fetch(
     >
       {
         logbookEntries.map((entry: any) => {
-          const dateStr = new Date(entry.publishedAt)
-            .toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "2-digit",
-              day: "2-digit",
-            })
-            .replace(/\//g, ".");
+          const date = new Date(entry.publishedAt);
+          const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
           return (
             <a
               href={`/logbook/${entry.slug.current}`}
