@@ -1,0 +1,119 @@
+---
+import ResumeLayout from '../layouts/ResumeLayout.astro';
+---
+
+<ResumeLayout title="Resume">
+  <main class="resume-page" style="padding: 120px 5vw 60px; max-width: 800px; margin: 0 auto; color: var(--foreground); font-family: 'Geist Sans', sans-serif; line-height: 1.6;">
+    <header style="margin-bottom: 48px; border-bottom: 1px solid var(--accents-2); padding-bottom: 24px;">
+      <h1 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; font-family: 'Geist Mono', monospace; letter-spacing: -0.05em;">Daniel N. Maghiș</h1>
+      <p style="font-size: 1rem; color: var(--accents-5); margin-bottom: 16px;">Timișoara • 0735646723 • maghisdaniel@gmail.com • <a href="https://linkedin.com/in/danielnmaghis" target="_blank" rel="noreferrer" style="color: var(--foreground); text-decoration: underline;">linkedin.com/in/danielnmaghis</a> • <a href="https://theretrocircuit.com/" target="_blank" rel="noreferrer" style="color: var(--foreground); text-decoration: underline;">theretrocircuit.com</a></p>
+
+      <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 8px;">Product Manager</h2>
+      <p style="font-size: 1rem;">
+        Product Manager with 4+ years of enterprise SaaS experience. At ATOSS Software AG I drove product discovery, roadmapping, and cross-functional delivery for workforce management solutions. Also shipped a full-stack personal project (The Retro Circuit) from zero to MVP in 3 months as sole PM. Certified in Product Strategy, Discovery, Experimentation, and PLG by Product School.
+      </p>
+    </header>
+
+    <section style="margin-bottom: 48px;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accents-2); padding-bottom: 8px; margin-bottom: 24px; font-family: 'Geist Mono', monospace;">Work Experience</h2>
+
+      <div style="margin-bottom: 32px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+          <h3 style="font-size: 1.125rem; font-weight: 600;">Junior Technical Product Manager</h3>
+          <span style="font-size: 0.875rem; color: var(--accents-5); font-family: 'Geist Mono', monospace;">05/2021 - 01/2025</span>
+        </div>
+        <p style="font-size: 1rem; margin-bottom: 12px; font-weight: 500;">ATOSS Software AG • Timișoara • Full-time</p>
+        <ul style="list-style-type: disc; padding-left: 20px; font-size: 1rem; color: var(--accents-6);">
+          <li style="margin-bottom: 8px;">Owned end-to-end product lifecycle for enterprise workforce management features across 5+ major releases.</li>
+          <li style="margin-bottom: 8px;">Partnered with engineering and UX to define specs and acceptance criteria, reducing story-cycle time.</li>
+          <li style="margin-bottom: 8px;">Built and maintained roadmaps in Jira/Confluence, aligning engineering, sales, and customer success priorities.</li>
+          <li style="margin-bottom: 8px;">Ran user interviews and requirement workshops with enterprise clients, translating insights into actionable epics.</li>
+        </ul>
+      </div>
+
+      <div style="margin-bottom: 32px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px;">
+          <h3 style="font-size: 1.125rem; font-weight: 600;">Assistant Manager</h3>
+          <span style="font-size: 0.875rem; color: var(--accents-5); font-family: 'Geist Mono', monospace;">01/2016 - 01/2018</span>
+        </div>
+        <p style="font-size: 1rem; margin-bottom: 12px; font-weight: 500;">Scripture Union Romania • Timișoara • Part-time</p>
+        <ul style="list-style-type: disc; padding-left: 20px; font-size: 1rem; color: var(--accents-6);">
+          <li style="margin-bottom: 8px;">Led cross-functional volunteer teams of 20+ people across social and educational programs for 100+ youth.</li>
+          <li style="margin-bottom: 8px;">Organized 3 international youth camps per year, owning full logistics and stakeholder communication.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 48px;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accents-2); padding-bottom: 8px; margin-bottom: 24px; font-family: 'Geist Mono', monospace;">Projects</h2>
+
+      <div style="margin-bottom: 32px;">
+        <div style="margin-bottom: 8px;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; display: inline-block; margin-right: 8px;">The Retro Circuit</h3>
+          <a href="https://theretrocircuit.com/" target="_blank" rel="noreferrer" style="font-size: 0.875rem; color: var(--accents-5); text-decoration: underline;">theretrocircuit.com</a>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--accents-5); margin-bottom: 12px; font-family: 'Geist Mono', monospace;">Next.js • Supabase • SQL basics • Authentication • Resend • Jira • Porkbun</p>
+        <ul style="list-style-type: disc; padding-left: 20px; font-size: 1rem; color: var(--accents-6);">
+          <li style="margin-bottom: 8px;">Identified market fragmentation in retro gaming hardware: consumers lacked a reliable way to compare complex device variants. Designed and shipped a specialized comparison engine from zero to MVP in 3 months.</li>
+          <li style="margin-bottom: 8px;">Leveraged Google AI Studio as an engineering counterpart — writing precise specs, defining architecture constraints, and managing a CI/CD pipeline (Next.js 16, Supabase/PostgreSQL, Vercel) without writing code natively.</li>
+          <li style="margin-bottom: 8px;">Architected a relational data schema (Manufacturers → Consoles → Variants) to eliminate 'signal noise' — enabling SKU-level comparisons rather than generic product aggregations.</li>
+          <li style="margin-bottom: 8px;">Designed and shipped 'The Finder,' a quiz-based recommendation wizard guiding users to optimal hardware based on budget, form factor, and emulation targets.</li>
+          <li style="margin-bottom: 8px;">Built a restricted Admin Command Center with RBAC and validation rules, enabling non-technical content management and scaling the product catalog without database intervention.</li>
+          <li style="margin-bottom: 8px;">Established a 'Swiss Industrial' design system for information density and UX consistency, and implemented a public Roadmap & Changelog to build user trust.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 48px;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accents-2); padding-bottom: 8px; margin-bottom: 24px; font-family: 'Geist Mono', monospace;">Skills</h2>
+      <ul style="list-style-type: none; padding-left: 0; font-size: 1rem; color: var(--foreground);">
+        <li style="margin-bottom: 12px;"><strong style="font-weight: 600;">Product:</strong> Roadmapping • Product Discovery • User Story Writing • OKRs • A/B Testing • Waterfall • Agile/Scrum • Stakeholder Management • Zero-to-One Delivery</li>
+        <li style="margin-bottom: 12px;"><strong style="font-weight: 600;">Technical:</strong> AI-Assisted Development • Relational DB Modeling • Architecture Strategy • Next.js / React • Supabase • Vercel</li>
+        <li style="margin-bottom: 12px;"><strong style="font-weight: 600;">Tools:</strong> Jira • Confluence • Notion • Asana • Google Workspace • GitHub • Microsoft Office • Jules</li>
+        <li style="margin-bottom: 12px;"><strong style="font-weight: 600;">Languages:</strong> Romanian (Native) • English (Fluent) • German (Basic)</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: 48px;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accents-2); padding-bottom: 8px; margin-bottom: 24px; font-family: 'Geist Mono', monospace;">Certifications</h2>
+      <ul style="list-style-type: none; padding-left: 0; font-size: 1rem; color: var(--foreground);">
+        <li style="margin-bottom: 8px;"><strong>Product Strategy (PSC)</strong> • Product School</li>
+        <li style="margin-bottom: 8px;"><strong>Product Discovery</strong> • Product School</li>
+        <li style="margin-bottom: 8px;"><strong>Product Experimentation (PEC)</strong> • Product School</li>
+        <li style="margin-bottom: 8px;"><strong>Product-Led Growth</strong> • Product School</li>
+      </ul>
+    </section>
+
+    <section style="margin-bottom: 48px;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accents-2); padding-bottom: 8px; margin-bottom: 24px; font-family: 'Geist Mono', monospace;">Education</h2>
+
+      <div style="margin-bottom: 16px;">
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 4px;">FEAA | Universitatea de Vest Timișoara</h3>
+        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+          <span style="font-size: 1rem; color: var(--accents-6);">Master of Business Management</span>
+          <span style="font-size: 0.875rem; color: var(--accents-5); font-family: 'Geist Mono', monospace;">01/2019 - 01/2021</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px;">
+          <span style="font-size: 1rem; color: var(--accents-6);">Bachelor of Business Management</span>
+          <span style="font-size: 0.875rem; color: var(--accents-5); font-family: 'Geist Mono', monospace;">01/2016 - 01/2019</span>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-bottom: 48px;">
+      <h2 style="font-size: 1.25rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; border-bottom: 1px solid var(--accents-2); padding-bottom: 8px; margin-bottom: 24px; font-family: 'Geist Mono', monospace;">Volunteering & Leadership</h2>
+
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 4px;">BBPT</h3>
+        <p style="font-size: 1rem; margin-bottom: 4px;"><strong>Social Media Lead</strong></p>
+        <p style="font-size: 1rem; color: var(--accents-6);">Led social media strategy (Facebook/Instagram) and implemented software for media production and lyric projection.</p>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 4px;">Scripture Union</h3>
+        <p style="font-size: 1rem; margin-bottom: 4px;"><strong>Team Leader & Coordinator</strong></p>
+        <p style="font-size: 1rem; color: var(--accents-6);">Recruited and led 20+ volunteers; coordinated international camps, youth programs, and NGO outreach initiatives.</p>
+      </div>
+    </section>
+  </main>
+</ResumeLayout>
