@@ -8,6 +8,7 @@ export default defineConfig({
 
   projectId: 'gwlcf911',
   dataset: 'production',
+  basePath: '/studio',
 
   plugins: [structureTool()],
 

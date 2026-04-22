@@ -871,9 +871,7 @@ body.menu-open .global-anchor {
     mix-blend-mode: difference;
     will-change: transform;
   }
-  .site-header {
-    /* Kept clean for mix-blend-mode support on iOS */
-  }
+
   .dot-nav {
     right: 16px;
   }
@@ -1214,9 +1212,7 @@ body.menu-open .global-anchor {
 /* ---- NEW BENTO TILES ---- */
 
 /* GitHub Tile Overhaul */
-.bento-github-triple {
-  /* Spans handled in main grid block */
-}
+
 .bento-github {
   width: 100%;
 }
