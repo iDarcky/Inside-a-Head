@@ -59,9 +59,11 @@ const logbookEntries = await sanityClient.fetch(`*[_type == "logbookEntry"] | or
         const date = new Date(entry.publishedAt);
         const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
         return (
-          <a href={`/logbook/${entry.slug.current}`} class="logbook-item" data-hover>
-            <span class="logbook-date">{dateStr}</span>
-            <span class="logbook-title">{entry.title}</span>
+          <a href={`/logbook/${entry.slug.current}`} class="logbook-entry" data-hover>
+            <div class="logbook-date">{dateStr}</div>
+            <div class="logbook-content">
+              <h3 class="logbook-title-parallax">{entry.title}</h3>
+            </div>
           </a>
         );
       })}
