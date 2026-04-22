@@ -122,14 +122,7 @@ async function renderCollections(data) {
     studioAnchor.parentNode.insertBefore(panel, studioAnchor);
   });
 
-  // Logbook
-  const logbookList = document.getElementById("logbook-list");
-  if (data.logbook && logbookList) {
-    logbookList.innerHTML = "";
-    data.logbook.forEach(entry => {
-      logbookList.appendChild(createLogbookEntry(entry));
-    });
-  }
+  // Logbook is now handled server-side by Astro & Sanity
 
   // Bento Box Reading Tile
   const bentoReading = document.getElementById("bento-reading");
