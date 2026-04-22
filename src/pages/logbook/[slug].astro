@@ -4,13 +4,6 @@ import MagazineLayout from '../../layouts/MagazineLayout.astro';
 import PortableText from '../../components/PortableText.astro';
 import { sanityClient, urlFor } from '../../utils/sanity';
 
-export async function getStaticPaths() {
-  const entries = await sanityClient.fetch(`*[_type == "logbookEntry"]{ "slug": slug.current }`);
-  return entries.map((entry: any) => ({
-    params: { slug: entry.slug },
-  }));
-}
-
 const { slug } = Astro.params;
 const entry = await sanityClient.fetch(`*[_type == "logbookEntry" && slug.current == $slug][0]`, { slug });
 
