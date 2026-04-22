@@ -8,7 +8,7 @@ const logbookEntries = await sanityClient.fetch(
 ---
 
 <MagazineLayout title="Logbook">
-  <main class="article-layout" style="padding-bottom: 10vh;">
+  <main class="article-layout">
     <!-- Explicit spacer to clear the fixed Magazine header completely -->
     <div style="height: 180px; width: 100%;"></div>
 
@@ -59,7 +59,7 @@ const logbookEntries = await sanityClient.fetch(
     </div>
 
     <!-- Centered inline-block link prevents the cursor bounding box from stretching full width -->
-    <div style="text-align: center; margin-top: 15vh;">
+    <div style="text-align: center; margin-top: 4rem;">
       <a
         href="/#top"
         class="footer-back-studio"
