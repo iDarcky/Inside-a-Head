@@ -253,7 +253,6 @@ h1, h2, h3 {
   font-size: 0.75rem;
   color: var(--accents-6);
   letter-spacing: 0.2em;
-  text-transform: uppercase;
 }
 
 .scroll-indicator {
@@ -615,15 +614,17 @@ body, .layout {
 
   .hero-massive-text {
     font-size: clamp(2rem, 10vw, 4rem);
+    transform: translateY(-8vh);
   }
 
   .hero-center-cluster {
     width: 60vw;
     height: 80vw;
+    transform: translateY(-8vh);
   }
 
   .hero-copy {
-    bottom: 5vh;
+    bottom: 13vh;
     left: 20px;
     right: 20px;
     font-size: 1.2rem;
@@ -631,7 +632,7 @@ body, .layout {
   }
 
   .hero-copy.centered-text {
-    bottom: 10vh;
+    bottom: 18vh;
     top: auto;
     left: 20px;
     right: 20px;
@@ -645,6 +646,7 @@ body, .layout {
 
   .app-panel-content {
     flex-direction: column !important;
+    transform: translateY(-8vh);
   }
 
   .app-text-column {
