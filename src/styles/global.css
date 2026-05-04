@@ -1476,13 +1476,7 @@ body.menu-open .global-anchor {
 /* Native CSS Scroll Snapping */
 html {
   scroll-behavior: smooth;
-  /* `proximity` (vs. `mandatory`) lets the user scroll freely between sections
-     and only snaps when close to one. Critical so the footer at the very end
-     of the page is always reachable on tall desktops where mandatory snap can
-     trap the user one section short. */
-  scroll-snap-type: y proximity;
-  /* Reserve room for the fixed header so anchor scrolls don't sit behind it. */
-  scroll-padding-top: 80px;
+  scroll-snap-type: y mandatory;
 }
 
 body {
@@ -1496,8 +1490,7 @@ body {
 
 .section-snap {
   scroll-snap-align: start;
-  /* No `scroll-snap-stop: always` — that forces the user to commit a scroll
-     gesture per section and is what made the footer feel unreachable. */
+  scroll-snap-stop: always;
 }
 
 .bento-title-parallax {
