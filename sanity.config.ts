@@ -16,7 +16,7 @@ export default defineConfig({
         S.list()
           .title('Content')
           .items([
-            // Singleton for Site Settings
+            // Singletons
             S.listItem()
               .title('Site Settings')
               .child(
@@ -24,10 +24,17 @@ export default defineConfig({
                   .schemaType('siteSettings')
                   .documentId('siteSettings')
               ),
+            S.listItem()
+              .title('Resume')
+              .child(
+                S.document()
+                  .schemaType('resume')
+                  .documentId('resume')
+              ),
             S.divider(),
             // Regular document types
             ...S.documentTypeListItems().filter(
-              (listItem: any) => !['siteSettings'].includes(listItem.getId())
+              (listItem: any) => !['siteSettings', 'resume'].includes(listItem.getId())
             ),
           ]),
     }),

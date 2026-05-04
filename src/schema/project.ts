@@ -11,6 +11,20 @@ export const project = {
       initialValue: 100,
     },
     {
+      name: 'featured',
+      title: 'Featured on Homepage',
+      type: 'boolean',
+      description: 'If true, this project appears in the curated lobby on the homepage. Up to 3 are shown.',
+      initialValue: true,
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      options: { layout: 'tags' },
+    },
+    {
       name: 'title',
       title: 'Title',
       type: 'string',

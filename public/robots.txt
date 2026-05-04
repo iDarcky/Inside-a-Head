@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /studio
+Disallow: /api/
+
+Sitemap: https://inside-a-head.vercel.app/sitemap-index.xml

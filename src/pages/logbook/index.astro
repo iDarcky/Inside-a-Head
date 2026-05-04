@@ -2,49 +2,95 @@
 export const prerender = false;
 import MagazineLayout from "../../layouts/MagazineLayout.astro";
 import { sanityClient } from "../../utils/sanity";
+import { readingTimeFromPortableText } from "../../utils/text";
 
-let logbookEntries = [];
+let logbookEntries: any[] = [];
 
 try {
   logbookEntries = await sanityClient.fetch(
-    `*[_type == "logbookEntry"] | order(publishedAt desc)`,
+    `*[_type == "logbookEntry" && (status == "published" || !defined(status))]
+      | order(publishedAt desc){
+        title, slug, publishedAt, excerpt, tags, readingTime, body
+      }`,
   );
 } catch (error) {
   console.error("Failed to fetch logbook entries:", error);
 }
+
+const allTags = Array.from(
+  new Set(logbookEntries.flatMap((e: any) => e.tags || [])),
+).sort();
 ---
 
-<MagazineLayout title="Logbook">
+<MagazineLayout
+  title="Logbook"
+  description="Notes, experiments, and field reports from the studio. Writing to learn."
+  ogType="website"
+>
   <main class="article-layout">
-    <!-- Explicit spacer to clear the fixed Magazine header completely -->
     <div style="height: 180px; width: 100%;"></div>
 
-    <header class="article-header" style="margin-bottom: 5rem;">
+    <header class="article-header" style="margin-bottom: 3rem;">
       <h1 class="article-title">STUDIO LOG</h1>
       <p
         style="color: var(--accents-5); font-family: var(--font-mono); font-size: 0.9rem; margin-top: 1rem;"
       >
-        CHRONOLOGICAL FRAGMENTS & DOCUMENTATION
+        CHRONOLOGICAL FRAGMENTS &amp; DOCUMENTATION
+      </p>
+      <p style="margin-top: 1rem;">
+        <a
+          href="/logbook/rss.xml"
+          class="footer-back-studio"
+          data-hover
+          style="display: inline-block; margin: 0;"
+        >
+          Subscribe via RSS →
+        </a>
       </p>
     </header>
 
+    {allTags.length > 0 && (
+      <nav class="logbook-tag-bar" aria-label="Filter by tag">
+        <span class="tag-chip-label">TAGS:</span>
+        {allTags.map((tag: string) => (
+          <a href={`/logbook/tag/${encodeURIComponent(tag.toLowerCase())}`} class="tag-chip" data-hover>
+            #{tag}
+          </a>
+        ))}
+      </nav>
+    )}
+
     <div
       class="logbook-list"
-      style="border-top: 1px solid var(--geist-border);"
+      style="border-top: 1px solid var(--geist-border); margin-top: 2rem;"
     >
       {
         logbookEntries.map((entry: any) => {
           const date = new Date(entry.publishedAt);
           const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+          const minutes = readingTimeFromPortableText(entry.body, entry.readingTime);
           return (
             <a
               href={`/logbook/${entry.slug.current}`}
               class="logbook-entry"
               data-hover
             >
-              <div class="logbook-date">{dateStr}</div>
+              <div class="logbook-date">
+                <div>{dateStr}</div>
+                <div class="logbook-reading-time">{minutes} MIN READ</div>
+              </div>
               <div class="logbook-content">
                 <h3 class="logbook-title-parallax">{entry.title}</h3>
+                {entry.excerpt && (
+                  <p class="logbook-entry-excerpt">{entry.excerpt}</p>
+                )}
+                {entry.tags && entry.tags.length > 0 && (
+                  <div class="logbook-entry-tags">
+                    {entry.tags.map((t: string) => (
+                      <span class="tag-chip-inline">#{t}</span>
+                    ))}
+                  </div>
+                )}
               </div>
             </a>
           );
@@ -60,7 +106,6 @@ try {
       }
     </div>
 
-    <!-- Centered inline-block link prevents the cursor bounding box from stretching full width -->
     <div style="text-align: center; margin-top: 4rem;">
       <a
         href="/#top"
@@ -72,3 +117,60 @@ try {
     </div>
   </main>
 </MagazineLayout>
+
+<style>
+  .logbook-tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+    margin-top: 2rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+  }
+
+  .tag-chip-label {
+    color: var(--accents-5);
+    letter-spacing: 0.1em;
+    margin-right: 8px;
+  }
+
+  .tag-chip {
+    display: inline-block;
+    padding: 4px 12px;
+    border: 1px solid var(--geist-border);
+    border-radius: 999px;
+    color: var(--accents-6);
+    text-decoration: none;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .tag-chip:hover {
+    color: var(--foreground);
+    border-color: var(--accents-5);
+  }
+
+  .tag-chip-inline {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accents-5);
+    margin-right: 12px;
+  }
+
+  .logbook-reading-time {
+    font-size: 0.75rem;
+    color: var(--accents-4);
+    margin-top: 4px;
+  }
+
+  .logbook-entry-excerpt {
+    color: var(--accents-6);
+    line-height: 1.55;
+    margin-top: 8px;
+    max-width: 65ch;
+  }
+
+  .logbook-entry-tags {
+    margin-top: 12px;
+  }
+</style>

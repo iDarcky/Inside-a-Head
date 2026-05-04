@@ -1,0 +1,185 @@
+---
+export const prerender = false;
+import MagazineLayout from '../layouts/MagazineLayout.astro';
+import PortableText from '../components/PortableText.astro';
+import { sanityClient, urlFor } from '../utils/sanity';
+
+let siteSettings: any = null;
+
+try {
+  siteSettings = await sanityClient.fetch(`*[_type == "siteSettings"][0]`);
+} catch (error) {
+  console.error('Failed to fetch site settings:', error);
+}
+
+const bio = siteSettings?.bio || 'hi, daniel here. welcome to inside a head. a personal studio for tech experiments and exploring aesthetic design. documenting the learning process, and making room for the personal mess.';
+const aboutBody = siteSettings?.aboutBody;
+const nowFocus: string[] = siteSettings?.nowFocus || [];
+const currentStatus: string | undefined = siteSettings?.currentStatus;
+const ogImage = siteSettings?.ogImage ? urlFor(siteSettings.ogImage).width(1200).url() : undefined;
+---
+
+<MagazineLayout
+  title="About"
+  description="The studio behind Inside a Head — what I'm building, what I'm focused on, and how to get in touch."
+  ogImage={ogImage}
+  ogType="profile"
+>
+  <main class="article-layout">
+    <div style="height: 180px; width: 100%;"></div>
+
+    <header class="article-header" style="margin-bottom: 4rem;">
+      <p style="color: var(--accents-5); font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.1em;">
+        ABOUT THE STUDIO
+      </p>
+      <h1 class="article-title" style="margin-top: 0.5rem;">HEY, I'M DANIEL.</h1>
+      <p style="color: var(--accents-6); font-size: 1.15rem; line-height: 1.7; margin-top: 1.5rem; max-width: 60ch;">
+        {bio}
+      </p>
+    </header>
+
+    {currentStatus && (
+      <section class="about-now-block">
+        <span class="about-now-label">RIGHT NOW</span>
+        <p class="about-now-text">{currentStatus}</p>
+      </section>
+    )}
+
+    {aboutBody && (
+      <section class="article-body" style="margin-bottom: 4rem;">
+        <PortableText portableText={aboutBody} />
+      </section>
+    )}
+
+    {nowFocus.length > 0 && (
+      <section style="margin-bottom: 4rem;">
+        <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; border-bottom: 1px solid var(--accents-2); padding-bottom: 1rem;">
+          Now
+        </h2>
+        <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--accents-5); margin-bottom: 1.5rem;">
+          What I'm focused on this month.
+        </p>
+        <ul class="now-list">
+          {nowFocus.map((item: string) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <section style="margin-bottom: 4rem;">
+      <h2 style="font-size: 1.25rem; font-weight: 600; margin-bottom: 1.5rem; border-bottom: 1px solid var(--accents-2); padding-bottom: 1rem;">
+        Get in touch
+      </h2>
+      <ul class="contact-list">
+        <li>
+          <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" data-hover>
+            LinkedIn → <span>danielnmaghis</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" data-hover>
+            GitHub → <span>iDarcky</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" data-hover>
+            Goodreads → <span>What I'm reading</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.instagram.com/danielmhimself/" target="_blank" rel="noreferrer" data-hover>
+            Instagram → <span>@danielmhimself</span>
+          </a>
+        </li>
+      </ul>
+    </section>
+
+    <div style="text-align: center; margin-top: 4rem;">
+      <a href="/" class="footer-back-studio" data-hover style="display: inline-block;">
+        &larr; Back to Studio
+      </a>
+    </div>
+  </main>
+</MagazineLayout>
+
+<style>
+  .about-now-block {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--geist-border);
+    border-radius: 12px;
+    padding: 24px 32px;
+    margin-bottom: 4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .about-now-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accents-5);
+    letter-spacing: 0.15em;
+  }
+
+  .about-now-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .now-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: var(--accents-6);
+    line-height: 1.6;
+  }
+
+  .now-list li {
+    padding-left: 1.5rem;
+    position: relative;
+  }
+
+  .now-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--accents-4);
+  }
+
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .contact-list a {
+    color: var(--foreground);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--accents-1);
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .contact-list a:hover {
+    color: var(--accents-5);
+    border-color: var(--accents-3);
+  }
+
+  .contact-list a span {
+    color: var(--accents-5);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+</style>

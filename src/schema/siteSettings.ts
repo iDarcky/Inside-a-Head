@@ -57,5 +57,63 @@ export const siteSettings = {
         },
       ],
     },
+    {
+      name: 'currentlyListening',
+      title: 'Currently Listening',
+      type: 'object',
+      description: 'Track / album / playlist for the Museum.',
+      fields: [
+        { name: 'title', title: 'Title', type: 'string' },
+        { name: 'artist', title: 'Artist', type: 'string' },
+        {
+          name: 'spotifyEmbedUrl',
+          title: 'Spotify Embed URL',
+          type: 'url',
+          description: 'Use the URL that begins with https://open.spotify.com/embed/ from the Spotify share menu.',
+        },
+      ],
+    },
+    {
+      name: 'currentStatus',
+      title: 'Current Status',
+      type: 'string',
+      description: 'A one-liner about what you’re focused on right now (shown on Museum + About).',
+    },
+    {
+      name: 'recentlyFinishedBooks',
+      title: 'Recently Finished Books',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'title', title: 'Title', type: 'string' },
+            { name: 'author', title: 'Author', type: 'string' },
+            { name: 'coverImage', title: 'Cover Image', type: 'image', options: { hotspot: true } },
+            { name: 'url', title: 'URL', type: 'url' },
+          ],
+          preview: { select: { title: 'title', subtitle: 'author', media: 'coverImage' } },
+        },
+      ],
+    },
+    {
+      name: 'aboutBody',
+      title: 'About Page Body',
+      type: 'blockContent',
+      description: 'Longform content rendered on the /about page.',
+    },
+    {
+      name: 'nowFocus',
+      title: 'Now (focus list)',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Bullet points of what you are focused on this month (shown on /about).',
+    },
+    {
+      name: 'githubUsername',
+      title: 'GitHub Username',
+      type: 'string',
+      description: 'Used to fetch contribution data for the Museum (e.g. iDarcky).',
+    },
   ],
 };

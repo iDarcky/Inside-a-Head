@@ -3,18 +3,19 @@ export const prerender = false;
 import HomeLayout from '../layouts/HomeLayout.astro';
 import Footer from '../components/Footer.astro';
 import ProjectPanel from '../components/ProjectPanel.astro';
-import ReadingTile from '../components/ReadingTile.astro';
-import { sanityClient } from '../utils/sanity';
+import { sanityClient, urlFor } from '../utils/sanity';
 
-let logbookEntries = [];
-let projects = [];
-let siteSettings = null;
+let logbookEntries: any[] = [];
+let projects: any[] = [];
+let siteSettings: any = null;
+let museumTeasers: any[] = [];
 
 try {
-  [logbookEntries, projects, siteSettings] = await Promise.all([
-    sanityClient.fetch(`*[_type == "logbookEntry"] | order(publishedAt desc) [0..2]`),
-    sanityClient.fetch(`*[_type == "project"] | order(order asc)`),
-    sanityClient.fetch(`*[_type == "siteSettings"][0]`)
+  [logbookEntries, projects, siteSettings, museumTeasers] = await Promise.all([
+    sanityClient.fetch(`*[_type == "logbookEntry" && (status == "published" || !defined(status))] | order(publishedAt desc) [0..2]`),
+    sanityClient.fetch(`*[_type == "project" && (featured == true || !defined(featured))] | order(order asc) [0..2]`),
+    sanityClient.fetch(`*[_type == "siteSettings"][0]`),
+    sanityClient.fetch(`*[_type == "museumFragment"] | order(date desc) [0..2]`),
   ]);
 } catch (error) {
   console.error("Failed to fetch data from Sanity:", error);
@@ -23,9 +24,10 @@ try {
 const siteTitle = siteSettings?.siteTitle || "Inside a Head | Digital Studio";
 const siteDescription = siteSettings?.siteDescription || "The digital studio of Daniel. Product Manager, Musician, and Builder.";
 const bio = siteSettings?.bio || "hi, daniel here. welcome to inside a head. a personal studio for tech experiments and exploring aesthetic design. documenting the learning process, and making room for the personal mess.";
+const ogImage = siteSettings?.ogImage ? urlFor(siteSettings.ogImage).width(1200).url() : undefined;
 ---
 
-<HomeLayout title={siteTitle} description={siteDescription} projects={projects}>
+<HomeLayout title={siteTitle} description={siteDescription} projects={projects} ogImage={ogImage} showDotNav={true}>
   <section class="hero-immersive section-snap" id="top">
     <div class="hero-parallax-wrapper">
       <h1 id="hero-title" class="hero-massive-text">INSIDE A HEAD</h1>
@@ -56,15 +58,16 @@ const bio = siteSettings?.bio || "hi, daniel here. welcome to inside a head. a p
     <ProjectPanel project={project} index={index} />
   ))}
 
-  <!-- The Design System (The Engine Room) -->
-  <section class="engine-room-section section-snap" id="design-system">
+  <!-- View all projects CTA -->
+  <section class="engine-room-section section-snap" id="all-projects-cta">
     <div class="engine-room-content">
       <div>
-        <h2 class="engine-title">SYSTEM ARCHITECTURE</h2>
-        <p class="engine-copy">Powered by Geist UI. Explore the foundational principles, typography, and semantic components that power every app in the studio.</p>
+        <div class="bento-kicker" style="margin-bottom: 16px;">PROJECT ARCHIVE</div>
+        <h2 class="engine-title">SEE THE FULL CATALOG</h2>
+        <p class="engine-copy">Featured here is a curated selection. The complete archive of builds, experiments, and shipped work lives in the projects index.</p>
       </div>
-      <a href="https://design-system-dm.vercel.app/" class="button button-massive ds-cta" target="_blank" rel="noreferrer" data-hover>
-        Explore <i data-lucide="arrow-right" style="margin-left: 16px; width: 24px; height: 24px;"></i>
+      <a href="/projects" class="button button-massive ds-cta" data-hover>
+        View all projects <i data-lucide="arrow-right" style="margin-left: 16px; width: 24px; height: 24px;"></i>
       </a>
     </div>
   </section>
@@ -83,86 +86,90 @@ const bio = siteSettings?.bio || "hi, daniel here. welcome to inside a head. a p
             <div class="logbook-date">{dateStr}</div>
             <div class="logbook-content">
               <h3 class="logbook-title-parallax">{entry.title}</h3>
+              {entry.excerpt && <p class="logbook-excerpt">{entry.excerpt}</p>}
             </div>
           </a>
         );
       })}
     </div>
-<div class="logbook-footer" style="margin-top: 4vw; text-align: right;">
+    <div class="logbook-footer" style="margin-top: 4vw; text-align: right;">
       <a href="/logbook" class="button button-massive" data-hover style="padding: 16px 32px; font-size: 1rem;">View Full Logbook →</a>
     </div>
   </section>
 
-  <!-- The Shelf Part 1: Build Metrics & Status -->
-  <section class="bento-section section-snap" id="shelf-builds">
-    <div class="bento-wrapper">
-      <div class="logbook-header-wrapper">
-        <h2 class="logbook-huge-title bento-title-parallax">MUSEUM OF MY MESS</h2>
+  <!-- Museum of My Mess teaser -->
+  <section class="engine-room-section section-snap" id="museum-teaser">
+    <div class="engine-room-content">
+      <div>
+        <div class="bento-kicker" style="margin-bottom: 16px;">PERSONAL ARCHIVE</div>
+        <h2 class="engine-title">MUSEUM OF MY MESS</h2>
+        <p class="engine-copy">Photos, quotes, books, gear, athletics, what I'm listening to. The personal stuff that doesn't fit anywhere else.</p>
+        {museumTeasers.length > 0 && (
+          <ul class="museum-teaser-list">
+            {museumTeasers.map((f: any) => {
+              const dateStr = f.date ? new Date(f.date).toISOString().slice(0, 10).replace(/-/g, '.') : '';
+              return (
+                <li>
+                  <span class="museum-teaser-date">{dateStr}</span>
+                  <span class="museum-teaser-kind">{(f.kind || 'note').toUpperCase()}</span>
+                  <span class="museum-teaser-title">{f.title || '—'}</span>
+                </li>
+              );
+            })}
+          </ul>
+        )}
       </div>
-      <div class="bento-grid bento-grid-builds">
-        <!-- Tile: Clock -->
-        <div class="bento-tile bento-clock">
-          <div class="bento-kicker">LOCAL TIME</div>
-          <div class="geist-wrapper">
-            <span id="geist-time" class="geist-time">00:00</span>
-            <span id="geist-seconds" class="geist-seconds">00</span>
-          </div>
-          <div class="clock-location">BUCHAREST, RO</div>
-        </div>
-
-        <!-- Tile: Reading Tile (SSR from Sanity) -->
-        <ReadingTile currentlyReading={siteSettings?.currentlyReading} />
-
-        <!-- Tile: GitHub (Named Area: gh) -->
-        <div class="bento-tile bento-github">
-          <div class="github-header">
-            <div class="bento-kicker">BUILD METRICS</div>
-            <div class="gh-counter" id="gh-total-count">... contributions</div>
-          </div>
-          <div class="github-container">
-            <div class="gh-labels-y"><span>Mon</span><span>Wed</span><span>Fri</span></div>
-            <div class="github-matrix"></div>
-          </div>
-          <div class="github-footer">
-            <div class="github-meta"><span>github.com/iDarcky</span><i data-lucide="github" style="width: 14px;"></i></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- The Shelf Part 2: Gear & Media -->
-  <section class="bento-section section-snap" id="shelf-media">
-    <div class="bento-wrapper">
-      <div class="logbook-header-wrapper">
-        <div class="bento-kicker" style="color: var(--accents-5); letter-spacing: 0.3em; margin-bottom: 16px;">THE GEAR // THE MESS</div>
-        <h2 class="logbook-huge-title bento-title-parallax" style="font-size: clamp(2rem, 5vw, 4rem); color: var(--accents-4);">COLLECTED FRAGMENTS</h2>
-      </div>
-      <div class="bento-grid bento-grid-media">
-        <!-- Tile: Spotify (Named Area: audio) -->
-        <div class="bento-tile bento-audio" style="padding: 0;">
-          <iframe src="https://open.spotify.com/embed/track/5lNmaZfu3SQMuzl1hH2wzA?utm_source=generator" style="border-radius:16px; border: none; width: 100%; height: 100%;" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
-
-        <!-- Tile: Gear (Named Area: shoe) -->
-        <div class="bento-tile bento-shoe">
-          <div class="bento-kicker">CURRENT GEAR</div>
-          <!-- We use absolute public URLs for static assets that we ported -->
-          <img src="https://cdn1.npcdn.net/images/c66082ec8dffeee531fb002baa744f91_1758184573.webp?md5id=2169a2cc59e83ed5c094702f589fdd1d&new_width=1000&new_height=1000&w=1755845547&from=png&type=9" class="shoe-img" alt="Adidas Evo SL" />
-          <div class="shoe-name">ADIDAS EVO SL</div>
-        </div>
-
-        <!-- Tile: Athletics (Named Area: athletics) -->
-        <div class="bento-tile bento-athletics">
-          <div class="bento-kicker">ATHLETICS</div>
-          <div class="athletics-data">
-            <div class="ath-row"><span class="ath-label">HALF MARATHON</span><span class="ath-value">1:38:42</span></div>
-            <div class="ath-row"><span class="ath-label">5K PR</span><span class="ath-value">20:15</span></div>
-          </div>
-        </div>
-      </div>
+      <a href="/museum" class="button button-massive ds-cta" data-hover>
+        Enter the museum <i data-lucide="arrow-right" style="margin-left: 16px; width: 24px; height: 24px;"></i>
+      </a>
     </div>
   </section>
 
   <Footer className="section-snap" variant="massive" />
 </HomeLayout>
+
+<style>
+  .logbook-excerpt {
+    color: var(--accents-5);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-top: 8px;
+    max-width: 60ch;
+  }
+
+  .museum-teaser-list {
+    list-style: none;
+    padding: 0;
+    margin: 32px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+  }
+
+  .museum-teaser-list li {
+    display: grid;
+    grid-template-columns: 100px 80px 1fr;
+    gap: 16px;
+    color: var(--accents-6);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 12px;
+  }
+
+  .museum-teaser-kind {
+    color: var(--accents-4);
+    letter-spacing: 0.1em;
+  }
+
+  .museum-teaser-title {
+    color: var(--foreground);
+  }
+
+  @media (max-width: 640px) {
+    .museum-teaser-list li {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+  }
+</style>

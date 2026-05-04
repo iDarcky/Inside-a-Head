@@ -1,0 +1,325 @@
+---
+export const prerender = false;
+import HomeLayout from '../layouts/HomeLayout.astro';
+import Footer from '../components/Footer.astro';
+import ReadingTile from '../components/ReadingTile.astro';
+import { sanityClient, urlFor } from '../utils/sanity';
+
+let siteSettings: any = null;
+let fragments: any[] = [];
+
+try {
+  [siteSettings, fragments] = await Promise.all([
+    sanityClient.fetch(`*[_type == "siteSettings"][0]`),
+    sanityClient.fetch(`*[_type == "museumFragment"] | order(date desc)[0..23]`),
+  ]);
+} catch (error) {
+  console.error('Failed to fetch museum data:', error);
+}
+
+const currentStatus = siteSettings?.currentStatus || 'Building, reading, running. In that order, mostly.';
+const listening = siteSettings?.currentlyListening;
+const recentlyFinished: any[] = siteSettings?.recentlyFinishedBooks || [];
+const ogImage = siteSettings?.ogImage ? urlFor(siteSettings.ogImage).width(1200).url() : undefined;
+---
+
+<HomeLayout
+  title="Museum of My Mess | Inside a Head"
+  description="Random fragments, current obsessions, finished books, listening, athletics, gear. The personal mess that powers the studio."
+  ogImage={ogImage}
+>
+  <section class="museum-hero section-snap">
+    <div class="logbook-header-wrapper">
+      <div class="bento-kicker" style="margin-bottom: 16px;">PERSONAL ARCHIVE</div>
+      <h1 class="logbook-huge-title">MUSEUM OF MY MESS</h1>
+      <p class="hero-copy" style="max-width: 720px; margin-top: 24px;">
+        Not a portfolio. The other stuff — what I’m reading, listening to, training for, thinking about. Random fragments and current obsessions, kept in public.
+      </p>
+      <p class="museum-status" style="margin-top: 32px; font-family: var(--font-mono); font-size: 0.9rem; color: var(--accents-5);">
+        <span style="color: var(--accents-4);">NOW —</span> {currentStatus}
+      </p>
+    </div>
+  </section>
+
+  <!-- NOW: time, status, listening, reading -->
+  <section class="bento-section section-snap" id="museum-now">
+    <div class="bento-wrapper">
+      <div class="logbook-header-wrapper">
+        <div class="bento-kicker">SECTION 01</div>
+        <h2 class="logbook-huge-title bento-title-parallax" style="font-size: clamp(2rem, 5vw, 4rem);">NOW</h2>
+      </div>
+      <div class="bento-grid bento-grid-builds">
+        <div class="bento-tile bento-clock">
+          <div class="bento-kicker">LOCAL TIME</div>
+          <div class="geist-wrapper">
+            <span id="geist-time" class="geist-time">00:00</span>
+            <span id="geist-seconds" class="geist-seconds">00</span>
+          </div>
+          <div class="clock-location">BUCHAREST, RO</div>
+        </div>
+
+        <ReadingTile currentlyReading={siteSettings?.currentlyReading} />
+
+        <div class="bento-tile bento-github">
+          <div class="github-header">
+            <div class="bento-kicker">BUILD METRICS</div>
+            <div class="gh-counter" id="gh-total-count">... contributions</div>
+          </div>
+          <div class="github-container">
+            <div class="gh-labels-y"><span>Mon</span><span>Wed</span><span>Fri</span></div>
+            <div class="github-matrix"></div>
+          </div>
+          <div class="github-footer">
+            <div class="github-meta"><span>github.com/{siteSettings?.githubUsername || 'iDarcky'}</span><i data-lucide="github" style="width: 14px;"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BODY: gear, athletics, listening -->
+  <section class="bento-section section-snap" id="museum-body">
+    <div class="bento-wrapper">
+      <div class="logbook-header-wrapper">
+        <div class="bento-kicker">SECTION 02</div>
+        <h2 class="logbook-huge-title bento-title-parallax" style="font-size: clamp(2rem, 5vw, 4rem);">BODY &amp; SOUND</h2>
+      </div>
+      <div class="bento-grid bento-grid-media">
+        <div class="bento-tile bento-audio" style="padding: 0;">
+          <iframe
+            src={listening?.spotifyEmbedUrl || 'https://open.spotify.com/embed/track/5lNmaZfu3SQMuzl1hH2wzA?utm_source=generator'}
+            style="border-radius:16px; border: none; width: 100%; height: 100%;"
+            frameBorder="0"
+            allowfullscreen=""
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+          ></iframe>
+        </div>
+
+        <div class="bento-tile bento-shoe">
+          <div class="bento-kicker">CURRENT GEAR</div>
+          <img
+            src="https://cdn1.npcdn.net/images/c66082ec8dffeee531fb002baa744f91_1758184573.webp?md5id=2169a2cc59e83ed5c094702f589fdd1d&new_width=1000&new_height=1000&w=1755845547&from=png&type=9"
+            class="shoe-img"
+            alt="Adidas Evo SL"
+            loading="lazy"
+          />
+          <div class="shoe-name">ADIDAS EVO SL</div>
+        </div>
+
+        <div class="bento-tile bento-athletics">
+          <div class="bento-kicker">ATHLETICS</div>
+          <div class="athletics-data">
+            <div class="ath-row"><span class="ath-label">HALF MARATHON</span><span class="ath-value">1:38:42</span></div>
+            <div class="ath-row"><span class="ath-label">5K PR</span><span class="ath-value">20:15</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MIND: recently finished books, currently reading shelf -->
+  {recentlyFinished.length > 0 && (
+    <section class="bento-section section-snap" id="museum-mind">
+      <div class="bento-wrapper">
+        <div class="logbook-header-wrapper">
+          <div class="bento-kicker">SECTION 03</div>
+          <h2 class="logbook-huge-title bento-title-parallax" style="font-size: clamp(2rem, 5vw, 4rem);">RECENTLY FINISHED</h2>
+        </div>
+        <div class="museum-shelf">
+          {recentlyFinished.map((book: any) => (
+            <a
+              href={book.url || '#'}
+              target={book.url ? '_blank' : undefined}
+              rel={book.url ? 'noreferrer' : undefined}
+              class="museum-shelf-book"
+              data-hover
+            >
+              {book.coverImage && (
+                <img src={urlFor(book.coverImage).width(300).url()} alt={book.title} loading="lazy" />
+              )}
+              <div class="museum-shelf-meta">
+                <div class="museum-shelf-title">{book.title}</div>
+                <div class="museum-shelf-author">{book.author}</div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- RANDOM MESS: museum fragments -->
+  <section class="bento-section section-snap" id="museum-random">
+    <div class="bento-wrapper">
+      <div class="logbook-header-wrapper">
+        <div class="bento-kicker">SECTION 04</div>
+        <h2 class="logbook-huge-title bento-title-parallax" style="font-size: clamp(2rem, 5vw, 4rem);">RANDOM MESS</h2>
+        <p class="hero-copy" style="max-width: 600px; margin-top: 16px; color: var(--accents-5);">
+          Photos, quotes, links, half-thoughts. Posted from /studio with no ceremony.
+        </p>
+      </div>
+
+      {fragments.length === 0 && (
+        <p style="text-align: center; color: var(--accents-4); padding: 4rem 0; font-family: var(--font-mono);">
+          The mess is empty. Add a fragment in the Studio to get started.
+        </p>
+      )}
+
+      {fragments.length > 0 && (
+        <div class="museum-fragments">
+          {fragments.map((f: any) => {
+            const dateStr = f.date
+              ? new Date(f.date).toISOString().slice(0, 10).replace(/-/g, '.')
+              : '';
+            return (
+              <article class={`museum-fragment fragment-${f.kind || 'note'}`}>
+                <header class="fragment-meta">
+                  <span class="fragment-kind">{(f.kind || 'note').toUpperCase()}</span>
+                  <span class="fragment-date">{dateStr}</span>
+                </header>
+                {f.title && <h3 class="fragment-title">{f.title}</h3>}
+                {f.kind === 'image' && f.media && (
+                  <img src={urlFor(f.media).width(800).url()} alt={f.title || ''} loading="lazy" />
+                )}
+                {f.kind === 'link' && f.externalUrl && (
+                  <a href={f.externalUrl} target="_blank" rel="noreferrer" class="fragment-link" data-hover>
+                    {f.externalUrl} →
+                  </a>
+                )}
+                {f.body && (
+                  <div class="fragment-body">
+                    {f.body.map((block: any) =>
+                      block._type === 'block' ? (
+                        <p>{block.children?.map((c: any) => c.text).join('')}</p>
+                      ) : null
+                    )}
+                  </div>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </section>
+
+  <Footer className="section-snap" variant="massive" />
+</HomeLayout>
+
+<style>
+  .museum-hero {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    padding: 12vh 5vw 5vh;
+  }
+
+  .museum-shelf {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 24px;
+    padding: 24px 0;
+  }
+
+  .museum-shelf-book {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 0.3s ease;
+  }
+
+  .museum-shelf-book:hover {
+    transform: translateY(-4px);
+  }
+
+  .museum-shelf-book img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: 4px;
+    background: var(--accents-2);
+  }
+
+  .museum-shelf-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .museum-shelf-author {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accents-5);
+    margin-top: 4px;
+  }
+
+  .museum-fragments {
+    column-count: 3;
+    column-gap: 24px;
+    padding: 24px 0;
+  }
+
+  @media (max-width: 1024px) {
+    .museum-fragments { column-count: 2; }
+  }
+
+  @media (max-width: 640px) {
+    .museum-fragments { column-count: 1; }
+  }
+
+  .museum-fragment {
+    break-inside: avoid;
+    margin-bottom: 24px;
+    padding: 24px;
+    background: rgba(12, 12, 12, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .fragment-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--accents-5);
+    letter-spacing: 0.1em;
+  }
+
+  .fragment-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .fragment-quote .fragment-body p {
+    font-family: 'Lora', serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .fragment-link {
+    color: var(--foreground);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    word-break: break-word;
+  }
+
+  .museum-fragment img {
+    width: 100%;
+    border-radius: 8px;
+  }
+
+  .fragment-body {
+    color: var(--accents-6);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+</style>

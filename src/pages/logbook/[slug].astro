@@ -3,9 +3,10 @@ export const prerender = false;
 import MagazineLayout from '../../layouts/MagazineLayout.astro';
 import PortableText from '../../components/PortableText.astro';
 import { sanityClient, urlFor } from '../../utils/sanity';
+import { readingTimeFromPortableText, plainTextFromPortableText } from '../../utils/text';
 
 const { slug } = Astro.params;
-let entry = null;
+let entry: any = null;
 
 try {
   entry = await sanityClient.fetch(`*[_type == "logbookEntry" && slug.current == $slug][0]`, { slug });
@@ -17,18 +18,22 @@ if (!entry) {
   return Astro.redirect('/404');
 }
 
-// Reading time heuristic
-const words = entry.body
-  ? entry.body
-      .filter((block: any) => block._type === 'block' && block.children)
-      .map((block: any) => block.children.map((child: any) => child.text).join(' '))
-      .join(' ')
-      .split(/\s+/).length
-  : 0;
-const readingTime = Math.ceil(words / 200);
+if (entry.status === 'draft') {
+  return Astro.redirect('/404');
+}
+
+const readingTime = readingTimeFromPortableText(entry.body, entry.readingTime);
+const description = entry.excerpt || plainTextFromPortableText(entry.body, 180) || 'A logbook entry from Inside a Head.';
+const heroImageUrl = entry.heroImage ? urlFor(entry.heroImage).width(1200).url() : undefined;
 ---
 
-<MagazineLayout title={entry.title}>
+<MagazineLayout
+  title={entry.title}
+  description={description}
+  ogImage={heroImageUrl}
+  ogType="article"
+  publishedAt={entry.publishedAt}
+>
   {entry.heroImage && (
     <div class="project-hero-wrapper">
       <img src={urlFor(entry.heroImage).url()} alt={entry.title} class="project-hero-img" />
@@ -49,6 +54,19 @@ const readingTime = Math.ceil(words / 200);
           <span class="meta-value">{readingTime} MIN READ</span>
         </div>
       </div>
+      {entry.tags && entry.tags.length > 0 && (
+        <div style="margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: 8px;">
+          {entry.tags.map((t: string) => (
+            <a
+              href={`/logbook/tag/${encodeURIComponent(t.toLowerCase())}`}
+              data-hover
+              style="font-family: var(--font-mono); font-size: 0.75rem; padding: 4px 12px; border: 1px solid var(--geist-border); border-radius: 999px; color: var(--accents-6); text-decoration: none;"
+            >
+              #{t}
+            </a>
+          ))}
+        </div>
+      )}
     </header>
 
     <section class="article-body">
