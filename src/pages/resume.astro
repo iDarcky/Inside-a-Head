@@ -202,7 +202,10 @@ import MagazineLayout from '../layouts/MagazineLayout.astro';
 
     .skill-category ul li {
       display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
       justify-content: space-between;
+      gap: 0.25rem 1rem;
       margin-bottom: 0.5rem;
       border-bottom: 1px solid var(--accents-1);
       padding-bottom: 0.25rem;
@@ -210,6 +213,8 @@ import MagazineLayout from '../layouts/MagazineLayout.astro';
 
     .skill-category ul li span.cert-org {
       color: var(--accents-5);
+      white-space: nowrap;
+      margin-left: auto;
     }
   </style>
 
@@ -350,6 +355,8 @@ import MagazineLayout from '../layouts/MagazineLayout.astro';
             <div class="skill-category">
               <h4>Certifications</h4>
               <ul>
+                <li><strong>Claude 101</strong> <span class="cert-org">Anthropic &bull; 2026</span></li>
+                <li><strong>Exploring the Basics of Project Management</strong> <span class="cert-org">Adobe Learning Manager &bull; 2026</span></li>
                 <li><strong>Product Strategy (PSC)</strong> <span class="cert-org">Product School</span></li>
                 <li><strong>Product Discovery</strong> <span class="cert-org">Product School</span></li>
                 <li><strong>Product Experimentation</strong> <span class="cert-org">Product School</span></li>
