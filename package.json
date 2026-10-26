@@ -1,5 +1,5 @@
 {
-  "name": "cyan-comet",
+  "name": "inside-a-head",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -9,7 +9,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "resume:pdf": "node scripts/resume-pdf.mjs"
   },
   "dependencies": {
     "@astrojs/markdoc": "^2.1.0",

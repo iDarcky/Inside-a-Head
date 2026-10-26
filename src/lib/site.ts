@@ -11,6 +11,8 @@ export interface Settings {
   linkedin: string;
   github: string;
   availability: string;
+  manifestoTitle: string;
+  manifesto: string;
 }
 
 export const settings = parse(raw) as Settings;

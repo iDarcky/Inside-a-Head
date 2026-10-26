@@ -77,10 +77,13 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
-  scroll-padding-top: var(--s-8);
+  scroll-padding-top: 124px; /* clears the sticky header (two rows on phones) */
 }
 @media (pointer: fine) {
   html { overscroll-behavior: none; }
+}
+@media (min-width: 480px) {
+  html { scroll-padding-top: 80px; }
 }
 
 body {
@@ -213,6 +216,13 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 @media print {
-  .site-header, .site-footer, .no-print { display: none !important; }
-  body { background: #fff; color: #000; }
+  :root {
+    color-scheme: light;
+    --paper: #fff;
+    --ink: #000;
+    --ink-2: #4a4a46;
+    --rule: #000;
+    --hairline: #d5d3cc;
+  }
+  .site-header, .site-footer, .skip, .no-print { display: none !important; }
 }

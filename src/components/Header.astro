@@ -9,8 +9,8 @@ const links = [
 ];
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
-<header class="site-header wrap">
-  <div class="bar">
+<header class="site-header">
+  <div class="bar wrap">
     <a class="brand" href="/" aria-label="Inside a Head, home">
       <Mark size={22} />
       <span>Inside a Head</span>
@@ -28,14 +28,20 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 </header>
 
 <style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--paper);
+    border-bottom: 1px solid var(--hairline);
+  }
   .bar {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     gap: var(--s-3) var(--s-8);
-    padding-block: var(--s-4);
-    border-bottom: 1px solid var(--hairline);
+    padding-block: var(--s-2);
   }
   .brand {
     display: inline-flex;

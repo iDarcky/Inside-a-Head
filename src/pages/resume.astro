@@ -1,13 +1,14 @@
 ---
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
+import Download from '../components/Download.astro';
 import { settings } from '../lib/site';
 
 const experience = [
   {
     dates: '05/2021 – 01/2025',
     title: 'Junior Technical Product Manager',
-    org: 'ATOSS Software AG',
+    org: 'Enterprise SaaS, workforce management',
     meta: 'Timișoara · Full-time',
     points: [
       'Owned end-to-end product lifecycle for enterprise workforce management features across 5+ major releases.',
@@ -30,12 +31,51 @@ const experience = [
 
 const projects = [
   {
-    dates: '2024',
+    dates: '2026',
+    title: 'Setlists.md',
+    org: 'Founder & sole PM · Web app (PWA)',
+    link: { href: 'https://setlistsmd.insideahead.com/', label: 'setlistsmd.insideahead.com' },
+    points: [
+      'Defined an offline-first chord-chart app for worship teams of 3–7 musicians, replacing PDFs and shared docs with one dynamic chart: transpose, capo, Nashville numbers and column layout in a single tap.',
+      'Chose plain Markdown as the song format so users own their data: every chart exports as a portable .md file that stays readable without the app.',
+      'Ran an end-to-end review of ten user flows, from first launch to Sunday morning, that settled the product model (one shared space per church; a setlist is the service) and the beta critical path.',
+      'Planned the rollout: a private soft launch with 5–10 worship teams in December 2026, then a public beta on 1 February 2027.',
+    ],
+    tags: ['React', 'Vite', 'Supabase', 'PWA', 'Tailwind'],
+  },
+  {
+    dates: '2026',
+    title: 'Meridian',
+    org: 'Personal project · Android',
+    link: { href: 'https://insideahead.com/work/meridian', label: 'insideahead.com/work/meridian' },
+    points: [
+      'Designing and building an Android calendar in the spirit of Sunrise that puts events, to-dos and habits in one daily list.',
+      'Shipped natural-language quick add that tells events, to-dos and habits apart, e.g. “Lunch with Priya today at 1pm” or “Run 30 min every weekday morning”.',
+      'Built on the calendars already on the phone, with no account and no server; wrote the privacy policy, listing every external service and exactly what it receives, before the store listing.',
+      'Added weather-aware habit scheduling that moves outdoor habits to a dry slot when rain is forecast. Currently at v0.4.',
+    ],
+    tags: ['Kotlin', 'Jetpack Compose', 'Material 3'],
+  },
+  {
+    dates: '2026',
+    title: 'Ridely',
+    org: 'Personal project · Android, iOS planned',
+    link: { href: 'https://insideahead.com/work/ridely', label: 'insideahead.com/work/ridely' },
+    points: [
+      'Wrote the product brief and principles for a money app for Uber and Bolt drivers in Romania, built around one question: how much did I actually keep?',
+      'Segmented onboarding by business model (self-employed PFA vs. fleet driver), so tax and cash-register features appear only for the drivers who need them.',
+      'Replaced manual entry with on-device screenshot import from each ride-sharing app; nothing is uploaded.',
+      'Cut the home screen to a single headline metric after a review found too many cards and too much text. Now at v0.22 in English and Romanian, with iOS planned from the shared Kotlin Multiplatform code.',
+    ],
+    tags: ['Kotlin Multiplatform', 'Jetpack Compose', 'Room'],
+  },
+  {
+    dates: '2025',
     title: 'The Retro Circuit',
-    org: 'Founder & Sole Developer',
+    org: 'Founder & sole PM · Web',
     link: { href: 'https://theretrocircuit.com/', label: 'theretrocircuit.com' },
     points: [
-      'Identified market fragmentation in retro gaming hardware: consumers lacked a reliable way to compare complex device variants. Designed and shipped a specialized comparison engine from zero to MVP in 3 months.',
+      'Identified market fragmentation in retro gaming hardware: consumers lacked a reliable way to compare complex device variants. Took the idea from 2022–2023 to a shipped comparison engine, zero to MVP in 3 months.',
       'Leveraged Google AI Studio as an engineering counterpart — writing precise specs, defining architecture constraints, and managing a CI/CD pipeline (Next.js 16, Supabase/PostgreSQL, Vercel) without writing code natively.',
       'Architected a relational data schema (Manufacturers → Consoles → Variants) to eliminate ‘signal noise’ — enabling SKU-level comparisons rather than generic product aggregations.',
       'Built a restricted Admin Command Center with RBAC and validation rules, enabling non-technical content management and scaling the product catalog without database intervention.',
@@ -68,9 +108,10 @@ const volunteering = [
       <h1>{settings.name}</h1>
       <p class="role">Product Manager</p>
       <p class="summary">
-        Product Manager with 4+ years of enterprise SaaS experience. At ATOSS Software AG I drove product discovery,
-        roadmapping, and cross-functional delivery for workforce management solutions. Also shipped a full-stack
-        personal project (The Retro Circuit) from zero to MVP in 3 months as sole PM.
+        Product Manager with around 4 years of experience in enterprise SaaS, driving product discovery,
+        roadmapping and cross-functional delivery for workforce management solutions. Since 2025 I’ve built four
+        products of my own end to end as the sole PM: a web comparison engine, an offline web app for worship
+        teams and two Android apps.
       </p>
       <ul class="contact mono">
         <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
@@ -79,7 +120,7 @@ const volunteering = [
         <li><a href="tel:+40735646723">0735 646 723</a></li>
       </ul>
       <div class="actions no-print">
-        <button class="button solid" type="button" data-print>Save as PDF</button>
+        <a class="button solid" href="/daniel-n-maghis-resume.pdf" download>Download PDF <Download /></a>
         <a class="button" href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a>
       </div>
     </header>
@@ -114,13 +155,6 @@ const volunteering = [
             </div>
           </li>
         ))}
-        <li class="item">
-          <p class="dates mono">2026</p>
-          <div>
-            <h3>Setlists.md, Meridian, Ridely</h3>
-            <p class="org">Personal projects <span>· <a href="/#work">Case studies</a></span></p>
-          </div>
-        </li>
       </ol>
     </section>
 
@@ -163,10 +197,6 @@ const volunteering = [
   </article>
 </Base>
 
-<script>
-  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
-</script>
-
 <style>
   .cv { padding-bottom: var(--s-24); }
   .top { padding-block: var(--s-12) var(--s-16); row-gap: var(--s-6); align-items: end; }
@@ -202,14 +232,38 @@ const volunteering = [
   .plain { list-style: none; display: grid; gap: var(--s-1); }
 
   @media print {
-    @page { margin: 14mm; }
+    @page { size: A4; margin: 10mm 13mm; }
+    :root {
+      --t-body: 9.5pt;
+      --t-small: 9pt;
+      --t-lead: 10.5pt;
+      --t-h2: 22pt;
+      --t-h3: 12pt;
+      --gutter: 5mm;
+    }
+    body { font-size: 9pt; line-height: 1.38; }
     .cv { padding: 0; }
-    .top { padding-block: 0 8mm; }
-    .block { break-inside: avoid; padding-bottom: 6mm; }
-    .item { grid-template-columns: 34mm 1fr !important; }
-    .block h2 { grid-column: 1 / span 3 !important; }
-    .items { grid-column: 4 / -1 !important; }
-    .grid { grid-template-columns: repeat(12, 1fr) !important; }
+    .grid { grid-template-columns: repeat(12, 1fr) !important; column-gap: 5mm; }
+    .top { padding-block: 0 5mm; row-gap: 2mm; }
+    h1 { grid-column: 1 / -1; }
+    .role { margin-top: 0; }
+    .summary { grid-column: 1 / span 8 !important; max-width: none; line-height: 1.4; }
+    .contact { grid-column: 9 / -1 !important; align-self: end; font-size: 8pt; }
+    .block { padding-block: 2mm 4mm; row-gap: 3mm; border-top-width: 1.5px; }
+    .block h2 { grid-column: 1 / span 2 !important; font-size: 12pt; }
+    .items { grid-column: 3 / -1 !important; gap: 3.5mm; }
+    .item { grid-template-columns: 24mm 1fr !important; gap: 4mm; break-inside: avoid; }
+    .dates { font-size: 7.5pt; padding-top: 0.15em; }
+    h3 { font-size: 10.5pt; }
+    .org { margin-top: 0.5mm; }
+    .points { margin-top: 1.5mm; max-width: none; }
+    .points li + li { margin-top: 0.8mm; }
+    .tags { margin-top: 1mm; font-size: 7.5pt; }
+    .block h2, h3 { break-after: avoid; }
     a { text-decoration: none; color: inherit; }
+    .plain { display: block; }
+    .plain li { display: inline; }
+    .plain li:not(:last-child)::after { content: ';  '; }
+    .items { gap: 3mm; }
   }
 </style>

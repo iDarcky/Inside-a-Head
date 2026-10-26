@@ -46,7 +46,7 @@ Mess) stays, but below the work.
 | 01 | Setlists.md | Web (PWA) | `docs/mockups/*` | Live at setlistsmd.insideahead.com; accent vetiver `#53796F`, bone `#F6F4EF` |
 | 02 | Meridian | Android | `src/assets/projects/meridian/01–08` (Play-style, 1080×1920) | Calendar app; accent `#A64200` burnt orange, paper `#FCEFE8` |
 | 03 | Ride Tracker | Android (KMP) | `docs/play/graphics/*` | Ride-sharing income tracker, EN/RO; accent teal `#136682` |
-| 04 | The Retro Circuit | Web | `public/retro-circuit.png` | Handheld comparison engine; accent International Orange `#FF4F00` |
+| 04 | The Retro Circuit | Web | `public/retro-circuit.png` | Handheld comparison engine; accent violet `#7C3AED` (Tailwind violet-600; violet-500 fails contrast) |
 | — | Redline Running | — | — | Moved to Museum of my Mess as an idea |
 
 Each project page: full case study (problem → decisions → screens → what's next), written from the

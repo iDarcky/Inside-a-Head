@@ -37,6 +37,12 @@ export default config({
         linkedin: fields.url({ label: 'LinkedIn URL' }),
         github: fields.url({ label: 'GitHub URL' }),
         availability: fields.text({ label: 'Availability', description: 'e.g. "Open to product roles"' }),
+        manifestoTitle: fields.text({ label: 'Manifesto heading' }),
+        manifesto: fields.text({
+          label: 'Manifesto',
+          multiline: true,
+          description: 'Shown above the Museum of my Mess. Separate paragraphs with a blank line; the last one is set in bold.',
+        }),
       },
     }),
   },
