@@ -41,7 +41,7 @@ Mess) stays, but below the work.
 | # | Project | Platform | Assets | Notes |
 |---|---------|----------|--------|-------|
 | 01 | Setlists.md | Web (PWA) | `docs/mockups/*` | Live at setlistsmd.insideahead.com |
-| 02 | Meridian | Android | needs real screenshots | Calendar app; repo screenshots are of Sunrise (reference), not usable |
+| 02 | Meridian | Android | `src/assets/projects/meridian/01–05` (Play-style, 1080×1920) | Calendar app; accent `#A64200` burnt orange, paper `#FCEFE8` |
 | 03 | Ride Tracker | Android (KMP) | `docs/play/graphics/*` | Ride-sharing income tracker, EN/RO |
 | 04 | The Retro Circuit | Web | `public/retro-circuit.png` | Handheld comparison engine |
 | — | Redline Running | — | — | Moved to Museum of my Mess as an idea |
