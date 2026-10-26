@@ -1,0 +1,54 @@
+---
+title: Setlists.md
+order: 1
+summary: An offline chord-chart app for worship teams, built so the chart still works when the building’s Wi-Fi doesn’t.
+role: Product, design and build
+year: '2026'
+platform: Web app (PWA), tablet first
+status: Live, beta in February 2027
+stack: React, Vite, Supabase, Tailwind
+kind: personal
+accent: '#53796F'
+ink: light
+link: https://setlistsmd.insideahead.com/
+linkLabel: setlistsmd.insideahead.com
+repo: https://github.com/iDarcky/setlists-md
+cover: ../../assets/projects/setlists-md/setlists-viewer-cards.png
+coverShape: screen
+gallery:
+  - image: ../../assets/projects/setlists-md/setlists-viewer-cards.png
+    alt: The setlist viewer with a song open in two columns, chords above the lyrics.
+    caption: The viewer, on stage. Transpose, capo and columns are one tap each.
+  - image: ../../assets/projects/setlists-md/song-editor-cards.png
+    alt: The song editor showing Markdown with chords in brackets next to the rendered chart.
+    caption: Every song is a plain Markdown file with chords inline.
+  - image: ../../assets/projects/setlists-md/setlist-editor-cards.png
+    alt: The setlist editor listing songs for a Sunday service with keys and roles.
+    caption: A setlist is the service itself, with songs, keys and who plays.
+  - image: ../../assets/projects/setlists-md/aa-menu.png
+    alt: Three variations of the reading options menu for text size, chords and layout.
+    caption: Reading options, explored before they were built.
+---
+## The problem
+
+A worship band’s charts live in PDFs, screenshots and shared Google Docs. Change the key on Sunday morning and someone is re-exporting a PDF in the car park. Then the church Wi-Fi drops halfway through the set.
+
+## Who it’s for
+
+A worship leader with a guitar and a tablet, leading a band of three to seven people. No playback engineer, no Ableton rig: just the people on stage, who need the right chart in the right key.
+
+## Decisions
+
+**Offline first, not offline capable.** The whole app and the whole song library live on the device. Sync is a bonus, never a dependency, so the chart works at zero signal.
+
+**Songs are Markdown files.** Each chart is a readable `.md` file with chords written inline. If the app disappeared tomorrow, every song would still open in any text editor. Ownership became a feature instead of a line in the terms.
+
+**Dynamic, not static.** Transpose, add a capo, switch to Nashville numbers, go from one column to two: each is a single tap, with no PDF to regenerate.
+
+**Churches first, personal stays.** I walked ten flows end to end, from first launch to Sunday morning. That review settled the model: a church is one shared space with no sub-groups, and a setlist *is* the service, not an “event” with a setlist attached.
+
+**Guests need no account.** A substitute musician opens a shared setlist from a link and plays.
+
+## Where it is
+
+Live at setlistsmd.insideahead.com and in active development. A private soft launch with five to ten worship teams is planned for December 2026, so January can go to fixing what they find before the public beta on 1 February 2027.

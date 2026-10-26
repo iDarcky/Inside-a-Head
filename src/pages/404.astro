@@ -1,17 +1,16 @@
 ---
-// src/pages/404.astro
-import MagazineLayout from '../layouts/MagazineLayout.astro';
+import Base from '../layouts/Base.astro';
 ---
+<Base title="Not found">
+  <section class="wrap nf">
+    <h1>404</h1>
+    <p>This page isn’t in the head. It may have moved when the site was rebuilt.</p>
+    <a class="button solid" href="/">Back to the studio</a>
+  </section>
+</Base>
 
-<MagazineLayout title="404: Page Not Found">
-  <main class="article-layout" style="min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
-    <span class="manifesto-kicker" style="margin-bottom: 24px; color: var(--accents-5);">ERROR 404</span>
-    <h1 class="article-title" style="font-size: clamp(4rem, 15vw, 12rem); line-height: 0.8; margin-bottom: 48px;">LOST IN THE MESS.</h1>
-    <p style="font-size: clamp(1.2rem, 2vw, 1.8rem); color: var(--accents-7); max-width: 600px; line-height: 1.5; margin-bottom: 64px;">
-      The page you are looking for has been moved, deleted, or never existed in this studio.
-    </p>
-    <a href="/" class="button button-massive" data-hover style="padding: 24px 48px; font-size: 1.2rem; border: 1px solid var(--geist-border);">
-      RETURN TO STUDIO INDEX
-    </a>
-  </main>
-</MagazineLayout>
+<style>
+  .nf { padding-block: var(--s-16) var(--s-32); display: grid; gap: var(--s-8); justify-items: start; }
+  h1 { font-size: var(--t-display); font-weight: 700; letter-spacing: -0.055em; line-height: 0.86; }
+  p { font-size: var(--t-lead); max-width: 28ch; line-height: 1.3; }
+</style>

@@ -1,28 +1,91 @@
 ---
-import Manifesto from './Manifesto.astro';
+import { settings } from '../lib/site';
+import Arrow from './Arrow.astro';
 
-interface Props {
-  className?: string;
-  variant?: 'massive' | 'minimal';
-}
-
-const { className = "", variant = "minimal" } = Astro.props;
+const year = new Date().getFullYear();
 ---
-
-<footer class={`footer-base ${variant === 'massive' ? 'footer-massive' : 'footer-minimal'} ${className}`} id="social">
-  {variant === 'massive' && (
-    <div class="footer-huge-links">
-      <a href="#" id="manifesto-btn" data-hover>MANIFESTO</a>
-      <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
-      <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
-      <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
-      <a href="https://www.instagram.com/danielmhimself/" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
+<footer class="site-footer wrap" id="contact">
+  <div class="cta grid">
+    <h2>Looking for a product manager who ships? Let’s talk.</h2>
+    <div class="actions">
+      <a class="button solid" href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a>
+      <a class="button" href="/resume">Resume</a>
+      <a class="button" href={`mailto:${settings.email}`}>Email</a>
     </div>
-  )}
-  <div class="footer-bottom-meta" style={variant === 'minimal' ? "border-top: none; padding-top: 1rem; padding-bottom: 2rem;" : ""}>
-    <p>© 2026 INSIDE A HEAD STUDIO.</p>
-    <a href="#top" class="back-to-top" data-hover>BACK TO TOP ↑</a>
+    <p class="note">{settings.availability}. Based in {settings.location}.</p>
+  </div>
+  <div class="base grid mono">
+    <span>© {year} {settings.name}</span>
+    <span class="clock">
+      <span>{settings.location.split(',')[0]}</span>
+      <time data-clock={settings.timeZone} aria-live="off"></time>
+    </span>
+    <span class="links">
+      <a href={settings.github} rel="me noreferrer">GitHub</a>
+      <a href={settings.linkedin} rel="me noreferrer">LinkedIn</a>
+    </span>
   </div>
 </footer>
 
-<Manifesto />
+<script>
+  // Local time in the studio's time zone. Rendered on the client only, so it is never stale.
+  const els = document.querySelectorAll<HTMLTimeElement>('time[data-clock]');
+  const tick = () => {
+    const now = new Date();
+    els.forEach((el) => {
+      const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: el.dataset.clock, hour: '2-digit', minute: '2-digit' });
+      el.textContent = fmt.format(now);
+      el.dateTime = now.toISOString();
+    });
+  };
+  tick();
+  setInterval(tick, 15_000);
+</script>
+
+<style>
+  .site-footer {
+    padding-bottom: max(var(--s-8), env(safe-area-inset-bottom));
+  }
+  .cta {
+    border-top: 2px solid var(--rule);
+    padding-block: var(--s-6) var(--s-24);
+    row-gap: var(--s-8);
+  }
+  h2 {
+    grid-column: 1 / -1;
+    font-size: var(--t-h2);
+    max-width: 14ch;
+  }
+  .actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-3);
+    align-self: end;
+  }
+  .note {
+    grid-column: 1 / -1;
+    color: var(--ink-2);
+  }
+  @media (min-width: 720px) {
+    h2 { grid-column: 1 / span 8; }
+    .actions { grid-column: 9 / -1; justify-content: flex-end; }
+    .note { grid-column: 1 / span 6; }
+  }
+  .base {
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--s-4);
+    row-gap: var(--s-2);
+    color: var(--ink-2);
+  }
+  .base > * { grid-column: 1 / -1; }
+  .clock { display: inline-flex; gap: var(--s-2); }
+  .links { display: flex; gap: var(--s-4); }
+  .links a { text-decoration: none; }
+  .links a:hover { color: var(--ink); text-decoration: underline; }
+  @media (min-width: 720px) {
+    .base > :nth-child(1) { grid-column: 1 / span 4; }
+    .base > :nth-child(2) { grid-column: 5 / span 4; }
+    .base > :nth-child(3) { grid-column: 9 / -1; justify-content: flex-end; }
+  }
+</style>

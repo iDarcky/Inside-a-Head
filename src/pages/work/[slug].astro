@@ -1,0 +1,221 @@
+---
+import { render } from 'astro:content';
+import { Picture, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Arrow from '../../components/Arrow.astro';
+import { getProjects, accentStyle, type Project } from '../../lib/projects';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project, i) => ({
+    params: { slug: project.id },
+    props: { project, next: projects[(i + 1) % projects.length] },
+  }));
+}
+
+interface Props { project: Project; next: Project }
+const { project, next } = Astro.props;
+const d = project.data;
+const { Content } = await render(project);
+const og = await getImage({ src: d.cover, width: 1200, format: 'jpg' });
+
+const facts = [
+  ['Role', d.role],
+  ['Year', d.year],
+  ['Platform', d.platform],
+  ['Status', d.status],
+  ['Stack', d.stack],
+];
+const isPhone = d.coverShape === 'phone';
+---
+<Base title={d.title} description={d.summary} image={og.src} type="article">
+  <article style={accentStyle(project)}>
+    <header class="hero">
+      <div class="wrap">
+        <a class="back mono" href="/#work"><Arrow dir="left" /> All work</a>
+        <h1>{d.title}</h1>
+        <div class="grid hero-foot">
+          <p class="summary">{d.summary}</p>
+          <div class="links">
+            {d.link && <a class="button on-accent" href={d.link} rel="noreferrer">{d.linkLabel ?? 'Visit'} <Arrow /></a>}
+            {d.repo && <a class="button on-accent ghost" href={d.repo} rel="noreferrer">Source on GitHub <Arrow /></a>}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap">
+      <dl class="facts grid">
+        {facts.map(([k, v]) => (
+          <div><dt class="mono">{k}</dt><dd>{v}</dd></div>
+        ))}
+      </dl>
+
+      <div class="prose grid">
+        <Content />
+      </div>
+
+      {d.gallery.length > 0 && (
+        <section class="gallery" aria-labelledby="screens-title">
+          <h2 id="screens-title" class="gallery-title">Screens</h2>
+          <ul class:list={['shots', 'grid', isPhone ? 'phones' : 'screens']}>
+            {d.gallery.map((g, i) => (
+              <li>
+                <figure>
+                  <Picture
+                    src={g.image}
+                    alt={g.alt}
+                    formats={['avif', 'webp']}
+                    widths={isPhone ? [360, 540, 720] : [800, 1200, 1600, 2400]}
+                    sizes={isPhone ? '(min-width: 1200px) 22vw, (min-width: 720px) 30vw, 48vw' : '(min-width: 720px) 90vw, 100vw'}
+                    loading={i < 2 ? 'eager' : 'lazy'}
+                  />
+                  {g.caption && <figcaption>{g.caption}</figcaption>}
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+
+    <nav class="next" aria-label="Next project" style={accentStyle(next)}>
+      <a class="wrap" href={`/work/${next.id}`}>
+        <span class="mono">Next project</span>
+        <span class="next-title">{next.data.title} <Arrow dir="right" /></span>
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .hero {
+    background: var(--accent);
+    color: var(--on-accent);
+    padding-block: var(--s-8) var(--s-12);
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    min-height: 44px;
+    text-decoration: none;
+  }
+  .back:hover { text-decoration: underline; }
+  h1 {
+    margin-top: var(--s-12);
+    font-size: var(--t-display);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+    margin-left: -0.04em;
+    overflow-wrap: anywhere;
+  }
+  .hero-foot { margin-top: var(--s-12); row-gap: var(--s-6); align-items: end; }
+  .summary {
+    grid-column: 1 / -1;
+    font-size: var(--t-lead);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    max-width: 30ch;
+  }
+  .links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  @media (min-width: 720px) {
+    .summary { grid-column: 1 / span 7; }
+    .links { grid-column: 9 / -1; justify-content: flex-end; }
+  }
+  .button.on-accent { border-color: var(--on-accent); color: var(--accent); background: var(--on-accent); }
+  .button.on-accent:hover { background: transparent; color: var(--on-accent); }
+  .button.on-accent.ghost { background: transparent; color: var(--on-accent); }
+  .button.on-accent.ghost:hover { background: var(--on-accent); color: var(--accent); }
+  .hero :focus-visible { outline-color: var(--on-accent); }
+
+  .facts {
+    padding-block: var(--s-6);
+    row-gap: var(--s-4);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .facts div { grid-column: span 2; }
+  .facts div:last-child { grid-column: 1 / -1; }
+  .facts dt { color: var(--ink-2); margin-bottom: var(--s-1); }
+  .facts dd { font-size: var(--t-small); }
+  @media (min-width: 720px) {
+    .facts div { grid-column: span 2; }
+    .facts div:last-child { grid-column: span 4; }
+  }
+
+  /* Case study: headings hang in the left columns, text runs in a 7-column measure. */
+  .prose { padding-block: var(--s-16) var(--s-8); row-gap: 0; }
+  /* Markdoc wraps its output in <article>; let its children sit on the grid. */
+  .prose > :global(article) { display: contents; }
+  .prose :global(article > *) { grid-column: 1 / -1; }
+  .prose :global(h2) {
+    font-size: var(--t-h3);
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-top: var(--s-16);
+    margin-bottom: var(--s-4);
+  }
+  .prose :global(h2:first-child) { margin-top: 0; }
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol) { margin-bottom: var(--s-4); max-width: 68ch; }
+  .prose :global(ul), .prose :global(ol) { padding-left: 1.2em; }
+  .prose :global(li + li) { margin-top: var(--s-2); }
+  .prose :global(strong) { font-weight: 600; }
+  .prose :global(code) { font-family: var(--mono); font-size: 0.9em; }
+  .prose :global(a) { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+  @media (min-width: 960px) {
+    .prose :global(article > h2) { grid-column: 1 / span 4; margin-top: var(--s-16); margin-bottom: 0; padding-right: var(--s-8); }
+    .prose :global(h2 + *) { margin-top: var(--s-16); }
+    .prose :global(h2:first-child + *) { margin-top: 0; }
+    .prose :global(article > :is(p, ul, ol)) { grid-column: 5 / span 7; }
+  }
+
+  .gallery { padding-block: var(--s-16) var(--s-24); }
+  .gallery-title {
+    font-size: var(--t-h3);
+    letter-spacing: -0.03em;
+    border-top: 2px solid var(--rule);
+    padding-top: var(--s-3);
+    margin-bottom: var(--s-8);
+  }
+  .shots { list-style: none; row-gap: var(--s-12); }
+  .shots li { grid-column: span 2; }
+  .screens li { grid-column: 1 / -1; }
+  @media (min-width: 720px) {
+    .phones li { grid-column: span 4; }
+  }
+  @media (min-width: 1200px) {
+    .phones li { grid-column: span 3; }
+  }
+  figure :global(img) { width: 100%; background: var(--wash); }
+  figcaption {
+    margin-top: var(--s-3);
+    font-size: var(--t-small);
+    color: var(--ink-2);
+    max-width: 40ch;
+  }
+
+  .next { background: var(--accent); color: var(--on-accent); }
+  .next a {
+    display: grid;
+    gap: var(--s-3);
+    padding-block: var(--s-12) var(--s-16);
+    text-decoration: none;
+  }
+  .next-title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-4);
+    font-size: var(--t-h2);
+    font-weight: 650;
+    letter-spacing: -0.045em;
+    line-height: 1;
+  }
+  .next-title :global(svg) { width: 0.6em; height: 0.6em; transition: transform 200ms var(--ease-out); }
+  @media (hover: hover) {
+    .next a:hover .next-title :global(svg) { transform: translateX(6px); }
+  }
+  .next :focus-visible { outline-color: var(--on-accent); outline-offset: -6px; }
+</style>

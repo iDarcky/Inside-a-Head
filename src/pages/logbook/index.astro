@@ -1,74 +1,58 @@
 ---
-export const prerender = false;
-import MagazineLayout from "../../layouts/MagazineLayout.astro";
-import { sanityClient } from "../../utils/sanity";
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Arrow from '../../components/Arrow.astro';
+import { formatDate } from '../../lib/site';
 
-let logbookEntries = [];
-
-try {
-  logbookEntries = await sanityClient.fetch(
-    `*[_type == "logbookEntry"] | order(publishedAt desc)`,
-  );
-} catch (error) {
-  console.error("Failed to fetch logbook entries:", error);
-}
+const entries = (await getCollection('logbook')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
-
-<MagazineLayout title="Logbook">
-  <main class="article-layout">
-    <!-- Explicit spacer to clear the fixed Magazine header completely -->
-    <div style="height: 180px; width: 100%;"></div>
-
-    <header class="article-header" style="margin-bottom: 5rem;">
-      <h1 class="article-title">STUDIO LOG</h1>
-      <p
-        style="color: var(--accents-5); font-family: var(--font-mono); font-size: 0.9rem; margin-top: 1rem;"
-      >
-        CHRONOLOGICAL FRAGMENTS & DOCUMENTATION
-      </p>
-    </header>
-
-    <div
-      class="logbook-list"
-      style="border-top: 1px solid var(--geist-border);"
-    >
-      {
-        logbookEntries.map((entry: any) => {
-          const date = new Date(entry.publishedAt);
-          const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-          return (
-            <a
-              href={`/logbook/${entry.slug.current}`}
-              class="logbook-entry"
-              data-hover
-            >
-              <div class="logbook-date">{dateStr}</div>
-              <div class="logbook-content">
-                <h3 class="logbook-title-parallax">{entry.title}</h3>
-              </div>
+<Base title="Logbook" description="A weekly logbook: what I built, what broke, and what I’d do differently.">
+  <section class="section wrap">
+    <div class="head grid">
+      <h1>Logbook</h1>
+      <p class="intro">What I built, what broke, and what I’d do differently. Roughly once a week.</p>
+    </div>
+    {entries.length === 0 ? (
+      <p class="empty">The first entry is on its way.</p>
+    ) : (
+      <ol class="rows">
+        {entries.map((e) => (
+          <li>
+            <a class="row grid" href={`/logbook/${e.id}`}>
+              <time class="mono" datetime={e.data.date.toISOString()}>{formatDate(e.data.date)}</time>
+              <span class="row-title">{e.data.title}</span>
+              {e.data.summary && <span class="row-note">{e.data.summary}</span>}
+              <Arrow dir="right" />
             </a>
-          );
-        })
-      }
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+</Base>
 
-      {
-        logbookEntries.length === 0 && (
-          <p style="text-align: center; color: var(--accents-4); padding: 4rem 0;">
-            The log is currently empty.
-          </p>
-        )
-      }
-    </div>
-
-    <!-- Centered inline-block link prevents the cursor bounding box from stretching full width -->
-    <div style="text-align: center; margin-top: 4rem;">
-      <a
-        href="/#top"
-        class="footer-back-studio"
-        data-hover
-        style="display: inline-block; margin-top: 0; margin-bottom: 0;"
-        >&larr; Back to Studio</a
-      >
-    </div>
-  </main>
-</MagazineLayout>
+<style>
+  .head { padding-bottom: var(--s-12); row-gap: var(--s-6); align-items: end; }
+  h1 { grid-column: 1 / -1; font-size: var(--t-display); font-weight: 700; letter-spacing: -0.055em; line-height: 0.86; margin-left: -0.04em; }
+  .intro { grid-column: 1 / -1; font-size: var(--t-lead); line-height: 1.3; max-width: 32ch; color: var(--ink-2); }
+  @media (min-width: 720px) { .intro { grid-column: 1 / span 6; } }
+  .rows { list-style: none; }
+  .rows li { border-top: 1px solid var(--hairline); }
+  .rows li:last-child { border-bottom: 1px solid var(--hairline); }
+  .row { padding-block: var(--s-4); row-gap: var(--s-1); align-items: baseline; text-decoration: none; }
+  .row > * { grid-column: 1 / -1; }
+  .row > :global(svg) { display: none; }
+  .row time { color: var(--ink-2); }
+  .row-title { font-size: var(--t-h3); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
+  .row-note { color: var(--ink-2); max-width: 60ch; }
+  @media (hover: hover) {
+    .row:hover .row-title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.15em; }
+  }
+  @media (min-width: 720px) {
+    .row > :nth-child(1) { grid-column: 1 / span 2; }
+    .row > :nth-child(2) { grid-column: 3 / span 4; }
+    .row > :nth-child(3) { grid-column: 7 / span 5; }
+    .row > :global(svg) { display: block; grid-column: 12; justify-self: end; align-self: center; }
+  }
+  .empty { color: var(--ink-2); }
+</style>

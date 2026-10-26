@@ -1,28 +1,39 @@
-# Inside a Head 🧠
-**The Digital Studio of Daniel.**
+# Inside a Head
 
-Welcome to the internal blueprint of my personal studio. This repository houses the code, design systems, and logbooks that power the "Inside a Head" ecosystem—a space dedicated to exploring the intersection of software, aesthetic design, and building in public.
+The studio of Daniel N. Maghiș, product manager. Case studies, a weekly logbook and a museum of unfinished ideas.
 
-## 🏗️ The Vision
-**Inside a Head** isn't just a portfolio. It’s an ongoing experiment in digital product development. It’s a studio where I build tools like *Setlists MD*, explore retro gaming hardware, and document everything along the way.
+Built with [Astro](https://astro.build) and [Keystatic](https://keystatic.com), deployed on Vercel. Every public page is prerendered; content lives in this repo as Markdown and YAML.
 
-## 🛠️ The Philosophy
-- **Aesthetic First:** If it doesn't feel right, it doesn't exist. We lean heavily on high-fidelity designs, custom GSAP animations, and Swiss industrial design principles.
-- **Build in Public:** Every mistake, iteration, and breakthrough is documented in the **Logbook**.
-- **Vibe-Coded:** Technical dogma takes a backseat to the ultimate result: how the space feels.
+## Run it
 
-## 📓 The Logbook
-The logbook is a bit of everything. It's a continuous stream of thoughts, experiments, and daily builds—updated organically. It exists to document the human side of the journey, not just the polished destination. Keep an eye out for weekly updates.
+```bash
+npm install
+npm run dev        # http://localhost:4321
+npm run build
+```
 
-## 🌱 Future Trajectory
-**Inside a Head** is designed as a living organism. The North Star? To evolve from a personal digital garden into a collaborative agency that helps creators, builders, and dreamers bring their ideas to life through design, marketing, and management.
+## Editing content
 
----
+Open `/keystatic` while `npm run dev` is running. Changes are written straight to the files below.
 
-## 🤝 Let's Connect
-"There are a lot of ideas out there, but you should actually start building."
+| What | Where |
+| --- | --- |
+| Projects (case studies) | `src/content/projects/*.mdoc`, images in `src/assets/projects/` |
+| Logbook | `src/content/logbook/*.mdoc` |
+| Museum of my Mess | `src/content/mess/*.yaml` |
+| Name, intro, links | `src/content/settings.yaml` |
 
-Did this space spark an idea? Are you intrigued by the mess? 
-**Let's connect and ideate together.**
+You can also edit any of those files by hand, in GitHub or in Obsidian.
 
-[GitHub](https://github.com/iDarcky) | [LinkedIn](https://www.linkedin.com/in/danielnmaghis/)
+### Editing on the live site
+
+In production, Keystatic saves through GitHub instead of the local disk. To turn that on once:
+
+1. Run `npm run dev`, open `/keystatic`, and follow **Connect to GitHub**. It creates a GitHub App and writes `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET` and `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` to `.env`.
+2. Add the same four variables to the Vercel project's environment variables and redeploy.
+
+After that, `insideahead.com/keystatic` lets you sign in with GitHub and publish from any device, phone included.
+
+## Design
+
+Classic Swiss: a 12-column grid, Geist and Geist Mono, black on paper (and paper on black in dark mode). Each project brings its own single accent colour. See `docs/redesign-spec.md`.

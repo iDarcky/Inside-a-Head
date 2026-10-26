@@ -1,0 +1,10 @@
+---
+// The Inside a Head mark: a square head with the idea sitting inside it.
+// Placeholder until a direction is chosen from docs/logo/.
+interface Props { size?: number; class?: string }
+const { size = 24, class: className } = Astro.props;
+---
+<svg class={className} width={size} height={size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <path fill="currentColor" fill-rule="evenodd" d="M0 0h24v24H0zM3 3v18h18V3z" />
+  <rect x="13" y="6" width="5" height="5" fill="currentColor" />
+</svg>

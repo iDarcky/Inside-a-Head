@@ -1,0 +1,60 @@
+---
+title: Ridely
+order: 3
+summary: A money app for Uber and Bolt drivers that answers one question first, how much did I actually keep?
+role: Product, design and build
+year: '2026'
+platform: Android, iOS later
+status: v0.22, in development
+stack: Kotlin Multiplatform, Jetpack Compose, Room
+kind: personal
+accent: '#136682'
+ink: light
+repo: https://github.com/iDarcky/ride-tracker
+cover: ../../assets/projects/ridely/01.png
+coverShape: phone
+gallery:
+  - image: ../../assets/projects/ridely/01.png
+    alt: Ridely’s home screen showing money kept for October and progress towards a monthly target.
+    caption: How much did you keep? Right at the top.
+  - image: ../../assets/projects/ridely/02.png
+    alt: This week’s payout from Uber and Bolt, with kept, fees and expenses as one bar.
+    caption: This week’s payout, and what’s coming to your account.
+  - image: ../../assets/projects/ridely/03.png
+    alt: A weekly summary with money kept and money per hour before and after fuel.
+    caption: Every Monday, your week, in money per hour after fuel.
+  - image: ../../assets/projects/ridely/05.png
+    alt: The import screen with a week of days checked off for Bolt and Uber.
+    caption: One screenshot a day from each app. Nothing is uploaded.
+  - image: ../../assets/projects/ridely/04.png
+    alt: The end-of-month import asking for each app’s monthly totals and online hours.
+    caption: End of month in two steps per app.
+  - image: ../../assets/projects/ridely/06.png
+    alt: A “Your September, Wrapped” story screen showing 23 days on the road.
+    caption: Your month, wrapped and ready to share.
+---
+## The problem
+
+Ride-sharing drivers see big numbers in the Uber and Bolt apps, but not what’s left once platform fees, fuel, the car and the accountant are paid. The services that exist sell accounting. None of them simply shows a driver their own numbers.
+
+## Who it’s for
+
+Drivers in Romania working for Uber, Bolt or both, either as a PFA (their own business) or through a fleet partner. Not fleet managers, and not accountants.
+
+## The principles came first
+
+Before any screen, I wrote down the rules: adding an entry takes under ten seconds; home answers one question; every figure is marked known, estimated or missing; data stays on the phone with no account; tax figures are estimates with editable thresholds, never advice; and the app stays calm, with no streaks and no decorative charts.
+
+## Decisions
+
+**Onboarding forks on how you drive.** A PFA driver gets tax estimates and cash-register features. A fleet driver never sees them, because the fleet handles those, and fleet commission becomes an income field instead.
+
+**Screenshots in, typing out.** Typing a day in is fast, but faster still is one screenshot a day from each app, read on the phone. Nothing is uploaded.
+
+**One big number per screen.** When home grew too many cards and too much text, I cut it back to a single headline: money kept, with the monthly target inside a ring. Everything else moved behind “In detail”.
+
+**Uber and Bolt are values, not screens.** Adding another app adds a value, not a feature, so the product can grow into other platforms and countries without a redesign.
+
+## Where it is
+
+Version 0.22 on Android, in English and Romanian, with the Google Play listing being prepared. The iPhone app will come later from the same shared Kotlin code.

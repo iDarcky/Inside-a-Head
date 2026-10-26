@@ -1,23 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
-
-import sanity from '@sanity/astro';
 import react from '@astrojs/react';
-
+import markdoc from '@astrojs/markdoc';
+import keystatic from '@keystatic/astro';
 import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [
-    sanity({
-      projectId: "gwlcf911",
-      dataset: "production",
-      useCdn: false,
-      studioBasePath: '/studio',
-      apiVersion: '2024-04-20'
-    }),
-    react()
-  ],
-
-  adapter: vercel()
+  site: 'https://insideahead.com',
+  integrations: [react(), markdoc(), keystatic()],
+  adapter: vercel(),
 });

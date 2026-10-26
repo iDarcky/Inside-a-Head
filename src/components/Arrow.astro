@@ -1,0 +1,11 @@
+---
+// A drawn arrow, so every arrow on the site has the same stroke.
+interface Props { dir?: 'up-right' | 'right' | 'left' }
+const { dir = 'up-right' } = Astro.props;
+const d = {
+  'up-right': 'M4 12 12 4M5.5 4H12v6.5',
+  right: 'M2 8h12M9 3l5 5-5 5',
+  left: 'M14 8H2M7 3 2 8l5 5',
+}[dir];
+---
+<svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true" focusable="false"><path d={d} /></svg>

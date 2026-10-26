@@ -1,0 +1,63 @@
+---
+title: Meridian
+order: 2
+summary: A calm Android calendar in the spirit of Sunrise, with your events, to-dos and habits in one list.
+role: Product, design and build
+year: '2026'
+platform: Android
+status: v0.4, in development
+stack: Kotlin, Jetpack Compose, Material 3
+kind: personal
+accent: '#A64200'
+ink: light
+cover: ../../assets/projects/meridian/01-today.png
+coverShape: phone
+gallery:
+  - image: ../../assets/projects/meridian/01-today.png
+    alt: 'Meridian’s today view: a week strip, habit rings, a birthday and two to-dos marked “Moved to today”.'
+    caption: Your whole day at a glance.
+  - image: ../../assets/projects/meridian/02-quick-add.png
+    alt: Quick add turning “Lunch with Priya today at 1pm at Foodhallen” into what, when, who and where.
+    caption: Type a sentence; Meridian works out the event.
+  - image: ../../assets/projects/meridian/03-three-days.png
+    alt: A three-day timeline with a flight, a workshop and a red line marking the current time.
+    caption: Three days or the whole week when you need to plan ahead.
+  - image: ../../assets/projects/meridian/04-event-detail.png
+    alt: An event detail screen with an RSVP choice and a map of the location.
+    caption: Map, guests and RSVP on one screen.
+  - image: ../../assets/projects/meridian/05-todos.png
+    alt: The to-do list filtered by Personal, Work and Family, with overdue items moved to today.
+    caption: Unfinished to-dos roll over to today instead of disappearing.
+  - image: ../../assets/projects/meridian/06-habit-streaks.png
+    alt: The month view switched to habit streaks, each day shaded by how many habits were done.
+    caption: The month view doubles as a habit heatmap.
+  - image: ../../assets/projects/meridian/07-habits.png
+    alt: The habits screen with a 2 of 5 ring and streaks for running, reading and water.
+    caption: Habits with real streaks.
+  - image: ../../assets/projects/meridian/08-dark.png
+    alt: The today view in a dark theme built from neutral greys.
+    caption: A true dark theme in neutral greys.
+---
+## The problem
+
+Sunrise was the calendar a lot of people loved, and it was shut down in 2016. What’s left mostly splits the day in two: a calendar for meetings, another app for tasks, a third for habits. None of them shows the day the way you actually live it.
+
+## The idea
+
+One calm list for the day. Events from the calendars already on the phone, the to-dos you didn’t finish yesterday, and the habits you’re trying to keep, all in the same place.
+
+## Decisions
+
+**No account, no server.** Meridian reads and writes the calendars Android already has, so Google sync keeps working exactly as before and nothing is copied anywhere else. What it learns about you stays on the phone.
+
+**Quick add understands sentences.** “Lunch with Priya today at 1pm at Foodhallen” becomes an event with a time, a guest and a place. “Buy milk by Friday” becomes a to-do. “Run 30 min every weekday morning” becomes a habit.
+
+**Nothing gets lost silently.** Unfinished to-dos move to today and say so, with a “Moved to today” label and the day they were due.
+
+**Habits fit around the day.** Meridian suggests free slots for habits, and outdoor ones move to a dry slot when rain is forecast. Weather is off by default.
+
+**Privacy written before the store listing.** Every outside service is listed with exactly what it receives. No analytics, no crash reporting, no ads.
+
+## What’s next
+
+Meridian’s own event editor (New event still opens the system calendar’s editor), Google Tasks sync, and a release on Google Play.

@@ -1,168 +1,189 @@
 ---
-export const prerender = false;
-import HomeLayout from '../layouts/HomeLayout.astro';
-import Footer from '../components/Footer.astro';
-import ProjectPanel from '../components/ProjectPanel.astro';
-import ReadingTile from '../components/ReadingTile.astro';
-import { sanityClient } from '../utils/sanity';
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Poster from '../components/Poster.astro';
+import Arrow from '../components/Arrow.astro';
+import { getProjects } from '../lib/projects';
+import { settings, formatDate } from '../lib/site';
 
-let logbookEntries = [];
-let projects = [];
-let siteSettings = null;
+const projects = await getProjects();
+const logbook = (await getCollection('logbook')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latest = logbook.slice(0, 4);
 
-try {
-  [logbookEntries, projects, siteSettings] = await Promise.all([
-    sanityClient.fetch(`*[_type == "logbookEntry"] | order(publishedAt desc) [0..2]`),
-    sanityClient.fetch(`*[_type == "project"] | order(order asc)`),
-    sanityClient.fetch(`*[_type == "siteSettings"][0]`)
-  ]);
-} catch (error) {
-  console.error("Failed to fetch data from Sanity:", error);
-}
+const stateOrder = { idea: 0, paused: 1, abandoned: 2, became: 3 } as const;
+const stateLabel = { idea: 'Idea', paused: 'Paused', abandoned: 'Abandoned', became: 'Became something' } as const;
+const mess = (await getCollection('mess')).sort((a, b) => stateOrder[a.data.state] - stateOrder[b.data.state]);
 
-const siteTitle = siteSettings?.siteTitle || "Inside a Head | Digital Studio";
-const siteDescription = siteSettings?.siteDescription || "The digital studio of Daniel. Product Manager, Musician, and Builder.";
-const bio = siteSettings?.bio || "hi, daniel here. welcome to inside a head. a personal studio for tech experiments and exploring aesthetic design. documenting the learning process, and making room for the personal mess.";
+// Poster wall rhythm: wide/narrow, then narrow/wide. Odd counts end full width.
+const spans = projects.map((_, i) => {
+  if (i === projects.length - 1 && projects.length % 2 === 1) return 12;
+  return (Math.floor(i / 2) % 2 === 0) === (i % 2 === 0) ? 7 : 5;
+}) as (5 | 7 | 12)[];
 ---
-
-<HomeLayout title={siteTitle} description={siteDescription} projects={projects}>
-  <section class="hero-immersive section-snap" id="top">
-    <div class="hero-parallax-wrapper">
-      <h1 id="hero-title" class="hero-massive-text">INSIDE A HEAD</h1>
-
-      <div class="hero-center-cluster">
-        <div class="intro-portrait"></div>
-        <div class="intro-logo-overlay">
-          <svg viewBox="0 0 100 100" class="iah-logo">
-            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="'Geist Mono', monospace" font-size="28" font-weight="bold" fill="currentColor" letter-spacing="-2">STUDIO</text>
-          </svg>
-        </div>
-      </div>
-
-      <p class="hero-copy centered-text" id="profile-bio">
-        {bio}
+<Base>
+  <section class="masthead wrap" aria-labelledby="masthead-title">
+    <h1 id="masthead-title">Inside a Head</h1>
+    <div class="grid intro">
+      <p class="lead">
+        <strong>{settings.name}</strong>, {settings.role.toLowerCase()}. {settings.intro}
       </p>
-    </div>
-
-    <div class="scroll-indicator-wrapper">
-      <span class="scroll-indicator-text">SCROLL FOR MORE</span>
-      <div class="scroll-indicator">
-        <div class="scroll-indicator-line"></div>
+      <dl class="facts">
+        <div><dt>Role</dt><dd>{settings.role}</dd></div>
+        <div><dt>Based in</dt><dd>{settings.location}</dd></div>
+        <div><dt>Status</dt><dd>{settings.availability}</dd></div>
+      </dl>
+      <div class="actions">
+        <a class="button solid" href="/resume">Resume</a>
+        <a class="button" href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a>
       </div>
     </div>
   </section>
 
-  {projects.map((project: any, index: number) => (
-    <ProjectPanel project={project} index={index} />
-  ))}
-
-  <!-- The Design System (The Engine Room) -->
-  <section class="engine-room-section section-snap" id="design-system">
-    <div class="engine-room-content">
-      <div>
-        <h2 class="engine-title">SYSTEM ARCHITECTURE</h2>
-        <p class="engine-copy">Powered by Geist UI. Explore the foundational principles, typography, and semantic components that power every app in the studio.</p>
-      </div>
-      <a href="https://design-system-dm.vercel.app/" class="button button-massive ds-cta" target="_blank" rel="noreferrer" data-hover>
-        Explore <i data-lucide="arrow-right" style="margin-left: 16px; width: 24px; height: 24px;"></i>
-      </a>
+  <section class="section wrap" id="work" aria-labelledby="work-title">
+    <div class="section-head grid">
+      <h2 id="work-title">Work</h2>
+      <p class="mono">{projects.length} products, idea to release</p>
+    </div>
+    <div class="grid wall">
+      {projects.map((p, i) => <Poster project={p} span={spans[i]} eager={i < 2} />)}
     </div>
   </section>
 
-  <!-- The Logbook -->
-  <section class="logbook-cinematic section-snap" id="logbook">
-    <div class="logbook-header-wrapper">
-      <h2 class="logbook-huge-title">LOGBOOK</h2>
+  <section class="section wrap" id="logbook" aria-labelledby="logbook-title">
+    <div class="section-head grid">
+      <h2 id="logbook-title">Logbook</h2>
+      <p class="mono"><a href="/logbook">All entries</a></p>
     </div>
-    <div id="logbook-list" class="logbook-list">
-      {logbookEntries.map((entry: any) => {
-        const date = new Date(entry.publishedAt);
-        const dateStr = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+    {latest.length === 0 ? (
+      <p class="empty">The first entry is on its way.</p>
+    ) : (
+      <ol class="rows">
+        {latest.map((e) => (
+          <li>
+            <a class="row grid" href={`/logbook/${e.id}`}>
+              <time class="mono" datetime={e.data.date.toISOString()}>{formatDate(e.data.date)}</time>
+              <span class="row-title">{e.data.title}</span>
+              {e.data.summary && <span class="row-note">{e.data.summary}</span>}
+              <Arrow dir="right" />
+            </a>
+          </li>
+        ))}
+      </ol>
+    )}
+  </section>
+
+  <section class="section wrap" id="museum" aria-labelledby="museum-title">
+    <div class="section-head grid">
+      <h2 id="museum-title">Museum of my Mess</h2>
+      <p class="mono">Ideas, pauses and the things they turned into</p>
+    </div>
+    <ul class="rows">
+      {mess.map((m) => {
+        const inner = (
+          <>
+            <span class="mono state" data-state={m.data.state}>{stateLabel[m.data.state]}</span>
+            <span class="row-title">{m.data.title}</span>
+            <span class="row-note">{m.data.note}</span>
+            {m.data.link ? <Arrow /> : <span aria-hidden="true" />}
+          </>
+        );
         return (
-          <a href={`/logbook/${entry.slug.current}`} class="logbook-entry" data-hover>
-            <div class="logbook-date">{dateStr}</div>
-            <div class="logbook-content">
-              <h3 class="logbook-title-parallax">{entry.title}</h3>
-            </div>
-          </a>
+          <li>
+            {m.data.link ? (
+              <a class="row grid" href={m.data.link} rel="noreferrer">{inner}</a>
+            ) : (
+              <div class="row grid">{inner}</div>
+            )}
+          </li>
         );
       })}
-    </div>
-<div class="logbook-footer" style="margin-top: 4vw; text-align: right;">
-      <a href="/logbook" class="button button-massive" data-hover style="padding: 16px 32px; font-size: 1rem;">View Full Logbook →</a>
-    </div>
+    </ul>
   </section>
+</Base>
 
-  <!-- The Shelf Part 1: Build Metrics & Status -->
-  <section class="bento-section section-snap" id="shelf-builds">
-    <div class="bento-wrapper">
-      <div class="logbook-header-wrapper">
-        <h2 class="logbook-huge-title bento-title-parallax">MUSEUM OF MY MESS</h2>
-      </div>
-      <div class="bento-grid bento-grid-builds">
-        <!-- Tile: Clock -->
-        <div class="bento-tile bento-clock">
-          <div class="bento-kicker">LOCAL TIME</div>
-          <div class="geist-wrapper">
-            <span id="geist-time" class="geist-time">00:00</span>
-            <span id="geist-seconds" class="geist-seconds">00</span>
-          </div>
-          <div class="clock-location">BUCHAREST, RO</div>
-        </div>
+<style>
+  .masthead {
+    padding-block: var(--s-12) var(--s-16);
+  }
+  h1 {
+    /* Set to fill the grid: the wordmark is the poster. */
+    font-size: clamp(3.5rem, 21vw, 17rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+    margin-left: -0.04em; /* optical: align the I's stem with the grid edge */
+  }
+  .intro {
+    margin-top: var(--s-12);
+    row-gap: var(--s-8);
+    align-items: end;
+  }
+  .lead {
+    grid-column: 1 / -1;
+    font-size: var(--t-lead);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    max-width: 34ch;
+  }
+  .lead strong { font-weight: 600; }
+  .facts {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--s-2);
+    font-size: var(--t-small);
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--s-3);
+  }
+  .facts div { display: grid; grid-template-columns: 7rem 1fr; gap: var(--s-4); }
+  .facts dt { color: var(--ink-2); }
+  .actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s-3); }
+  @media (min-width: 720px) {
+    h1 { font-size: min(15.4vw, 16.5rem); }
+    .lead { grid-column: 1 / span 7; }
+    .facts { grid-column: 9 / -1; }
+    .actions { grid-column: 9 / -1; }
+  }
 
-        <!-- Tile: Reading Tile (SSR from Sanity) -->
-        <ReadingTile currentlyReading={siteSettings?.currentlyReading} />
+  .wall { row-gap: var(--gutter); }
 
-        <!-- Tile: GitHub (Named Area: gh) -->
-        <div class="bento-tile bento-github">
-          <div class="github-header">
-            <div class="bento-kicker">BUILD METRICS</div>
-            <div class="gh-counter" id="gh-total-count">... contributions</div>
-          </div>
-          <div class="github-container">
-            <div class="gh-labels-y"><span>Mon</span><span>Wed</span><span>Fri</span></div>
-            <div class="github-matrix"></div>
-          </div>
-          <div class="github-footer">
-            <div class="github-meta"><span>github.com/iDarcky</span><i data-lucide="github" style="width: 14px;"></i></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+  .rows { list-style: none; }
+  .rows li { border-top: 1px solid var(--hairline); }
+  .rows li:last-child { border-bottom: 1px solid var(--hairline); }
+  .row {
+    padding-block: var(--s-4);
+    row-gap: var(--s-1);
+    align-items: baseline;
+    text-decoration: none;
+    min-height: 56px;
+  }
+  .row > * { grid-column: 1 / -1; }
+  .row > :global(svg) { display: none; }
+  .row-title { font-size: var(--t-h3); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
+  .row-note { color: var(--ink-2); max-width: 60ch; }
+  .row time, .state { color: var(--ink-2); }
+  a.row { transition: background-color 160ms ease; }
+  @media (hover: hover) {
+    a.row:hover .row-title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.15em; }
+  }
+  @media (min-width: 720px) {
+    .row > :nth-child(1) { grid-column: 1 / span 2; }
+    .row > :nth-child(2) { grid-column: 3 / span 4; }
+    .row > :nth-child(3) { grid-column: 7 / span 5; }
+    .row > :global(svg) { display: block; grid-column: 12; justify-self: end; align-self: center; }
+  }
+  .state[data-state='idea']::before,
+  .state[data-state='paused']::before,
+  .state[data-state='abandoned']::before,
+  .state[data-state='became']::before {
+    content: '';
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    margin-right: 0.5em;
+    border: 1.5px solid currentColor;
+  }
+  .state[data-state='became']::before { background: currentColor; }
+  .state[data-state='idea']::before { border-radius: 50%; }
 
-  <!-- The Shelf Part 2: Gear & Media -->
-  <section class="bento-section section-snap" id="shelf-media">
-    <div class="bento-wrapper">
-      <div class="logbook-header-wrapper">
-        <div class="bento-kicker" style="color: var(--accents-5); letter-spacing: 0.3em; margin-bottom: 16px;">THE GEAR // THE MESS</div>
-        <h2 class="logbook-huge-title bento-title-parallax" style="font-size: clamp(2rem, 5vw, 4rem); color: var(--accents-4);">COLLECTED FRAGMENTS</h2>
-      </div>
-      <div class="bento-grid bento-grid-media">
-        <!-- Tile: Spotify (Named Area: audio) -->
-        <div class="bento-tile bento-audio" style="padding: 0;">
-          <iframe src="https://open.spotify.com/embed/track/5lNmaZfu3SQMuzl1hH2wzA?utm_source=generator" style="border-radius:16px; border: none; width: 100%; height: 100%;" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
-        </div>
-
-        <!-- Tile: Gear (Named Area: shoe) -->
-        <div class="bento-tile bento-shoe">
-          <div class="bento-kicker">CURRENT GEAR</div>
-          <!-- We use absolute public URLs for static assets that we ported -->
-          <img src="https://cdn1.npcdn.net/images/c66082ec8dffeee531fb002baa744f91_1758184573.webp?md5id=2169a2cc59e83ed5c094702f589fdd1d&new_width=1000&new_height=1000&w=1755845547&from=png&type=9" class="shoe-img" alt="Adidas Evo SL" />
-          <div class="shoe-name">ADIDAS EVO SL</div>
-        </div>
-
-        <!-- Tile: Athletics (Named Area: athletics) -->
-        <div class="bento-tile bento-athletics">
-          <div class="bento-kicker">ATHLETICS</div>
-          <div class="athletics-data">
-            <div class="ath-row"><span class="ath-label">HALF MARATHON</span><span class="ath-value">1:38:42</span></div>
-            <div class="ath-row"><span class="ath-label">5K PR</span><span class="ath-value">20:15</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <Footer className="section-snap" variant="massive" />
-</HomeLayout>
+  .empty { color: var(--ink-2); }
+</style>

@@ -1,66 +1,67 @@
 ---
-export const prerender = false;
-import MagazineLayout from '../../layouts/MagazineLayout.astro';
-import PortableText from '../../components/PortableText.astro';
-import { sanityClient, urlFor } from '../../utils/sanity';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Arrow from '../../components/Arrow.astro';
+import { formatDate } from '../../lib/site';
 
-const { slug } = Astro.params;
-let entry = null;
-
-try {
-  entry = await sanityClient.fetch(`*[_type == "logbookEntry" && slug.current == $slug][0]`, { slug });
-} catch (error) {
-  console.error("Failed to fetch logbook entry:", error);
+export async function getStaticPaths() {
+  const entries = (await getCollection('logbook')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return entries.map((entry, i) => ({
+    params: { slug: entry.id },
+    props: { entry, newer: entries[i - 1], older: entries[i + 1] },
+  }));
 }
 
-if (!entry) {
-  return Astro.redirect('/404');
+interface Props {
+  entry: CollectionEntry<'logbook'>;
+  newer?: CollectionEntry<'logbook'>;
+  older?: CollectionEntry<'logbook'>;
 }
-
-// Reading time heuristic
-const words = entry.body
-  ? entry.body
-      .filter((block: any) => block._type === 'block' && block.children)
-      .map((block: any) => block.children.map((child: any) => child.text).join(' '))
-      .join(' ')
-      .split(/\s+/).length
-  : 0;
-const readingTime = Math.ceil(words / 200);
+const { entry, newer, older } = Astro.props;
+const { Content } = await render(entry);
 ---
-
-<MagazineLayout title={entry.title}>
-  {entry.heroImage && (
-    <div class="project-hero-wrapper">
-      <img src={urlFor(entry.heroImage).url()} alt={entry.title} class="project-hero-img" />
-    </div>
-  )}
-
-  <article class="article-layout">
-    <header class="article-header">
-      <span class="manifesto-kicker" style="margin-bottom: 12px;">LOGBOOK ENTRY</span>
-      <h1 class="article-title">{entry.title}</h1>
-      <div class="article-meta-grid">
-        <div class="meta-item">
-          <span class="meta-label">PUBLISHED</span>
-          <span class="meta-value">{entry.publishedAt ? new Date(entry.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</span>
-        </div>
-        <div class="meta-item">
-          <span class="meta-label">READING TIME</span>
-          <span class="meta-value">{readingTime} MIN READ</span>
-        </div>
-      </div>
+<Base title={entry.data.title} description={entry.data.summary ?? undefined} type="article">
+  <article class="wrap">
+    <header class="head grid">
+      <a class="back mono" href="/logbook"><Arrow dir="left" /> Logbook</a>
+      <time class="mono" datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
+      <h1>{entry.data.title}</h1>
     </header>
-
-    <section class="article-body">
-      {entry.body ? <PortableText portableText={entry.body} /> : <p>No content available.</p>}
-    </section>
-
-    <footer class="magazine-footer-nav" style="justify-content: flex-end;">
-      <a href="/#logbook" class="footer-nav-link" data-hover style="text-align: right;">
-        <span class="nav-label">RETURN TO</span>
-        Logbook
-      </a>
-    </footer>
+    <div class="body grid">
+      <div class="text"><Content /></div>
+    </div>
+    {(newer || older) && (
+      <nav class="pager grid" aria-label="More entries">
+        {older ? <a class="older" href={`/logbook/${older.id}`}><span class="mono">Older</span>{older.data.title}</a> : <span />}
+        {newer && <a class="newer" href={`/logbook/${newer.id}`}><span class="mono">Newer</span>{newer.data.title}</a>}
+      </nav>
+    )}
   </article>
-</MagazineLayout>
+</Base>
 
+<style>
+  .head { padding-block: var(--s-8) var(--s-12); row-gap: var(--s-6); border-bottom: 1px solid var(--hairline); }
+  .back { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: var(--s-2); min-height: 44px; text-decoration: none; color: var(--ink-2); }
+  .back:hover { color: var(--ink); }
+  time { grid-column: 1 / -1; color: var(--ink-2); }
+  h1 { grid-column: 1 / -1; font-size: var(--t-h2); max-width: 18ch; }
+  .body { padding-block: var(--s-12) var(--s-24); }
+  .text { grid-column: 1 / -1; max-width: 68ch; font-size: 1.125rem; }
+  @media (min-width: 960px) {
+    time { grid-column: 1 / span 2; }
+    h1 { grid-column: 3 / -1; }
+    .text { grid-column: 3 / span 7; }
+  }
+  .text :global(p + p) { margin-top: 1.1em; }
+  .text :global(h2) { font-size: var(--t-h3); margin: 1.6em 0 0.5em; }
+  .text :global(ul), .text :global(ol) { padding-left: 1.2em; margin-top: 1em; }
+  .text :global(img) { margin-block: 1.5em; }
+  .pager { border-top: 1px solid var(--hairline); padding-block: var(--s-6) var(--s-16); row-gap: var(--s-6); }
+  .pager a { grid-column: 1 / -1; display: grid; gap: var(--s-1); text-decoration: none; font-weight: 600; font-size: var(--t-lead); letter-spacing: -0.02em; }
+  .pager .mono { color: var(--ink-2); font-weight: 400; }
+  .pager a:hover { text-decoration: underline; }
+  @media (min-width: 720px) {
+    .pager .older { grid-column: 1 / span 6; }
+    .pager .newer { grid-column: 7 / -1; text-align: right; }
+  }
+</style>

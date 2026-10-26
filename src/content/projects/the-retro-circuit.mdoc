@@ -1,0 +1,40 @@
+---
+title: The Retro Circuit
+order: 4
+summary: A comparison engine for retro handhelds that compares every variant, not just the name on the box.
+role: Founder and sole product manager
+year: '2024'
+platform: Web
+status: Live
+stack: Next.js, Supabase, Vercel, Resend
+kind: personal
+accent: '#FF4F00'
+ink: dark
+link: https://theretrocircuit.com/
+linkLabel: theretrocircuit.com
+cover: ../../assets/projects/the-retro-circuit/home.png
+coverShape: screen
+gallery:
+  - image: ../../assets/projects/the-retro-circuit/home.png
+    alt: The Retro Circuit’s homepage with a “Welcome to the circuit” headline and a row of featured consoles.
+    caption: A datasheet for the handheld revival.
+---
+## The problem
+
+A “Retroid Pocket 4” isn’t one device. It’s a spread of SKUs with different RAM, chipsets and prices. Buyers end up comparing product names when they should be comparing variants, and the details are scattered across forum threads and spec sheets.
+
+## What I did
+
+I took it from zero to MVP in three months as the only person on the project. I wrote the specs, set the architecture constraints and ran the CI/CD pipeline, working with an AI model as my engineering counterpart instead of writing the code by hand.
+
+## Decisions
+
+**Variants are first-class.** The data model runs manufacturers → consoles → variants, so every comparison is SKU against SKU instead of a generic product page.
+
+**An admin anyone can run.** A restricted command center with roles and validation rules lets non-technical editors grow the catalogue without touching the database.
+
+**A datasheet, not gamer neon.** The interface is Swiss and industrial: typography and information density do the work, and decoration doesn’t get a seat.
+
+## Where it is
+
+Live at theretrocircuit.com.

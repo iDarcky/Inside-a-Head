@@ -1,0 +1,124 @@
+---
+import { Picture } from 'astro:assets';
+import Arrow from './Arrow.astro';
+import { accentStyle, type Project } from '../lib/projects';
+
+interface Props {
+  project: Project;
+  /** Grid span on the 12-column layout. */
+  span: 5 | 6 | 7 | 12;
+  eager?: boolean;
+}
+const { project, span, eager = false } = Astro.props;
+const { title, summary, platform, year, status, cover, coverShape, gallery } = project.data;
+const alt = gallery.find((g) => g.image.src === cover.src)?.alt ?? '';
+---
+<a
+  class:list={['poster', `span-${span}`, `shape-${coverShape}`]}
+  href={`/work/${project.id}`}
+  style={accentStyle(project)}
+>
+  <div class="text">
+    <p class="meta mono"><span>{platform}</span><span>{year}</span><span>{status}</span></p>
+    <h3>{title}</h3>
+    <p class="summary">{summary}</p>
+    <span class="more">Read the case study <Arrow dir="right" /></span>
+  </div>
+  <div class="frame">
+    <Picture
+      src={cover}
+      alt={alt}
+      formats={['avif', 'webp']}
+      widths={coverShape === 'phone' ? [360, 540, 720] : [640, 960, 1280, 1600]}
+      sizes={coverShape === 'phone' ? '(min-width: 720px) 30vw, 70vw' : '(min-width: 720px) 55vw, 100vw'}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+    />
+  </div>
+</a>
+
+<style>
+  .poster {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: var(--s-8);
+    min-height: clamp(520px, 62vw, 880px);
+    padding: var(--s-6) var(--s-6) 0;
+    background: var(--accent);
+    color: var(--on-accent);
+    text-decoration: none;
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
+  }
+  @media (min-width: 720px) {
+    .poster { padding: var(--s-8) var(--s-8) 0; }
+    .span-5 { grid-column: span 5; }
+    .span-6 { grid-column: span 6; }
+    .span-7 { grid-column: span 7; }
+    .span-12 { grid-column: span 12; }
+    .poster { min-height: clamp(560px, 50vw, 880px); }
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-1) var(--s-4);
+    margin-bottom: var(--s-6);
+  }
+  h3 {
+    font-size: var(--t-h2);
+    font-weight: 650;
+    max-width: 10ch;
+  }
+  .summary {
+    margin-top: var(--s-4);
+    font-size: var(--t-lead);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    max-width: 26ch;
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    margin-top: var(--s-6);
+    font-size: var(--t-small);
+    font-weight: 500;
+    border-bottom: 1.5px solid currentColor;
+    padding-bottom: 2px;
+  }
+  .more :global(svg) { transition: transform 200ms var(--ease-out); }
+
+  .frame {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    min-height: 0;
+  }
+  .frame :global(picture) { display: contents; }
+  .frame :global(img) {
+    width: 100%;
+    transition: transform 280ms var(--ease-out);
+    transform-origin: 50% 100%;
+  }
+  /* Phone covers are store graphics: show the device, crop the graphic's own headline. */
+  .shape-phone .frame :global(img) {
+    width: min(78%, 420px);
+    aspect-ratio: 1080 / 1300;
+    object-fit: cover;
+    object-position: 50% 100%;
+  }
+  .shape-screen .frame :global(img) {
+    box-shadow: 0 -2px 24px rgb(0 0 0 / 0.18);
+  }
+
+  @media (hover: hover) {
+    .poster:hover .frame :global(img) { transform: translateY(-8px); }
+    .poster:hover .more :global(svg) { transform: translateX(3px); }
+  }
+  .poster:focus-visible { outline-offset: 4px; }
+</style>
