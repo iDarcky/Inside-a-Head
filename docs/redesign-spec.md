@@ -4,6 +4,9 @@ Decisions captured from the redesign interview, 2026-10-26.
 
 ## Goal
 
+Audience: hiring managers and recruiters for **product management** roles. Meridian and Ride Tracker
+are framed as personal projects. Resume content stays as is.
+
 A Swiss-style studio site that works for **hiring**: a recruiter should understand who Daniel is,
 what he has shipped, and how to reach him within one screen. Personality (logbook, Museum of my
 Mess) stays, but below the work.
@@ -14,7 +17,7 @@ Mess) stays, but below the work.
   four projects are native Android apps, so there is no web code to share).
 - **Keystatic** replaces Sanity. Content lives as Markdown/YAML in the repo, editable at
   `/keystatic`. Pages are prerendered — no runtime CMS fetches, no outage risk.
-- Existing Sanity logbook entries, projects and site settings are exported and migrated.
+- No Sanity migration: the logbook starts fresh in Keystatic; projects are re-authored from the repos.
 - Deploy: Vercel, `insideahead.com`.
 - Removed: Sanity Studio, styled-components, GSAP, Lucide-from-CDN, custom cursor, scroll-jacking.
 
@@ -40,10 +43,10 @@ Mess) stays, but below the work.
 
 | # | Project | Platform | Assets | Notes |
 |---|---------|----------|--------|-------|
-| 01 | Setlists.md | Web (PWA) | `docs/mockups/*` | Live at setlistsmd.insideahead.com |
-| 02 | Meridian | Android | `src/assets/projects/meridian/01–05` (Play-style, 1080×1920) | Calendar app; accent `#A64200` burnt orange, paper `#FCEFE8` |
-| 03 | Ride Tracker | Android (KMP) | `docs/play/graphics/*` | Ride-sharing income tracker, EN/RO |
-| 04 | The Retro Circuit | Web | `public/retro-circuit.png` | Handheld comparison engine |
+| 01 | Setlists.md | Web (PWA) | `docs/mockups/*` | Live at setlistsmd.insideahead.com; accent vetiver `#53796F`, bone `#F6F4EF` |
+| 02 | Meridian | Android | `src/assets/projects/meridian/01–08` (Play-style, 1080×1920) | Calendar app; accent `#A64200` burnt orange, paper `#FCEFE8` |
+| 03 | Ride Tracker | Android (KMP) | `docs/play/graphics/*` | Ride-sharing income tracker, EN/RO; accent teal `#136682` |
+| 04 | The Retro Circuit | Web | `public/retro-circuit.png` | Handheld comparison engine; accent International Orange `#FF4F00` |
 | — | Redline Running | — | — | Moved to Museum of my Mess as an idea |
 
 Each project page: full case study (problem → decisions → screens → what's next), written from the
