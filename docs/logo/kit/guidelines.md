@@ -56,7 +56,7 @@ Don’t stretch, squash or rotate the logo · don’t recolour it outside ink, p
 
 | File | What it is |
 |---|---|
-| `public/favicon.svg` | Browser tab icon, from the 16 px cut; turns paper-coloured in dark mode |
+| `public/favicon.svg` | Browser tab icon, from the 16 px cut, with its own paper fill so it reads on light and dark tabs |
 | `public/favicon.ico` | Fallback icon (16/32/48 px) for older browsers |
 | `public/apple-touch-icon.png` | iPhone/iPad home screen |
 | `public/icon-192.png`, `icon-512.png`, `maskable-512.png` | Android home screen and installed app |
