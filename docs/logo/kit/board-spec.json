@@ -1,0 +1,29 @@
+{
+  "brand": "inside a head",
+  "tagline": "a personal studio for tech experiments and aesthetic design",
+  "brief": "A personal studio for things Daniel likes building: apps, experiments, a logbook and a museum of unfinished ideas. Swiss, black and white, with colour left to the projects.",
+  "adjectives": ["curious", "structured", "honest", "a little messy"],
+  "criteria": "Works at 16 px, in one colour, reversed, and next to four very different project brands without competing with them.",
+  "mockups": ["website", "favicon-tab", "app-icon", "business-card", "social", "sticker"],
+  "nav": ["work", "logbook", "museum", "about"],
+  "brand_color": "#0b0b0a",
+  "greyscale": false,
+  "final": true,
+  "concepts": [
+    {
+      "name": "Frame",
+      "symbol": "mark.svg",
+      "lockup": "lockup-horizontal.svg",
+      "stacked": "lockup-stacked.svg",
+      "idea": "A square head with the idea sitting inside it, off-centre, where a thought would be.",
+      "rationale": [
+        "Two shapes on one grid: a 28-unit frame and a 56-unit idea, nothing else",
+        "The idea sits off-centre on purpose: structure with a little mess inside",
+        "A pixel-snapped 16 px cut keeps the favicon crisp",
+        "Lowercase Geist wordmark matches the site's own voice"
+      ]
+    }
+  ],
+  "recommendation": "Frame, with the lowercase wordmark. Black on paper by default, paper on black in dark mode.",
+  "next_steps": ["Use the files in docs/logo/kit", "Follow guidelines.md for spacing and minimum sizes"]
+}

@@ -20,7 +20,7 @@ const projectImage = (label: string) =>
 export default config({
   storage,
   ui: {
-    brand: { name: 'Inside a Head' },
+    brand: { name: 'inside a head' },
     navigation: { Content: ['projects', 'logbook', 'mess'], Site: ['settings'] },
   },
   singletons: {

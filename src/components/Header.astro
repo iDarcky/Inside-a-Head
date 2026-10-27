@@ -13,9 +13,9 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <header class="site-header">
   <div class="bar wrap">
-    <a class="brand" href="/" aria-label="Inside a Head, home">
+    <a class="brand" href="/" aria-label="inside a head, home">
       <Mark size={20} />
-      <span>Inside a Head</span>
+      <span>inside a head</span>
     </a>
     <nav aria-label="Main">
       <ul>
@@ -49,10 +49,11 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    font-size: 0.8125rem;
+    /* Same ratios as the logo lockup: type 0.72 × mark, gap 0.42 × mark. */
+    gap: 8.4px;
+    font-size: 14.4px;
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.025em;
     text-decoration: none;
     min-height: 44px;
   }
