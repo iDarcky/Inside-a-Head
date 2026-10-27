@@ -1,10 +1,12 @@
 ---
 import Mark from './Mark.astro';
+import ThemeToggle from './ThemeToggle.astro';
 
 const links = [
   { href: '/#work', label: 'Work' },
   { href: '/logbook', label: 'Logbook' },
   { href: '/#museum', label: 'Museum' },
+  { href: '/about', label: 'About' },
   { href: '/resume', label: 'Resume' },
 ];
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -12,7 +14,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 <header class="site-header">
   <div class="bar wrap">
     <a class="brand" href="/" aria-label="Inside a Head, home">
-      <Mark size={22} />
+      <Mark size={20} />
       <span>Inside a Head</span>
     </a>
     <nav aria-label="Main">
@@ -24,6 +26,7 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
         ))}
       </ul>
     </nav>
+    <ThemeToggle />
   </div>
 </header>
 
@@ -46,9 +49,10 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: var(--s-3);
+    gap: 10px;
+    font-size: 0.8125rem;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     text-decoration: none;
     min-height: 44px;
   }
@@ -72,8 +76,9 @@ const path = Astro.url.pathname.replace(/\/$/, '') || '/';
     text-decoration: underline;
     text-decoration-thickness: 2px;
   }
-  @media (max-width: 479px) {
-    nav { width: 100%; }
+  nav { margin-left: auto; }
+  @media (max-width: 559px) {
+    nav { order: 3; width: 100%; margin-left: 0; }
     ul { justify-content: space-between; gap: var(--s-2); }
   }
 </style>

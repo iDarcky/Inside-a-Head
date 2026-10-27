@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import { settings } from '../lib/site';
+
+const manifesto = settings.manifesto.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+
+// Each step is grounded in something one of the projects actually did.
+const steps = [
+  {
+    title: 'Start with one question',
+    text: 'Every product answers one question first. Ridely’s is “how much did I actually keep?” Everything else waits behind it.',
+  },
+  {
+    title: 'Write the principles before the screens',
+    text: 'A short list of rules decides the arguments before they happen: under ten seconds to add an entry, honest numbers, no account.',
+  },
+  {
+    title: 'Walk the flows end to end',
+    text: 'For Setlists.md I walked ten flows, from first launch to Sunday morning. That review settled the product model and the order of work.',
+  },
+  {
+    title: 'Build with AI as the engineering partner',
+    text: 'I write the specs and the constraints, an AI model writes the code, and I review what ships. It’s how The Retro Circuit went from zero to MVP in three months.',
+  },
+  {
+    title: 'Cut what doesn’t earn its place',
+    text: 'When Ridely’s home screen grew too many cards, it went back to one number. Less on the screen is usually the fix.',
+  },
+];
+---
+<Base title="About" description="Inside a Head is a personal studio for tech experiments and aesthetic design. Ideas are messy; this is where they get built.">
+  <article class="wrap about">
+    <header class="manifesto grid">
+      <h1>{settings.manifestoTitle}</h1>
+      <div class="manifesto-text">
+        {manifesto.map((p, i) => (i === manifesto.length - 1 ? <p class="closing">{p}</p> : <p>{p}</p>))}
+      </div>
+    </header>
+
+    <section class="block grid" aria-labelledby="me-title">
+      <h2 id="me-title">Daniel</h2>
+      <div class="text">
+        <p>
+          I like to create things and to challenge myself. By day I’m a product manager, with around four years in
+          enterprise SaaS. On the side I build my own products end to end, from the first idea to the release build,
+          and this studio is where they live.
+        </p>
+        <p class="muted">{settings.availability}, junior to mid level.</p>
+        <p class="links">
+          <a href="/resume">Resume</a>
+          <a href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a>
+          <a href={settings.github} rel="me noreferrer">GitHub <Arrow /></a>
+          <a href={`mailto:${settings.email}`}>Email</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="block grid" aria-labelledby="how-title">
+      <h2 id="how-title">How I work</h2>
+      <ol class="steps">
+        {steps.map((s, i) => (
+          <li>
+            <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="block grid" aria-labelledby="colophon-title">
+      <h2 id="colophon-title">The studio</h2>
+      <div class="text">
+        <p>
+          Built with Astro and Keystatic, set in Geist and Geist Mono on a twelve-column grid. Black and white; the colour
+          belongs to the projects. Everything here is written in plain Markdown, in the open, on{' '}
+          <a href="https://github.com/iDarcky/Inside-a-Head" rel="noreferrer">GitHub</a>.
+        </p>
+      </div>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .about { padding-bottom: var(--s-16); }
+  .manifesto { padding-block: var(--s-12) var(--s-24); row-gap: var(--s-12); }
+  h1 {
+    grid-column: 1 / -1;
+    font-size: clamp(3.5rem, 1rem + 10vw, 11rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+    max-width: 8ch;
+    margin-left: -0.04em;
+  }
+  .manifesto-text {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--s-6);
+    font-size: var(--t-lead);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    max-width: 40ch;
+  }
+  .closing { font-weight: 600; }
+  @media (min-width: 960px) {
+    .manifesto-text { grid-column: 6 / span 7; }
+  }
+
+  .block { border-top: 2px solid var(--rule); padding-block: var(--s-3) var(--s-16); row-gap: var(--s-6); }
+  .block h2 { grid-column: 1 / -1; font-size: var(--t-h3); letter-spacing: -0.03em; line-height: 1.1; }
+  .text, .steps { grid-column: 1 / -1; }
+  @media (min-width: 960px) {
+    .block h2 { grid-column: 1 / span 4; }
+    .text, .steps { grid-column: 6 / span 7; }
+  }
+  .text { display: grid; gap: var(--s-4); max-width: 62ch; font-size: 1.125rem; }
+  .muted { color: var(--ink-2); }
+  .links { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); font-size: var(--t-small); }
+  .links a { display: inline-flex; align-items: center; gap: var(--s-1); }
+
+  .steps { list-style: none; display: grid; gap: var(--s-8); }
+  .steps li { display: grid; grid-template-columns: 3rem 1fr; column-gap: var(--s-4); row-gap: var(--s-1); max-width: 62ch; }
+  .steps .mono { color: var(--ink-2); padding-top: 0.35em; grid-row: span 2; }
+  .steps h3 { font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1.25; }
+  .steps p { color: var(--ink-2); }
+</style>

@@ -1,8 +1,9 @@
 import { config, collection, singleton, fields } from '@keystatic/core';
 
 // Local storage while developing; GitHub storage on the deployed site so /keystatic
-// commits straight to the repo. See README → "Editing content".
-const storage = import.meta.env.PROD
+// commits straight to the repo. PUBLIC_KEYSTATIC_GITHUB=true uses GitHub locally too,
+// which is how the GitHub App is created the first time. See docs/editing-guide.md.
+const storage = import.meta.env.PROD || import.meta.env.PUBLIC_KEYSTATIC_GITHUB === 'true'
   ? ({ kind: 'github', repo: 'iDarcky/Inside-a-Head' } as const)
   : ({ kind: 'local' } as const);
 

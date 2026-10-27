@@ -1,0 +1,56 @@
+---
+// Light/dark switch. The first visit follows the system; a click stores the choice.
+---
+<button class="theme-toggle" type="button" aria-label="Switch theme" data-theme-toggle>
+  <svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
+    <circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5" />
+    <path d="M8 1.75a6.25 6.25 0 0 1 0 12.5Z" fill="currentColor" />
+  </svg>
+</button>
+
+<script>
+  const root = document.documentElement;
+  const dark = window.matchMedia('(prefers-color-scheme: dark)');
+  const current = () => (root.dataset.theme as 'light' | 'dark') ?? (dark.matches ? 'dark' : 'light');
+
+  function sync() {
+    const theme = current();
+    const next = theme === 'dark' ? 'light' : 'dark';
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach((b) => {
+      b.setAttribute('aria-label', `Switch to ${next} theme`);
+    });
+    document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((m) => {
+      m.content = theme === 'dark' ? '#0d0d0c' : '#f4f3ef';
+    });
+  }
+
+  document.querySelectorAll('[data-theme-toggle]').forEach((b) =>
+    b.addEventListener('click', () => {
+      const next = current() === 'dark' ? 'light' : 'dark';
+      root.dataset.theme = next;
+      try { localStorage.setItem('theme', next); } catch {}
+      sync();
+    }),
+  );
+  dark.addEventListener('change', sync);
+  sync();
+</script>
+
+<style>
+  .theme-toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin-right: -12px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: transform 120ms var(--ease-out);
+  }
+  .theme-toggle:active { transform: scale(0.92); }
+  .theme-toggle svg { transition: transform 240ms var(--ease-out); }
+  :global(:root[data-theme='dark']) .theme-toggle svg { transform: rotate(180deg); }
+</style>

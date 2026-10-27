@@ -4,12 +4,16 @@ Decisions captured from the redesign interview, 2026-10-26.
 
 ## Goal
 
-Audience: hiring managers and recruiters for **product management** roles. Meridian and Ride Tracker
-are framed as personal projects. Resume content stays as is.
+**Updated 2026-10-27:** the studio comes first, the job second. Inside a Head is a personal studio
+for the things Daniel likes building; it should still let a recruiter find the resume and the PM
+background quickly, but quietly (About page and Resume, not hiring copy on the homepage).
 
-A Swiss-style studio site that works for **hiring**: a recruiter should understand who Daniel is,
-what he has shipped, and how to reach him within one screen. Personality (logbook, Museum of my
-Mess) stays, but below the work.
+- Intro in Daniel's own lowercase voice, with the PM line worked in.
+- "Ideas are messy" manifesto lives on /about, with "Daniel", "How I work" and the colophon.
+- Project order: The Retro Circuit, Setlists.md, Meridian, Ridely.
+- Black and white chrome; colour only from the projects. Light/dark toggle.
+- Logo: the Frame mark (docs/logo/inside-a-head-mark.svg) with a small "Inside a Head" wordmark.
+- Later: a design-system section per app.
 
 ## Stack
 

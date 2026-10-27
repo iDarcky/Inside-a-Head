@@ -6,13 +6,13 @@ const year = new Date().getFullYear();
 ---
 <footer class="site-footer wrap" id="contact">
   <div class="cta grid">
-    <h2>Looking for a product manager who ships? Let’s talk.</h2>
-    <div class="actions">
-      <a class="button solid" href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a>
-      <a class="button" href="/resume">Resume</a>
-      <a class="button" href={`mailto:${settings.email}`}>Email</a>
-    </div>
-    <p class="note">{settings.availability}. Based in {settings.location}.</p>
+    <h2>Got an idea, or just want to say hi?</h2>
+    <ul class="actions">
+      <li><a href={`mailto:${settings.email}`}>Email</a></li>
+      <li><a href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a></li>
+      <li><a href={settings.github} rel="me noreferrer">GitHub <Arrow /></a></li>
+      <li><a href="/resume">Resume</a></li>
+    </ul>
   </div>
   <div class="base grid mono">
     <span>© {year} {settings.name}</span>
@@ -21,8 +21,7 @@ const year = new Date().getFullYear();
       <time data-clock={settings.timeZone} aria-live="off"></time>
     </span>
     <span class="links">
-      <a href={settings.github} rel="me noreferrer">GitHub</a>
-      <a href={settings.linkedin} rel="me noreferrer">LinkedIn</a>
+      <a href="/logbook/rss.xml">RSS</a>
     </span>
   </div>
 </footer>
@@ -58,19 +57,26 @@ const year = new Date().getFullYear();
   }
   .actions {
     grid-column: 1 / -1;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-3);
+    list-style: none;
+    display: grid;
     align-self: end;
+    border-top: 1px solid var(--hairline);
   }
-  .note {
-    grid-column: 1 / -1;
-    color: var(--ink-2);
+  .actions li { border-bottom: 1px solid var(--hairline); }
+  .actions a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    font-size: var(--t-lead);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-decoration: none;
   }
+  .actions a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
   @media (min-width: 720px) {
-    h2 { grid-column: 1 / span 8; }
-    .actions { grid-column: 9 / -1; justify-content: flex-end; }
-    .note { grid-column: 1 / span 6; }
+    h2 { grid-column: 1 / span 7; }
+    .actions { grid-column: 9 / -1; }
   }
   .base {
     border-top: 1px solid var(--hairline);

@@ -31,6 +31,19 @@ const experience = [
 
 const projects = [
   {
+    dates: '2025',
+    title: 'The Retro Circuit',
+    org: 'Founder & sole PM · Web',
+    link: { href: 'https://theretrocircuit.com/', label: 'theretrocircuit.com' },
+    points: [
+      'Identified market fragmentation in retro gaming hardware: consumers lacked a reliable way to compare complex device variants. Took the idea from 2022–2023 to a shipped comparison engine, zero to MVP in 3 months; it now draws about 100 visitors a month with no advertising.',
+      'Leveraged Google AI Studio as an engineering counterpart — writing precise specs, defining architecture constraints, and managing a CI/CD pipeline (Next.js 16, Supabase/PostgreSQL, Vercel) without writing code natively.',
+      'Architected a relational data schema (Manufacturers → Consoles → Variants) to eliminate ‘signal noise’ — enabling SKU-level comparisons rather than generic product aggregations.',
+      'Built a restricted Admin Command Center with RBAC and validation rules, enabling non-technical content management and scaling the product catalog without database intervention.',
+    ],
+    tags: ['Next.js', 'Supabase', 'SQL', 'Resend', 'Jira'],
+  },
+  {
     dates: '2026',
     title: 'Setlists.md',
     org: 'Founder & sole PM · Web app (PWA)',
@@ -39,7 +52,7 @@ const projects = [
       'Defined an offline-first chord-chart app for worship teams of 3–7 musicians, replacing PDFs and shared docs with one dynamic chart: transpose, capo, Nashville numbers and column layout in a single tap.',
       'Chose plain Markdown as the song format so users own their data: every chart exports as a portable .md file that stays readable without the app.',
       'Ran an end-to-end review of ten user flows, from first launch to Sunday morning, that settled the product model (one shared space per church; a setlist is the service) and the beta critical path.',
-      'Planned the rollout: a private soft launch with 5–10 worship teams in December 2026, then a public beta on 1 February 2027.',
+      'In active use by one church’s worship team, with two more churches interested. Planned the rollout: a private soft launch with 5–10 teams in December 2026, then a public beta on 1 February 2027.',
     ],
     tags: ['React', 'Vite', 'Supabase', 'PWA', 'Tailwind'],
   },
@@ -68,19 +81,6 @@ const projects = [
       'Cut the home screen to a single headline metric after a review found too many cards and too much text. Now at v0.22 in English and Romanian, with iOS planned from the shared Kotlin Multiplatform code.',
     ],
     tags: ['Kotlin Multiplatform', 'Jetpack Compose', 'Room'],
-  },
-  {
-    dates: '2025',
-    title: 'The Retro Circuit',
-    org: 'Founder & sole PM · Web',
-    link: { href: 'https://theretrocircuit.com/', label: 'theretrocircuit.com' },
-    points: [
-      'Identified market fragmentation in retro gaming hardware: consumers lacked a reliable way to compare complex device variants. Took the idea from 2022–2023 to a shipped comparison engine, zero to MVP in 3 months.',
-      'Leveraged Google AI Studio as an engineering counterpart — writing precise specs, defining architecture constraints, and managing a CI/CD pipeline (Next.js 16, Supabase/PostgreSQL, Vercel) without writing code natively.',
-      'Architected a relational data schema (Manufacturers → Consoles → Variants) to eliminate ‘signal noise’ — enabling SKU-level comparisons rather than generic product aggregations.',
-      'Built a restricted Admin Command Center with RBAC and validation rules, enabling non-technical content management and scaling the product catalog without database intervention.',
-    ],
-    tags: ['Next.js', 'Supabase', 'SQL', 'Resend', 'Jira'],
   },
 ];
 
@@ -117,7 +117,6 @@ const volunteering = [
         <li><a href={`mailto:${settings.email}`}>{settings.email}</a></li>
         <li><a href={settings.linkedin} rel="me noreferrer">linkedin.com/in/danielnmaghis</a></li>
         <li>Timișoara</li>
-        <li><a href="tel:+40735646723">0735 646 723</a></li>
       </ul>
       <div class="actions no-print">
         <a class="button solid" href="/daniel-n-maghis-resume.pdf" download>Download PDF <Download /></a>
@@ -232,7 +231,7 @@ const volunteering = [
   .plain { list-style: none; display: grid; gap: var(--s-1); }
 
   @media print {
-    @page { size: A4; margin: 10mm 13mm; }
+    @page { size: A4; margin: 9mm 13mm; }
     :root {
       --t-body: 9.5pt;
       --t-small: 9pt;
@@ -241,7 +240,7 @@ const volunteering = [
       --t-h3: 12pt;
       --gutter: 5mm;
     }
-    body { font-size: 9pt; line-height: 1.38; }
+    body { font-size: 9pt; line-height: 1.33; }
     .cv { padding: 0; }
     .grid { grid-template-columns: repeat(12, 1fr) !important; column-gap: 5mm; }
     .top { padding-block: 0 5mm; row-gap: 2mm; }

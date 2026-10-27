@@ -24,17 +24,29 @@ const {
 const fullTitle = title ? `${title} — Inside a Head` : `Inside a Head — ${settings.name}, ${settings.role}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = image ? new URL(image, Astro.site) : undefined;
+// Cloudflare Web Analytics: free, cookieless. Off until PUBLIC_CF_ANALYTICS_TOKEN is set in Vercel.
+const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <script is:inline>
+      // Apply a stored theme before first paint so there is no flash.
+      try {
+        const t = localStorage.getItem('theme');
+        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="alternate" type="application/rss+xml" title="Inside a Head — Logbook" href="/logbook/rss.xml" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f3ef" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0c" />
     <meta property="og:type" content={type} />
@@ -59,6 +71,9 @@ const ogImage = image ? new URL(image, Astro.site) : undefined;
       <slot />
     </main>
     <Footer />
+    {analyticsToken && (
+      <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={JSON.stringify({ token: analyticsToken })}></script>
+    )}
   </body>
 </html>
 

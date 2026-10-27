@@ -57,8 +57,9 @@
   :root { --gutter: 24px; --margin: 48px; }
 }
 
+/* Dark follows the system unless the visitor picked a theme with the toggle (data-theme on <html>). */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme='light']) {
     color-scheme: dark;
     --paper: #0d0d0c;
     --ink: #eeede8;
@@ -69,6 +70,17 @@
     --selection: #eeede8;
     --selection-ink: #0d0d0c;
   }
+}
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #0d0d0c;
+  --ink: #eeede8;
+  --ink-2: #a3a29b;
+  --rule: #eeede8;
+  --hairline: #2c2b28;
+  --wash: #1a1a18;
+  --selection: #eeede8;
+  --selection-ink: #0d0d0c;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -216,7 +228,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 
 @media print {
-  :root {
+  :root, :root[data-theme] {
     color-scheme: light;
     --paper: #fff;
     --ink: #000;
