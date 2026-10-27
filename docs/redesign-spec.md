@@ -13,7 +13,7 @@ background quickly, but quietly (About page and Resume, not hiring copy on the h
 - Project order: The Retro Circuit, Setlists.md, Meridian, Ridely.
 - Black and white chrome; colour only from the projects. Light/dark toggle.
 - Logo: the Frame mark (docs/logo/inside-a-head-mark.svg) with a small "Inside a Head" wordmark.
-- Later: a design-system section per app.
+- About has a Design section: the studio system and each app's system side by side.
 
 ## Stack
 

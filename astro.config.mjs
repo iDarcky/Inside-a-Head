@@ -9,5 +9,7 @@ import vercel from '@astrojs/vercel';
 export default defineConfig({
   site: 'https://insideahead.com',
   integrations: [react(), markdoc(), keystatic()],
+  // Fetch a page in the background when a link is hovered or tapped, so navigation feels instant.
+  prefetch: { prefetchAll: true, defaultStrategy: 'hover' },
   adapter: vercel(),
 });

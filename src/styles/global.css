@@ -4,6 +4,25 @@
 @import '@fontsource-variable/geist';
 @import '@fontsource-variable/geist-mono';
 
+/* Fallbacks sized to Geist's metrics, so the swap when Geist arrives doesn't reflow the page.
+   Values measured against Arial-metric fonts (size-adjust from average advance widths). */
+@font-face {
+  font-family: 'Geist Fallback';
+  src: local('Arial'), local('Liberation Sans'), local('Helvetica Neue'), local('Helvetica');
+  size-adjust: 104%;
+  ascent-override: 96.6%;
+  descent-override: 28.4%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Geist Mono Fallback';
+  src: local('Courier New'), local('Liberation Mono'), local('Menlo');
+  size-adjust: 100%;
+  ascent-override: 100.5%;
+  descent-override: 29.5%;
+  line-gap-override: 0%;
+}
+
 :root {
   color-scheme: light;
 
@@ -16,8 +35,8 @@
   --selection: #0b0b0a;
   --selection-ink: #f4f3ef;
 
-  --font: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
-  --mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', monospace;
+  --font: 'Geist Variable', 'Geist Fallback', ui-sans-serif, system-ui, sans-serif;
+  --mono: 'Geist Mono Variable', 'Geist Mono Fallback', ui-monospace, 'SF Mono', monospace;
 
   /* Type scale: a 1.25 step at text sizes, then display sizes set by viewport. */
   --t-meta: 0.8125rem;

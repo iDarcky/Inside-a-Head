@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
 import { settings } from '../lib/site';
+import { designSystems } from '../lib/design-systems';
 
 const manifesto = settings.manifesto.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
@@ -69,15 +70,41 @@ const steps = [
       </ol>
     </section>
 
-    <section class="block grid" aria-labelledby="colophon-title">
-      <h2 id="colophon-title">The studio</h2>
+    <section class="block grid" aria-labelledby="design-title">
+      <h2 id="design-title">Design</h2>
       <div class="text">
         <p>
-          Built with Astro and Keystatic, set in Geist and Geist Mono on a twelve-column grid. Black and white; the colour
-          belongs to the projects. Everything here is written in plain Markdown, in the open, on{' '}
+          Every project gets its own small design system. Here they are side by side, starting with this one. The site
+          is written in plain Markdown, in the open, on{' '}
           <a href="https://github.com/iDarcky/Inside-a-Head" rel="noreferrer">GitHub</a>.
         </p>
       </div>
+      <ul class="systems">
+        {designSystems.map((d) => (
+          <li class="system grid">
+            <div class="sys-name">
+              <h3>{d.slug ? <a href={`/work/${d.slug}`}>{d.project}</a> : d.project}</h3>
+              <p class="mono">{d.system}</p>
+            </div>
+            <div class="sys-body">
+              <p class="sys-idea">{d.idea}</p>
+              <ul class="swatches" aria-label={`${d.project} colours`}>
+                {d.colours.map((c) => (
+                  <li>
+                    <span class="chip" style={`background: ${c.hex}`} aria-hidden="true"></span>
+                    <span class="chip-name">{c.name}</span>
+                    <span class="mono">{c.hex}</span>
+                  </li>
+                ))}
+              </ul>
+              <dl class="spec">
+                <div><dt class="mono">Type</dt><dd>{d.type.join(' · ')}</dd></div>
+                <div><dt class="mono">Notes</dt><dd>{d.details.join(' · ')}</dd></div>
+              </dl>
+            </div>
+          </li>
+        ))}
+      </ul>
     </section>
   </article>
 </Base>
@@ -125,4 +152,36 @@ const steps = [
   .steps .mono { color: var(--ink-2); padding-top: 0.35em; grid-row: span 2; }
   .steps h3 { font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1.25; }
   .steps p { color: var(--ink-2); }
+
+  .systems { grid-column: 1 / -1; list-style: none; margin-top: var(--s-8); }
+  .system { border-top: 1px solid var(--hairline); padding-block: var(--s-8); row-gap: var(--s-4); }
+  .system:last-child { border-bottom: 1px solid var(--hairline); }
+  .sys-name, .sys-body { grid-column: 1 / -1; }
+  .sys-name h3 { font-size: var(--t-h3); letter-spacing: -0.03em; line-height: 1.1; }
+  .sys-name h3 a { text-decoration: none; }
+  .sys-name h3 a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+  .sys-name .mono { color: var(--ink-2); margin-top: var(--s-2); }
+  .sys-idea { font-size: 1.125rem; max-width: 52ch; }
+  .swatches {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+    gap: var(--s-4);
+    margin-top: var(--s-6);
+  }
+  .swatches li { display: grid; gap: var(--s-1); }
+  .chip {
+    display: block;
+    aspect-ratio: 3 / 2;
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+  .chip-name { font-size: var(--t-small); margin-top: var(--s-1); }
+  .swatches .mono { color: var(--ink-2); }
+  .spec { display: grid; gap: var(--s-2); margin-top: var(--s-6); font-size: var(--t-small); }
+  .spec div { display: grid; grid-template-columns: 4.5rem 1fr; gap: var(--s-4); }
+  .spec dt { color: var(--ink-2); padding-top: 0.15em; }
+  @media (min-width: 960px) {
+    .sys-name { grid-column: 1 / span 4; }
+    .sys-body { grid-column: 6 / span 7; }
+  }
 </style>
