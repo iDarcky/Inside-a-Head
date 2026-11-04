@@ -4,7 +4,7 @@ import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
 import SessionCard from '../components/SessionCard.astro';
 import Bookshelf, { type Book } from '../components/Bookshelf.astro';
-import { getProjects, inkFor } from '../lib/projects';
+import { getProjects } from '../lib/projects';
 import { settings, formatDate, sessionNumbers } from '../lib/site';
 
 const projects = await getProjects();
@@ -22,29 +22,20 @@ const books: Book[] = [
     title: p.data.title,
     year: p.data.year,
     color: p.data.accent,
-    ink: inkFor(p),
     meta: `${p.data.platform} · ${p.data.year} · ${p.data.status}`,
     text: p.data.summary,
     href: `/work/${p.id}`,
     linkLabel: 'Read the case study',
-    image: p.data.cover,
-    imageAlt: p.data.gallery.find((g) => g.image.src === p.data.cover.src)?.alt ?? '',
-    imageShape: p.data.coverShape,
   })),
   ...ideas.map((m) => ({
     id: m.id,
     title: m.data.title,
     year: m.data.year,
     color: m.data.color ?? '#55544f',
-    ink: '#ffffff',
     meta: [stateLabel[m.data.state], m.data.year].filter(Boolean).join(' · '),
     text: m.data.note,
     href: m.data.link ?? undefined,
     linkLabel: m.data.link ? 'Visit' : undefined,
-    image: m.data.image,
-    imageAlt: `${m.data.title}, an early screen`,
-    imageShape: 'phone' as const,
-    imageAnchor: 'top' as const,
     lean: m.data.state === 'idea',
   })),
 ];
