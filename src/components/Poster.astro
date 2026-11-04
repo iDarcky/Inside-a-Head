@@ -28,7 +28,7 @@ const alt = gallery.find((g) => g.image.src === cover.src)?.alt ?? '';
     <Picture
       src={cover}
       alt={alt}
-      formats={['avif', 'webp']}
+      formats={['webp']}
       widths={coverShape === 'phone' ? [360, 540, 720] : [640, 960, 1280, 1600]}
       sizes={coverShape === 'phone' ? '(min-width: 720px) 30vw, 70vw' : '(min-width: 720px) 55vw, 100vw'}
       loading={eager ? 'eager' : 'lazy'}
@@ -111,9 +111,6 @@ const alt = gallery.find((g) => g.image.src === cover.src)?.alt ?? '';
     aspect-ratio: 1080 / 1300;
     object-fit: cover;
     object-position: 50% 100%;
-  }
-  .shape-screen .frame :global(img) {
-    box-shadow: 0 -2px 24px rgb(0 0 0 / 0.18);
   }
 
   @media (hover: hover) {

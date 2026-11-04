@@ -110,9 +110,6 @@ html {
   -webkit-tap-highlight-color: transparent;
   scroll-padding-top: 124px; /* clears the sticky header (two rows on phones) */
 }
-@media (pointer: fine) {
-  html { overscroll-behavior: none; }
-}
 @media (min-width: 480px) {
   html { scroll-padding-top: 80px; }
 }
@@ -127,7 +124,6 @@ body {
   font-feature-settings: 'ss01', 'cv11';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
   touch-action: manipulation;
 }
 

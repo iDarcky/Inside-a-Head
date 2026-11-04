@@ -19,22 +19,30 @@ const year = new Date().getFullYear();
     <span class="clock">
       <span>{settings.location.split(',')[0]}</span>
       <time data-clock={settings.timeZone} aria-live="off"></time>
+      <span class="mood" data-mood></span>
     </span>
     <span class="links">
       <a href="/logbook/rss.xml">RSS</a>
     </span>
   </div>
+  <p class="end mono" aria-hidden="true">see you, space cowboy…</p>
 </footer>
 
 <script>
   // Local time in the studio's time zone. Rendered on the client only, so it is never stale.
+  // The studio is a coffee shop that stays open past midnight; the note follows the local hour.
   const els = document.querySelectorAll<HTMLTimeElement>('time[data-clock]');
+  const moods = document.querySelectorAll<HTMLElement>('[data-mood]');
+  const mood = (h: number) =>
+    h < 6 ? 'open past midnight' : h < 12 ? 'first coffee' : h < 18 ? 'building' : 'evening session';
   const tick = () => {
     const now = new Date();
     els.forEach((el) => {
       const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: el.dataset.clock, hour: '2-digit', minute: '2-digit' });
       el.textContent = fmt.format(now);
       el.dateTime = now.toISOString();
+      const hour = Number(new Intl.DateTimeFormat('en-GB', { timeZone: el.dataset.clock, hour: 'numeric', hourCycle: 'h23' }).format(now));
+      moods.forEach((m) => (m.textContent = `· ${mood(hour)}`));
     });
   };
   tick();
@@ -85,7 +93,12 @@ const year = new Date().getFullYear();
     color: var(--ink-2);
   }
   .base > * { grid-column: 1 / -1; }
-  .clock { display: inline-flex; gap: var(--s-2); }
+  .clock { display: inline-flex; flex-wrap: wrap; gap: var(--s-2); }
+  .end {
+    padding-block: var(--s-16) var(--s-4);
+    color: var(--ink-2);
+    letter-spacing: 0.08em;
+  }
   .links { display: flex; gap: var(--s-4); }
   .links a { text-decoration: none; }
   .links a:hover { color: var(--ink); text-decoration: underline; }
