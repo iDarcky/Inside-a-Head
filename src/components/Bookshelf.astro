@@ -1,5 +1,6 @@
 ---
-// The Museum of my Mess as a bookshelf. Every book is a project or an idea, bound in its own colour.
+// The Museum of my Mess as a bookshelf, designed as one series: every spine shares a catalogue number, the title,
+// the project's own emblem, the year and the studio's mark, bound in a deep version of the project's colour.
 // Pick a spine to read about it. An idea that hasn't started yet leans on its neighbour: the one thing out of place.
 import Arrow from './Arrow.astro';
 import Mark from './Mark.astro';
@@ -14,8 +15,32 @@ export interface Book {
   text: string;
   href?: string;
   linkLabel?: string;
+  emblem?: Emblem;
   lean?: boolean;
 }
+
+export type Emblem = 'pixels' | 'staff' | 'sun' | 'road' | 'track';
+
+// Small marks drawn on a 40-unit square, one per project, in the spine's lettering colour.
+const emblems: Record<Emblem, string> = {
+  // The Retro Circuit: a pixel staircase.
+  pixels: '<path fill="currentColor" d="M2 38V30h9v-9h9v-9h9V3h9v35Z"/>',
+  // Setlists.md: a stave with one note.
+  staff:
+    '<g stroke="currentColor" stroke-width="1.5"><path d="M2 9h36M2 15h36M2 21h36M2 27h36M2 33h36"/></g>' +
+    '<ellipse cx="22" cy="27" rx="5.2" ry="3.8" transform="rotate(-20 22 27)" fill="currentColor"/>' +
+    '<path d="M26.6 25.6V5" stroke="currentColor" stroke-width="1.8"/>',
+  // Meridian: the sun on the horizon.
+  sun: '<path fill="currentColor" d="M7 29a13 13 0 0 1 26 0Z"/><path d="M2 33h36" stroke="currentColor" stroke-width="2.5"/>',
+  // Ridely: a road with its lane markings.
+  road:
+    '<g stroke="currentColor" fill="none"><path d="M6 1v38M34 1v38" stroke-width="2"/>' +
+    '<path d="M20 2v8M20 16v8M20 30v8" stroke-width="3.5"/></g>',
+  // Redline Running: a running track.
+  track:
+    '<g stroke="currentColor" stroke-width="2.5" fill="none"><rect x="2" y="9" width="36" height="22" rx="11"/>' +
+    '<rect x="9" y="15.5" width="22" height="9" rx="4.5"/></g>',
+};
 
 /** Deepens a colour 25% toward warm black, like dyed bookcloth. Cream lettering reads at 5.7:1 or better. */
 function cloth(hex: string): string {
@@ -35,8 +60,10 @@ const widths = [1, 0.86, 0.94, 0.8, 0.9];
     {books.map((b, i) => (
       <li class:list={['book', { lean: b.lean }]} style={`--h: ${heights[i % heights.length]}%; --w: ${widths[i % widths.length]}; --cover: ${cloth(b.color)}`}>
         <button type="button" aria-controls={`book-${b.id}`} aria-expanded={i === 0 ? 'true' : 'false'} data-book={b.id}>
+          <span class="spine-no mono">{String(i + 1).padStart(2, '0')}</span>
           <span class="spine-title">{b.title}</span>
           <span class="spine-foot">
+            {b.emblem && <svg class="emblem" viewBox="0 0 40 40" aria-hidden="true" set:html={emblems[b.emblem]} />}
             {b.year && <span class="spine-year mono">{b.year}</span>}
             <Mark size={14} class="spine-mark" />
           </span>
@@ -84,7 +111,7 @@ const widths = [1, 0.86, 0.94, 0.8, 0.9];
     display: flex;
     align-items: flex-end;
     gap: 3px;
-    height: clamp(320px, 32vw, 460px);
+    height: clamp(420px, 34vw, 480px);
     padding: var(--s-6) var(--s-2) 0; /* headroom for a book pulled off the shelf */
     border-bottom: 6px solid var(--ink);
     overflow-x: auto;
@@ -95,38 +122,30 @@ const widths = [1, 0.86, 0.94, 0.8, 0.9];
     all: unset;
     box-sizing: border-box;
     cursor: pointer;
-    position: relative;
     height: 100%;
     width: calc(clamp(58px, 7.2vw, 108px) * var(--w));
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
-    gap: var(--s-3);
-    padding-block: 34px 30px;
+    padding-block: 14px 16px;
+    background: var(--cover);
     color: #f2ebdd;
-    /* Bookcloth: a soft light across the rounded spine, darker at the hinges. */
-    background:
-      linear-gradient(90deg, rgb(0 0 0 / 0.28) 0%, rgb(255 255 255 / 0.05) 18%, rgb(255 255 255 / 0.09) 42%, rgb(0 0 0 / 0.04) 70%, rgb(0 0 0 / 0.3) 100%),
-      var(--cover);
-    box-shadow: 0 1px 0 rgb(0 0 0 / 0.25), inset 0 1px 0 rgb(255 255 255 / 0.12);
+    /* A crisp hinge on each side, so neighbouring books read as separate volumes. */
+    box-shadow: inset -2px 0 0 rgb(0 0 0 / 0.22), inset 2px 0 0 rgb(255 255 255 / 0.06);
     transition: transform 180ms var(--ease-out);
   }
-  /* Tooling: thin double rules at the head and foot of the spine, like a bound book. */
-  .book button::before,
-  .book button::after {
-    content: '';
-    position: absolute;
-    left: 10%;
-    right: 10%;
-    height: 4px;
-    border-block: 1px solid rgb(242 235 221 / 0.45);
-  }
-  .book button::before { top: 14px; }
-  .book button::after { bottom: 14px; }
   .book button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
-  .spine-title, .spine-year { writing-mode: vertical-rl; }
+  .spine-no {
+    font-size: 0.6875rem;
+    letter-spacing: 0.08em;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid rgb(242 235 221 / 0.4);
+    width: 56%;
+    text-align: center;
+  }
   .spine-title {
+    writing-mode: vertical-rl;
     font-weight: 600;
     font-size: clamp(0.6875rem, 0.5rem + 0.5vw, 0.9375rem);
     line-height: 1.1;
@@ -134,9 +153,24 @@ const widths = [1, 0.86, 0.94, 0.8, 0.9];
     text-transform: uppercase;
     white-space: nowrap;
   }
-  .spine-foot { display: flex; flex-direction: column; align-items: center; gap: var(--s-3); }
-  .spine-year { font-size: 0.6875rem; letter-spacing: 0.08em; opacity: 0.75; }
-  .book :global(.spine-mark) { opacity: 0.85; }
+  .spine-foot {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding-top: 16px;
+  }
+  .emblem { width: min(46%, 36px); height: auto; }
+  .spine-year { font-size: 0.6875rem; letter-spacing: 0.08em; opacity: 0.8; }
+  .book :global(.spine-mark) { opacity: 0.9; }
+  @media (max-width: 599px) {
+    .shelf { height: 400px; }
+    .spine-no { padding-bottom: 8px; margin-bottom: 12px; }
+    .spine-title { letter-spacing: 0.1em; }
+    .spine-foot { gap: 8px; padding-top: 12px; }
+  }
 
   /* Pulling a book off the shelf: it rises a little on hover and stays up while open. */
   @media (hover: hover) {
