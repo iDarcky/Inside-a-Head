@@ -11,8 +11,29 @@ import inUse from '../assets/identity/in-use.png';
 
 const manifesto = settings.manifesto.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
 
-// The tools Daniel moved through, in order, on the way to building with AI.
-const tools = ['Google AI Studio', 'Google Jules', 'Cursor', 'Google Antigravity', 'Lovable', 'ChatGPT', 'Claude Code'];
+// Each step is grounded in something one of the projects actually did.
+const steps = [
+  {
+    title: 'Start with one question',
+    text: 'Every product answers one question first. Ridely’s is “how much did I actually keep?” Everything else waits behind it.',
+  },
+  {
+    title: 'Write the principles before the screens',
+    text: 'A short list of rules decides the arguments before they happen: under ten seconds to add an entry, honest numbers, no account.',
+  },
+  {
+    title: 'Walk the flows end to end',
+    text: 'For Setlists.md I walked ten flows, from first launch to Sunday morning. That review settled the product model and the order of work.',
+  },
+  {
+    title: 'Build with AI as the engineering partner',
+    text: 'I write the specs and the constraints, an AI model writes the code, and I review what ships. It’s how The Retro Circuit went from zero to MVP in three months.',
+  },
+  {
+    title: 'Cut what doesn’t earn its place',
+    text: 'When Ridely’s home screen grew too many cards, it went back to one number. Less on the screen is usually the fix.',
+  },
+];
 ---
 <Base title="About" description="inside a head is a personal studio for tech experiments and aesthetic design. Ideas are messy; this is where they get built.">
   <article class="wrap about">
@@ -23,110 +44,15 @@ const tools = ['Google AI Studio', 'Google Jules', 'Cursor', 'Google Antigravity
       </div>
     </header>
 
-    <section class="block grid" aria-labelledby="studio-title">
-      <h2 id="studio-title">The studio</h2>
-      <div class="text lead-text">
-        <p>
-          It’s a coffee shop that’s open past midnight. It smells of coffee, there’s some music playing in the
-          background, and you can really chill and think. There are a lot of books, because each book is an idea, a
-          project that hasn’t started yet. It’s messy, it’s quiet, and it’s a life worth living.
-        </p>
-        <p>
-          Think of the quiet planets in <cite>Cowboy Bebop</cite> (the anime, not the TV series): small, safe and far
-          from the noise. It smells of coffee and plays jazz. Stay as long as you like.
-        </p>
-      </div>
-    </section>
-
     <section class="block grid" aria-labelledby="me-title">
       <h2 id="me-title">Daniel</h2>
       <div class="text">
         <p>
-          It’s complicated. I’ve always liked exploring and learning new things, and that’s what I’m doing now:
-          exploring, and building the things I like. I drive for Uber and Bolt to keep things going, and this is where
-          I keep my creative side alive.
+          I like to create things and to challenge myself. By day I’m a product manager, with around four years in
+          enterprise SaaS. On the side I build my own products end to end, from the first idea to the release build,
+          and this studio is where they live.
         </p>
-        <p>
-          I was a shy kid, more the second guy than the first. But I was always curious.
-        </p>
-        <p>
-          Why <em>inside a head</em>? Because I always live in my head. I think about things, build scenarios, come up
-          with ideas about everything and critique everything, all in there. This is me, always thinking.
-        </p>
-        <p>
-          Music came first. One of the first things I did with a phone was look for a way to listen to music with the
-          screen off. That’s how I found Spotify, and, being broke and without a subscription, how I found APKs and
-          cracked APKs. That’s where some of my love for tech comes from. I picked up the guitar in ninth or tenth
-          grade, and my teacher told me I’d never be able to play because I wasn’t talented. Somehow I did, and I play
-          decently well now. I became a musician by working hard and surrounding myself with better musicians.
-        </p>
-        <p>I’m an idealist and a dreamer. The builder and the musician I’ve had to earn.</p>
-      </div>
-    </section>
-
-    <section class="block grid" aria-labelledby="pm-title">
-      <h2 id="pm-title">Product</h2>
-      <div class="text">
-        <p>
-          I didn’t plan it. A friend called about an open role where he worked and said he thought I’d like it. I did.
-          Not necessarily that job, but the idea of product management: being the one who makes the calls about the
-          product, talking with developers and customers, brainstorming solutions.
-        </p>
-        <p>
-          I worked on workforce management software. The hardest part was being thrown in as a junior in the middle of
-          a cloud transformation, with no corporate experience, talking to some of the most important people in the
-          company and somehow making them believe me.
-        </p>
-        <p>
-          What I’m proudest of is helping others, and the day a boss finally acknowledged that what I’d been saying was
-          true and important. What I got wrong taught me that you need more courage to stand your ground, and that you
-          need to prepare better.
-        </p>
-        <p class="pull">A good PM prepares, and understands the product.</p>
-      </div>
-    </section>
-
-    <section class="block grid" aria-labelledby="build-title">
-      <h2 id="build-title">How I build</h2>
-      <div class="text">
-        <p>
-          I started after a job interview. The person I talked to showed me what was possible, and curiosity took over.
-        </p>
-        <ol class="journey mono" aria-label="Tools, in the order I used them">
-          {tools.map((t) => <li>{t}</li>)}
-        </ol>
-        <p>
-          The AI writes the code. I still do the discovery: talking with customers and checking whether there’s a gap
-          in the market. And I like to build the framework first: why I’m doing this, how, and for whom.
-        </p>
-        <p>
-          It isn’t “ask, and the AI does it”. It needs direction, and I believe that direction is the difference
-          between slop and products that can grow.
-        </p>
-        <dl class="facts-list">
-          <div><dt class="mono">Every day</dt><dd>Claude Code and Obsidian. Surprisingly, Instagram and Threads too, to keep up with the market.</dd></div>
-          <div><dt class="mono">Learning now</dt><dd>Marketing, and how to take a product to market.</dd></div>
-        </dl>
-      </div>
-    </section>
-
-    <section class="block grid" aria-labelledby="next-title">
-      <h2 id="next-title">Where I’m headed</h2>
-      <div class="text">
-        <p>
-          A small, decent start-up that brings in 2,000–3,000 a month after taxes, with room to grow. And maybe, one
-          day, a physical space of my own: a coffee shop, or something like it.
-        </p>
-      </div>
-    </section>
-
-    <section class="block grid work" aria-labelledby="work-title">
-      <h2 id="work-title">If you’re here about work</h2>
-      <div class="text">
-        <p>
-          I’m a product manager with around four years in enterprise SaaS, open to remote product roles, junior to mid
-          level.
-        </p>
+        <p class="muted">{settings.availability}, junior to mid level.</p>
         <p class="links">
           <a href="/resume">Resume</a>
           <a href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a>
@@ -134,6 +60,19 @@ const tools = ['Google AI Studio', 'Google Jules', 'Cursor', 'Google Antigravity
           <a href={`mailto:${settings.email}`}>Email</a>
         </p>
       </div>
+    </section>
+
+    <section class="block grid" aria-labelledby="how-title">
+      <h2 id="how-title">How I work</h2>
+      <ol class="steps">
+        {steps.map((s, i) => (
+          <li>
+            <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
     </section>
 
     <section class="block grid" aria-labelledby="design-title">
@@ -227,32 +166,21 @@ const tools = ['Google AI Studio', 'Google Jules', 'Cursor', 'Google Antigravity
 
   .block { border-top: 2px solid var(--rule); padding-block: var(--s-3) var(--s-16); row-gap: var(--s-6); }
   .block h2 { grid-column: 1 / -1; font-size: var(--t-h3); letter-spacing: -0.03em; line-height: 1.1; }
-  .text { grid-column: 1 / -1; }
+  .text, .steps { grid-column: 1 / -1; }
   @media (min-width: 960px) {
     .block h2 { grid-column: 1 / span 4; }
-    .text { grid-column: 6 / span 7; }
+    .text, .steps { grid-column: 6 / span 7; }
   }
   .text { display: grid; gap: var(--s-4); max-width: 62ch; font-size: 1.125rem; }
   .muted { color: var(--ink-2); }
   .links { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); font-size: var(--t-small); }
   .links a { display: inline-flex; align-items: center; gap: var(--s-1); }
 
-  .lead-text { font-size: var(--t-lead); line-height: 1.35; letter-spacing: -0.015em; }
-  cite { font-style: italic; }
-  .pull { font-size: var(--t-lead); font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; }
-  .journey {
-    list-style: none;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--s-2) var(--s-3);
-    color: var(--ink-2);
-  }
-  .journey li:not(:last-child)::after { content: '→'; margin-left: var(--s-3); }
-  .journey li:last-child { color: var(--ink); }
-  .facts-list { display: grid; gap: var(--s-3); margin-top: var(--s-2); }
-  .facts-list div { display: grid; grid-template-columns: 7.5rem 1fr; gap: var(--s-4); align-items: baseline; }
-  .facts-list dt { color: var(--ink-2); }
-  .work .text { border: 1px solid var(--hairline); padding: var(--s-6); }
+  .steps { list-style: none; display: grid; gap: var(--s-8); }
+  .steps li { display: grid; grid-template-columns: 3rem 1fr; column-gap: var(--s-4); row-gap: var(--s-1); max-width: 62ch; }
+  .steps .mono { color: var(--ink-2); padding-top: 0.35em; grid-row: span 2; }
+  .steps h3 { font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1.25; }
+  .steps p { color: var(--ink-2); }
 
   .kit, .spec, .in-use, .colophon { grid-column: 1 / -1; }
   .kit {
