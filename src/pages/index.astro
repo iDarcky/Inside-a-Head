@@ -1,11 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
-import Poster from '../components/Poster.astro';
 import Arrow from '../components/Arrow.astro';
 import SessionCard from '../components/SessionCard.astro';
-import Bookshelf from '../components/Bookshelf.astro';
-import { getProjects } from '../lib/projects';
+import Bookshelf, { type Book } from '../components/Bookshelf.astro';
+import { getProjects, inkFor } from '../lib/projects';
 import { settings, formatDate, sessionNumbers } from '../lib/site';
 
 const projects = await getProjects();
@@ -13,14 +12,42 @@ const logbook = (await getCollection('logbook')).sort((a, b) => b.data.date.valu
 const latest = logbook.slice(0, 4);
 const sessions = sessionNumbers(logbook);
 
-const stateOrder = { idea: 0, paused: 1, abandoned: 2, became: 3 } as const;
-const mess = (await getCollection('mess')).sort((a, b) => stateOrder[a.data.state] - stateOrder[b.data.state]);
+const stateLabel = { idea: 'Idea', paused: 'Paused', abandoned: 'Abandoned', became: 'Became something' } as const;
+const ideas = await getCollection('mess');
 
-// Poster wall rhythm: wide/narrow, then narrow/wide. Odd counts end full width.
-const spans = projects.map((_, i) => {
-  if (i === projects.length - 1 && projects.length % 2 === 1) return 12;
-  return (Math.floor(i / 2) % 2 === 0) === (i % 2 === 0) ? 7 : 5;
-}) as (5 | 7 | 12)[];
+// The Museum of my Mess: every project is a book in its own colour, then the ideas still waiting on the shelf.
+const books: Book[] = [
+  ...projects.map((p) => ({
+    id: p.id,
+    title: p.data.title,
+    year: p.data.year,
+    color: p.data.accent,
+    ink: inkFor(p),
+    meta: `${p.data.platform} · ${p.data.year} · ${p.data.status}`,
+    text: p.data.summary,
+    href: `/work/${p.id}`,
+    linkLabel: 'Read the case study',
+    image: p.data.cover,
+    imageAlt: p.data.gallery.find((g) => g.image.src === p.data.cover.src)?.alt ?? '',
+    imageShape: p.data.coverShape,
+  })),
+  ...ideas.map((m) => ({
+    id: m.id,
+    title: m.data.title,
+    year: m.data.year,
+    color: m.data.color ?? '#55544f',
+    ink: '#ffffff',
+    meta: [stateLabel[m.data.state], m.data.year].filter(Boolean).join(' · '),
+    text: m.data.note,
+    href: m.data.link ?? undefined,
+    linkLabel: m.data.link ? 'Visit' : undefined,
+    image: m.data.image,
+    imageAlt: `${m.data.title}, an early screen`,
+    imageShape: 'phone' as const,
+    imageAnchor: 'top' as const,
+    lean: m.data.state === 'idea',
+  })),
+];
 ---
 <Base>
   <section class="masthead wrap" aria-labelledby="masthead-title">
@@ -39,11 +66,13 @@ const spans = projects.map((_, i) => {
     </div>
   </section>
 
-  <section class="section wrap" id="work" aria-labelledby="work-title">
-    <SessionCard number={1} title="Work" id="work-title">{projects.length} things I’ve built</SessionCard>
-    <div class="grid wall">
-      {projects.map((p, i) => <Poster project={p} span={spans[i]} eager={i < 2} />)}
-    </div>
+  <section class="section wrap" id="museum" aria-labelledby="museum-title">
+    <SessionCard number={1} title="Museum of my Mess" id="museum-title">{projects.length} things I’ve built, {ideas.length} still waiting</SessionCard>
+    <p class="museum-lead">
+      Every book on this shelf is an idea. Some became products, one is still waiting for its turn. Pick a book to
+      read about it.{' '}<a href="/about">Why this studio exists</a>.
+    </p>
+    <Bookshelf books={books} />
   </section>
 
   <section class="section wrap" id="logbook" aria-labelledby="logbook-title">
@@ -66,14 +95,6 @@ const spans = projects.map((_, i) => {
     )}
   </section>
 
-  <section class="section wrap" id="museum" aria-labelledby="museum-title">
-    <SessionCard number={3} title="Museum of my Mess" id="museum-title">Ideas, pauses and the things they turned into</SessionCard>
-    <p class="museum-lead">
-      Every book on the shelf is an idea, a project that hasn’t started yet. Some get read, some just wait.
-      Ideas are messy, and they still belong somewhere.{' '}<a href="/about">Why this studio exists</a>.
-    </p>
-    <Bookshelf items={mess} />
-  </section>
 </Base>
 
 <style>
@@ -119,7 +140,6 @@ const spans = projects.map((_, i) => {
     .actions { grid-column: 9 / -1; }
   }
 
-  .wall { row-gap: var(--gutter); }
 
   .rows { list-style: none; }
   .rows li { border-top: 1px solid var(--hairline); }

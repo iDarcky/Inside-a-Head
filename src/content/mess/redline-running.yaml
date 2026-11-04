@@ -1,6 +1,8 @@
 title: Redline Running
 state: idea
 year: '2026'
+color: '#EE0000'
+image: ../../assets/projects/redline-running/dashboard.png
 note: >-
   A running companion with a training log, pace and distance, a coach and race
   plans. A dashboard exists; it’s back to being an idea until it has one sharp

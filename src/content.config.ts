@@ -41,8 +41,10 @@ const logbook = defineCollection({
 
 const mess = defineCollection({
   loader: glob({ pattern: '*.yaml', base: './src/content/mess' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
+    color: hex.optional().nullable(),
+    image: image().optional().nullable(),
     state: z.enum(['idea', 'paused', 'abandoned', 'became']),
     year: z.string().optional().nullable(),
     note: z.string(),

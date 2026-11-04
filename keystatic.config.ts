@@ -120,7 +120,7 @@ export default config({
       },
     }),
     mess: collection({
-      label: 'Museum of my Mess',
+      label: 'Ideas (on the shelf)',
       slugField: 'title',
       path: 'src/content/mess/*',
       format: { data: 'yaml' },
@@ -138,6 +138,8 @@ export default config({
           defaultValue: 'idea',
         }),
         year: fields.text({ label: 'Year' }),
+        color: fields.text({ label: 'Spine colour', description: 'Hex, e.g. #EE0000. The colour of its book on the shelf.' }),
+        image: projectImage('Image'),
         note: fields.text({ label: 'Note', multiline: true, description: 'What it was and where it stands, in two sentences.' }),
         link: fields.url({ label: 'Link' }),
       },
