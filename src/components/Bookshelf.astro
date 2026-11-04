@@ -1,8 +1,9 @@
 ---
-// The Museum of my Mess as a bookshelf. Every book is a project or an idea, bound in cloth of its own colour,
-// with the app's logo stamped at the head and the studio's mark at the foot. Pick a book and it tilts out
-// toward you, with a bookmark ribbon showing where you are. An idea that hasn't started yet leans on its
-// neighbour: the one thing out of place.
+// The Museum of my Mess as a bookshelf, after Coralie Bickford-Smith's Penguin Clothbound Classics: each book is
+// bound in cloth of its project's colour and printed in one contrasting "foil" colour, with a repeating motif
+// above and below a plain band that carries the app's logo and the title. The studio's mark is the imprint at the
+// foot. Pick a book and it tilts out toward you, its ribbon marker hanging over the shelf. An idea that hasn't
+// started yet leans on its neighbour: the one thing out of place.
 import Arrow from './Arrow.astro';
 import Mark from './Mark.astro';
 import trcStamp from '../assets/logos/the-retro-circuit-stamp.png';
@@ -13,7 +14,7 @@ export interface Book {
   id: string;
   title: string;
   year?: string | null;
-  /** The project's own colour; the spine is bound in a slightly deeper version of it. */
+  /** The project's own colour; the cloth is a slightly deeper version of it. */
   color: string;
   meta: string;
   text: string;
@@ -23,7 +24,7 @@ export interface Book {
   lean?: boolean;
 }
 
-// Each app's own mark, redrawn in one colour so it can be stamped on cloth. Sources: Setlists.md's favicon,
+// Each app's own mark, redrawn in one colour so it can be printed in foil. Sources: Setlists.md's favicon,
 // Meridian's and Ridely's themed (monochrome) launcher icons, the running track drawn for Redline Running.
 // The Retro Circuit's neon wordmark is an image mask (see trcStamp).
 const stamps: Record<Exclude<Logo, 'the-retro-circuit'>, { viewBox: string; body: string }> = {
@@ -54,6 +55,59 @@ const stamps: Record<Exclude<Logo, 'the-retro-circuit'>, { viewBox: string; body
   },
 };
 
+// The printed pattern: two motifs per 36 × 40 tile (drawn in a 20-unit box), offset like a half-drop repeat,
+// with a scatter of stippled dots. Motifs come from what each project is, or from its own logo.
+const motifs: Record<Logo, { a: string; b: string }> = {
+  // Handheld consoles, the thing The Retro Circuit compares.
+  'the-retro-circuit': {
+    a:
+      '<rect x="4.5" y="1.5" width="11" height="17" rx="2" fill="none" stroke="currentColor" stroke-width="1.2"/>' +
+      '<rect x="6.5" y="3.5" width="7" height="5.5" rx=".5"/><path d="M6.6 13.3h2.8M8 11.9v2.8" stroke="currentColor" stroke-width="1"/>' +
+      '<circle cx="12.4" cy="12.6" r=".85"/><circle cx="13.8" cy="14.5" r=".85"/>',
+    b: '<path d="M4 16v-3h3v-3h3V7h3V4h3v12Z"/>',
+  },
+  // Music notes, and the app's own three bars.
+  'setlists-md': {
+    a: '<ellipse cx="7" cy="15" rx="3.2" ry="2.3" transform="rotate(-20 7 15)"/><path d="M9.9 14.2V3.5c2.6 1.3 4.6 2.9 4.4 6" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>',
+    b:
+      '<rect x="3" y="5" width="14" height="2.4" rx="1.2"/><rect x="3" y="9" width="11" height="2.4" rx="1.2" opacity=".8"/>' +
+      '<rect x="3" y="13" width="8" height="2.4" rx="1.2" opacity=".6"/>',
+  },
+  // Meridian's half-sun, and a small sun on the horizon.
+  meridian: {
+    a:
+      '<path d="M10 3.5a6.5 6.5 0 0 0 0 13Z"/><path d="M10 3.5a6.5 6.5 0 0 1 0 13Z" opacity=".45"/>' +
+      '<rect x="9.55" y="1" width=".9" height="18" rx=".45"/>',
+    b: '<path d="M5 13a5 5 0 0 1 10 0Z"/><path d="M2.5 15h15" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>',
+  },
+  // Ridely's ring, and a road lane.
+  ridely: {
+    a: '<path d="M10 3.5a6.5 6.5 0 1 1-6.18 4.49" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><circle cx="10" cy="3.5" r="2"/>',
+    b: '<path d="M10 2v4M10 9v3M10 15v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  },
+  // Stopwatches and a running track.
+  'redline-running': {
+    a:
+      '<circle cx="10" cy="11.5" r="6.3" fill="none" stroke="currentColor" stroke-width="1.4"/><rect x="8.6" y="1.6" width="2.8" height="2" rx=".6"/>' +
+      '<path d="M10 11.5V7.6M14.9 5.4l1.3-1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>',
+    b: '<g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="5" width="16" height="10" rx="5"/><rect x="5.5" y="8" width="9" height="4" rx="2"/></g>',
+  },
+};
+const dots =
+  '<circle cx="3" cy="22" r=".8"/><circle cx="31" cy="4" r=".8"/><circle cx="18" cy="37" r=".7"/><circle cx="34" cy="28" r=".7"/>' +
+  '<circle cx="12" cy="31" r=".6"/><circle cx="26" cy="16" r=".6"/><circle cx="2" cy="6" r=".6"/><circle cx="22" cy="2" r=".5"/>';
+const tile = (m: { a: string; b: string }) =>
+  `<g fill="currentColor"><g transform="translate(8 0)">${m.a}</g><g transform="translate(-10 20)">${m.b}</g><g transform="translate(26 20)">${m.b}</g>${dots}</g>`;
+
+// The foil: one light colour per book, taken from each app's own palette, readable on its cloth (4.5:1 or better).
+const foils: Record<Logo, string> = {
+  'the-retro-circuit': '#a5f3fc', // the cyan of its neon logo
+  'setlists-md': '#f6f4ef', // Bone
+  meridian: '#ffdbcb', // its peach container colour
+  ridely: '#a6f4c0', // the mint of its ring's dot
+  'redline-running': '#ffe5e5', // its light brand red
+};
+
 /** Deepens a colour 12% toward warm black, like dyed bookcloth, keeping it close to the brand. */
 function cloth(hex: string): string {
   const black = [0x1a, 0x16, 0x12];
@@ -65,14 +119,14 @@ interface Props { books: Book[] }
 const { books } = Astro.props;
 
 // A mixed shelf: different heights, thicknesses and title settings, like different editions.
-const heights = [100, 80, 94, 72, 88];
-const widths = [1, 1.24, 0.82, 1.12, 0.92];
+const heights = [100, 82, 94, 76, 88];
+const widths = [1.12, 1.24, 0.9, 1.1, 0.96];
 const titles = [
-  { weight: 750, size: 1.08, track: 0.06 },
-  { weight: 400, size: 0.92, track: 0.22 },
-  { weight: 600, size: 1, track: 0.12 },
-  { weight: 700, size: 1.12, track: 0.04 },
-  { weight: 500, size: 0.96, track: 0.16 },
+  { weight: 700, size: 1, track: 0.1 },
+  { weight: 400, size: 0.92, track: 0.2 },
+  { weight: 600, size: 0.96, track: 0.14 },
+  { weight: 700, size: 1.06, track: 0.08 },
+  { weight: 500, size: 0.92, track: 0.16 },
 ];
 ---
 <div class="bookshelf" data-bookshelf>
@@ -80,26 +134,37 @@ const titles = [
     <ul class="shelf" role="list" aria-label="Books on the shelf">
       {books.map((b, i) => {
         const t = titles[i % titles.length];
+        const foil = b.logo ? foils[b.logo] : '#f2ebdd';
         return (
           <li
             class:list={['book', { lean: b.lean }]}
-            style={`--h: ${heights[i % heights.length]}%; --w: ${widths[i % widths.length]}; --cover: ${cloth(b.color)}; --tw: ${t.weight}; --ts: ${t.size}; --tt: ${t.track}em`}
+            style={`--h: ${heights[i % heights.length]}%; --w: ${widths[i % widths.length]}; --cover: ${cloth(b.color)}; --foil: ${foil}; --tw: ${t.weight}; --ts: ${t.size}; --tt: ${t.track}em`}
           >
-            <span class="ribbon" aria-hidden="true"></span>
             <button type="button" aria-controls={`book-${b.id}`} aria-expanded={i === 0 ? 'true' : 'false'} data-book={b.id}>
               {b.logo && (
-                b.logo === 'the-retro-circuit' ? (
-                  <span class="stamp stamp-image" style={`--mask: url(${trcStamp.src}); aspect-ratio: ${trcStamp.width} / ${trcStamp.height}`} aria-hidden="true"></span>
-                ) : (
-                  <svg class="stamp" viewBox={stamps[b.logo].viewBox} fill="currentColor" aria-hidden="true" set:html={stamps[b.logo].body} />
-                )
+                <svg class="pattern" aria-hidden="true">
+                  <defs>
+                    <pattern id={`motif-${b.id}`} width="36" height="40" patternUnits="userSpaceOnUse" patternTransform="scale(1.2)" set:html={tile(motifs[b.logo])} />
+                  </defs>
+                  <rect width="100%" height="100%" fill={`url(#motif-${b.id})`} />
+                </svg>
               )}
-              <span class="spine-title">{b.title}</span>
-              <span class="spine-foot">
+              <span class="field top" aria-hidden="true"></span>
+              <span class="band">
+                {b.logo && (
+                  b.logo === 'the-retro-circuit' ? (
+                    <span class="stamp stamp-image" style={`--mask: url(${trcStamp.src}); aspect-ratio: ${trcStamp.width} / ${trcStamp.height}`} aria-hidden="true"></span>
+                  ) : (
+                    <svg class="stamp" viewBox={stamps[b.logo].viewBox} fill="currentColor" aria-hidden="true" set:html={stamps[b.logo].body} />
+                  )
+                )}
+                <span class="spine-title">{b.title}</span>
                 {b.year && <span class="spine-year mono">{b.year}</span>}
-                <Mark size={13} class="spine-mark" />
               </span>
+              <span class="field bottom" aria-hidden="true"></span>
+              <span class="imprint"><Mark size={12} /></span>
             </button>
+            <span class="ribbon" aria-hidden="true"></span>
           </li>
         );
       })}
@@ -111,7 +176,7 @@ const titles = [
   </div>
   <div class="notes">
     {books.map((b, i) => (
-      <article class="note" id={`book-${b.id}`} hidden={i !== 0} style={`--cover: ${cloth(b.color)}`}>
+      <article class="note" id={`book-${b.id}`} hidden={i !== 0} style={`--cover: ${cloth(b.color)}; --foil: ${b.logo ? foils[b.logo] : '#f2ebdd'}`}>
         <p class="mono meta">{b.meta}</p>
         <h3>{b.title}</h3>
         <p class="text">{b.text}</p>
@@ -152,11 +217,10 @@ const titles = [
     display: flex;
     align-items: flex-end;
     gap: 2px;
-    height: clamp(450px, 36vw, 530px);
-    padding: 72px var(--s-4) 0; /* headroom for the ribbon and a book tilted out of the row */
-    overflow-x: auto;
+    height: clamp(460px, 36vw, 540px);
+    padding: 40px var(--s-4) 0; /* headroom for a book tilted out of the row */
+    overflow-x: clip;
     overflow-y: visible;
-    scrollbar-width: none;
   }
   .board {
     position: relative;
@@ -189,44 +253,56 @@ const titles = [
     cursor: pointer;
     position: relative;
     z-index: 1;
+    overflow: hidden;
     height: 100%;
-    width: calc(clamp(58px, 7vw, 104px) * var(--w));
+    width: calc(clamp(56px, 7.4vw, 112px) * var(--w));
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    color: var(--foil);
+    border-radius: 2px 2px 1px 1px;
+    /* Flat bookcloth: a fine woven grain, no painted-on shine. */
+    background:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.3'/%3E%3C/svg%3E"),
+      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px),
+      var(--cover);
+    box-shadow:
+      inset 5px 0 7px -6px rgb(0 0 0 / 0.45),
+      inset -3px 0 4px -3px rgb(0 0 0 / 0.3),
+      0 3px 4px -1px rgb(0 0 0 / 0.3);
+  }
+  .book button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+  /* The printed pattern fills the spine; the band and imprint sit on plain cloth above it. */
+  .pattern { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--foil); opacity: 0.92; }
+  /* Patterned fields above and below the band (the pattern shows through them). */
+  .field { min-height: 28px; }
+  .field.top { flex: 3 1 0; }
+  .field.bottom { flex: 2 1 0; }
+  .band {
+    position: relative;
+    flex: 0 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-block: 34px 30px;
-    color: #f2ebdd;
-    border-radius: 3px 3px 1px 1px;
-    /* Bookcloth: a fine weave, a soft light across the rounded spine, darker at the hinges. */
-    background:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E"),
-      repeating-linear-gradient(0deg, rgb(255 255 255 / 0.025) 0 1px, transparent 1px 3px),
-      linear-gradient(90deg, rgb(0 0 0 / 0.3) 0%, rgb(255 255 255 / 0.05) 16%, rgb(255 255 255 / 0.1) 40%, rgb(0 0 0 / 0.03) 72%, rgb(0 0 0 / 0.32) 100%),
-      var(--cover);
-    box-shadow:
-      inset 6px 0 8px -6px rgb(0 0 0 / 0.4),
-      inset 0 1px 0 rgb(255 255 255 / 0.16),
-      inset 0 -1px 0 rgb(0 0 0 / 0.3),
-      0 3px 4px -1px rgb(0 0 0 / 0.3);
+    justify-content: center;
+    gap: 10px;
+    padding: 14px 6px;
+    background: var(--cover);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.08), 0 -1px 0 rgb(0 0 0 / 0.08);
   }
-  /* Tooling: thin double rules at the head and foot of the spine. */
-  .book button::before,
-  .book button::after {
-    content: '';
-    position: absolute;
-    left: 10%;
-    right: 10%;
-    height: 4px;
-    border-block: 1px solid rgb(242 235 221 / 0.45);
+  .imprint {
+    position: relative;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    height: 30px;
+    background: var(--cover);
   }
-  .book button::before { top: 14px; }
-  .book button::after { bottom: 14px; }
-  .book button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
-
-  .stamp { width: min(54%, 38px); height: auto; flex: none; margin-bottom: 16px; opacity: 0.92; }
+  .stamp { width: min(40%, 26px); height: auto; flex: none; }
   .stamp-image {
     display: block;
-    width: min(78%, 64px);
+    width: min(74%, 52px);
     background: currentColor;
     mask: var(--mask) center / contain no-repeat;
     -webkit-mask: var(--mask) center / contain no-repeat;
@@ -234,31 +310,30 @@ const titles = [
   .spine-title {
     writing-mode: vertical-rl;
     font-weight: var(--tw);
-    font-size: calc(clamp(0.6875rem, 0.5rem + 0.5vw, 0.9375rem) * var(--ts));
+    font-size: calc(clamp(0.625rem, 0.46rem + 0.36vw, 0.8125rem) * var(--ts));
     line-height: 1.1;
     letter-spacing: var(--tt);
     text-transform: uppercase;
     white-space: nowrap;
   }
-  .spine-foot { margin-top: auto; padding-top: 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-  .spine-year { writing-mode: vertical-rl; font-size: 0.6875rem; letter-spacing: 0.08em; opacity: 0.75; }
-  .book :global(.spine-mark) { opacity: 0.85; }
+  .spine-year { font-size: 0.625rem; letter-spacing: 0.08em; opacity: 0.85; }
 
-  /* The bookmark: a ribbon peeking out of the top of the book you're reading. */
+  /* The ribbon marker of the book you're reading, hanging over the front of the shelf. */
   .ribbon {
     position: absolute;
-    z-index: 0;
-    top: -26px;
-    right: 26%;
-    width: 9px;
-    height: 44px;
-    background: var(--signal);
-    clip-path: polygon(0 0, 50% 14%, 100% 0, 100% 100%, 0 100%);
-    opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 200ms ease, transform 260ms var(--ease-out);
+    z-index: 3;
+    top: calc(100% - 4px);
+    left: 30%;
+    width: 8px;
+    height: 46px;
+    background: var(--foil);
+    box-shadow: 1px 1px 2px rgb(0 0 0 / 0.25);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 86%, 0 100%);
+    transform-origin: top center;
+    transform: scaleY(0);
+    transition: transform 260ms var(--ease-out);
   }
-  .book:has(> button[aria-expanded='true']) .ribbon { opacity: 1; transform: none; }
+  .book:has(> button[aria-expanded='true']) .ribbon { transform: scaleY(1); }
 
   /* Pulling a book off the shelf: it lifts on hover and tilts out toward you when picked. */
   @media (hover: hover) {
@@ -270,13 +345,13 @@ const titles = [
   }
   .book:has(> button[aria-expanded='true']) button {
     box-shadow:
-      inset 6px 0 8px -6px rgb(0 0 0 / 0.4),
-      inset 0 1px 0 rgb(255 255 255 / 0.2),
+      inset 5px 0 7px -6px rgb(0 0 0 / 0.45),
+      inset -3px 0 4px -3px rgb(0 0 0 / 0.3),
       0 18px 24px -10px rgb(0 0 0 / 0.45);
   }
 
   /* The one thing out of place: an idea that hasn't started yet, leaning on its neighbour. */
-  .lean { margin-left: 44px; transform: rotate(-7deg); transform-origin: bottom left; }
+  .lean { margin-left: 40px; transform: rotate(-7deg); transform-origin: bottom left; }
   @media (hover: hover) {
     .lean:hover { transform: rotate(-4deg) translateY(-4px); }
   }
@@ -285,8 +360,11 @@ const titles = [
   }
 
   @media (max-width: 599px) {
-    .shelf { height: 470px; padding-inline: var(--s-2); }
+    .shelf { height: 480px; padding-inline: var(--s-2); }
+    .book button { width: calc(50px * var(--w)); }
+    .lean { margin-left: 26px; }
     .spine-title { letter-spacing: calc(var(--tt) * 0.6); }
+    .band { gap: 8px; padding-block: 10px; }
   }
 
   .notes { min-height: 12rem; }
@@ -297,7 +375,7 @@ const titles = [
     display: block;
     width: 48px;
     height: 8px;
-    background: var(--cover);
+    background: linear-gradient(90deg, var(--cover) 0 75%, var(--foil) 75%);
     margin-bottom: var(--s-2);
   }
   .meta { color: var(--ink-2); }
