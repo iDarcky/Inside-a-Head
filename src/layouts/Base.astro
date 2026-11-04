@@ -35,11 +35,16 @@ const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
   <head>
     <meta charset="utf-8" />
     <script is:inline>
-      // Apply a stored theme before first paint so there is no flash.
-      try {
-        const t = localStorage.getItem('theme');
-        if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
-      } catch {}
+      // Apply the theme before first paint so there is no flash: the visitor's own choice if they made one,
+      // otherwise night after 20:00 and before 06:00 in Timișoara, when the coffee shop is open late.
+      (() => {
+        const root = document.documentElement;
+        let t = null;
+        try { t = localStorage.getItem('theme'); } catch {}
+        if (t === 'light' || t === 'dark') { root.dataset.theme = t; return; }
+        const hour = Number(new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Bucharest', hour: 'numeric', hourCycle: 'h23' }).format(new Date()));
+        if (hour >= 20 || hour < 6) { root.dataset.theme = 'dark'; root.dataset.night = ''; }
+      })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
@@ -53,7 +58,7 @@ const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="alternate" type="application/rss+xml" title="inside a head — logbook" href="/logbook/rss.xml" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4f3ef" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d0d0c" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#14110d" />
     <meta property="og:type" content={type} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />

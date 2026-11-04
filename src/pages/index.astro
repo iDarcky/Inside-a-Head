@@ -3,15 +3,17 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Poster from '../components/Poster.astro';
 import Arrow from '../components/Arrow.astro';
+import SessionCard from '../components/SessionCard.astro';
+import Bookshelf from '../components/Bookshelf.astro';
 import { getProjects } from '../lib/projects';
-import { settings, formatDate } from '../lib/site';
+import { settings, formatDate, sessionNumbers } from '../lib/site';
 
 const projects = await getProjects();
 const logbook = (await getCollection('logbook')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const latest = logbook.slice(0, 4);
+const sessions = sessionNumbers(logbook);
 
 const stateOrder = { idea: 0, paused: 1, abandoned: 2, became: 3 } as const;
-const stateLabel = { idea: 'Idea', paused: 'Paused', abandoned: 'Abandoned', became: 'Became something' } as const;
 const mess = (await getCollection('mess')).sort((a, b) => stateOrder[a.data.state] - stateOrder[b.data.state]);
 
 // Poster wall rhythm: wide/narrow, then narrow/wide. Odd counts end full width.
@@ -38,20 +40,14 @@ const spans = projects.map((_, i) => {
   </section>
 
   <section class="section wrap" id="work" aria-labelledby="work-title">
-    <div class="section-head grid">
-      <h2 id="work-title">Work</h2>
-      <p class="mono">{projects.length} things I’ve built</p>
-    </div>
+    <SessionCard number={1} title="Work" id="work-title">{projects.length} things I’ve built</SessionCard>
     <div class="grid wall">
       {projects.map((p, i) => <Poster project={p} span={spans[i]} eager={i < 2} />)}
     </div>
   </section>
 
   <section class="section wrap" id="logbook" aria-labelledby="logbook-title">
-    <div class="section-head grid">
-      <h2 id="logbook-title">Logbook</h2>
-      <p class="mono"><a href="/logbook">All entries</a></p>
-    </div>
+    <SessionCard number={2} title="Logbook" id="logbook-title"><a href="/logbook">All entries</a></SessionCard>
     {latest.length === 0 ? (
       <p class="empty">The first entry is on its way.</p>
     ) : (
@@ -59,7 +55,7 @@ const spans = projects.map((_, i) => {
         {latest.map((e) => (
           <li>
             <a class="row grid" href={`/logbook/${e.id}`}>
-              <time class="mono" datetime={e.data.date.toISOString()}>{formatDate(e.data.date)}</time>
+              <span class="mono when">Session {sessions.get(e.id)} · <time datetime={e.data.date.toISOString()}>{formatDate(e.data.date)}</time></span>
               <span class="row-title">{e.data.title}</span>
               {e.data.summary && <span class="row-note">{e.data.summary}</span>}
               <Arrow dir="right" />
@@ -71,35 +67,12 @@ const spans = projects.map((_, i) => {
   </section>
 
   <section class="section wrap" id="museum" aria-labelledby="museum-title">
-    <div class="section-head grid">
-      <h2 id="museum-title">Museum of my Mess</h2>
-      <p class="mono">Ideas, pauses and the things they turned into</p>
-    </div>
+    <SessionCard number={3} title="Museum of my Mess" id="museum-title">Ideas, pauses and the things they turned into</SessionCard>
     <p class="museum-lead">
       Every book on the shelf is an idea, a project that hasn’t started yet. Some get read, some just wait.
       Ideas are messy, and they still belong somewhere.{' '}<a href="/about">Why this studio exists</a>.
     </p>
-    <ul class="rows">
-      {mess.map((m) => {
-        const inner = (
-          <>
-            <span class="mono state" data-state={m.data.state}>{stateLabel[m.data.state]}</span>
-            <span class="row-title">{m.data.title}</span>
-            <span class="row-note">{m.data.note}</span>
-            {m.data.link ? <Arrow /> : <span aria-hidden="true" />}
-          </>
-        );
-        return (
-          <li>
-            {m.data.link ? (
-              <a class="row grid" href={m.data.link} rel="noreferrer">{inner}</a>
-            ) : (
-              <div class="row grid">{inner}</div>
-            )}
-          </li>
-        );
-      })}
-    </ul>
+    <Bookshelf items={mess} />
   </section>
 </Base>
 
@@ -162,7 +135,7 @@ const spans = projects.map((_, i) => {
   .row > :global(svg) { display: none; }
   .row-title { font-size: var(--t-h3); font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; }
   .row-note { color: var(--ink-2); max-width: 60ch; }
-  .row time, .state { color: var(--ink-2); }
+  .row .when { color: var(--ink-2); }
   a.row { transition: background-color 160ms ease; }
   @media (hover: hover) {
     a.row:hover .row-title { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.15em; }
@@ -173,19 +146,6 @@ const spans = projects.map((_, i) => {
     .row > :nth-child(3) { grid-column: 7 / span 5; }
     .row > :global(svg) { display: block; grid-column: 12; justify-self: end; align-self: center; }
   }
-  .state[data-state='idea']::before,
-  .state[data-state='paused']::before,
-  .state[data-state='abandoned']::before,
-  .state[data-state='became']::before {
-    content: '';
-    display: inline-block;
-    width: 0.6em;
-    height: 0.6em;
-    margin-right: 0.5em;
-    border: 1.5px solid currentColor;
-  }
-  .state[data-state='became']::before { background: currentColor; }
-  .state[data-state='idea']::before { border-radius: 50%; }
 
   .empty { color: var(--ink-2); }
 

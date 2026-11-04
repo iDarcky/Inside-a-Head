@@ -1,0 +1,54 @@
+---
+// A section break in the style of Cowboy Bebop's title cards: one line of huge type on an inverted band.
+interface Props {
+  number: number;
+  title: string;
+  id: string;
+}
+const { number, title, id } = Astro.props;
+---
+<header class="session">
+  <p class="no mono">Session #{String(number).padStart(2, '0')}</p>
+  <h2 id={id}>{title}</h2>
+  {Astro.slots.has('default') && <div class="aside mono"><slot /></div>}
+</header>
+
+<style>
+  .session {
+    /* Full-bleed band without causing sideways scroll. */
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 0 0 100vmax var(--ink);
+    clip-path: inset(0 -100vmax);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    row-gap: var(--s-3);
+    padding-block: var(--s-8) var(--s-6);
+    margin-bottom: var(--s-12);
+  }
+  .no {
+    grid-column: 1 / -1;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    opacity: 0.75;
+  }
+  h2 {
+    font-size: clamp(2.75rem, 1rem + 7vw, 7.5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.035em;
+    line-height: 0.88;
+  }
+  .aside {
+    justify-self: end;
+    text-align: right;
+    padding-bottom: 0.4em;
+    max-width: 22ch;
+  }
+  .aside :global(a) { color: inherit; }
+  @media (max-width: 599px) {
+    .session { grid-template-columns: 1fr; }
+    .aside { justify-self: start; text-align: left; }
+  }
+</style>

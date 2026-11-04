@@ -1,0 +1,140 @@
+---
+// The Museum of my Mess as a bookshelf: every idea is a book. Pick a spine to read its note.
+// The first idea that hasn't started yet leans against its neighbour: the one thing out of place.
+import Arrow from './Arrow.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { items: CollectionEntry<'mess'>[] }
+const { items: all } = Astro.props;
+// The first idea that hasn't started yet goes at the end of the shelf, leaning on its neighbour.
+const leanIndex = all.findIndex((m) => m.data.state === 'idea');
+const items = leanIndex === -1 ? all : [...all.slice(0, leanIndex), ...all.slice(leanIndex + 1), all[leanIndex]];
+
+const stateLabel = { idea: 'Idea', paused: 'Paused', abandoned: 'Abandoned', became: 'Became something' } as const;
+const covers = ['ink', 'paper', 'wash', 'grey'] as const;
+const heights = [92, 100, 84, 96, 88];
+const leaner = leanIndex === -1 ? -1 : items.length - 1;
+---
+<div class="bookshelf" data-bookshelf>
+  <ul class="shelf" role="list" aria-label="Ideas on the shelf">
+    {items.map((m, i) => (
+      <li class:list={['book', covers[i % covers.length], { lean: i === leaner }]} style={`--h: ${heights[i % heights.length]}%`}>
+        <button
+          type="button"
+          aria-controls={`book-${m.id}`}
+          aria-expanded={i === 0 ? 'true' : 'false'}
+          data-book={m.id}
+        >
+          <span class="spine-title">{m.data.title}</span>
+          <span class="spine-year mono">{m.data.year}</span>
+        </button>
+      </li>
+    ))}
+  </ul>
+  <div class="notes">
+    {items.map((m, i) => (
+      <article class="note" id={`book-${m.id}`} hidden={i !== 0}>
+        <p class="mono state" data-state={m.data.state}>{stateLabel[m.data.state]}{m.data.year && ` · ${m.data.year}`}</p>
+        <h3>{m.data.title}</h3>
+        <p class="text">{m.data.note}</p>
+        {m.data.link && <a class="more" href={m.data.link} rel="noreferrer">Visit <Arrow /></a>}
+      </article>
+    ))}
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-bookshelf]').forEach((shelf) => {
+    const buttons = [...shelf.querySelectorAll<HTMLButtonElement>('[data-book]')];
+    buttons.forEach((b) =>
+      b.addEventListener('click', () => {
+        buttons.forEach((o) => {
+          const open = o === b;
+          o.setAttribute('aria-expanded', String(open));
+          shelf.querySelector<HTMLElement>(`#book-${o.dataset.book}`)!.hidden = !open;
+        });
+      }),
+    );
+  });
+</script>
+
+<style>
+  .bookshelf {
+    display: grid;
+    gap: var(--s-12);
+  }
+  @media (min-width: 960px) {
+    .bookshelf { grid-template-columns: 7fr 5fr; align-items: end; gap: var(--gutter); }
+  }
+
+  .shelf {
+    list-style: none;
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: clamp(300px, 28vw, 364px);
+    padding: var(--s-6) var(--s-2) 0; /* headroom for a book pulled off the shelf */
+    border-bottom: 6px solid var(--ink);
+    overflow-x: auto;
+    overflow-y: visible;
+    scrollbar-width: none;
+  }
+  .book { height: var(--h); flex: none; display: flex; }
+  .book button {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+    height: 100%;
+    width: clamp(52px, 5.4vw, 76px);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--s-3);
+    padding-block: var(--s-4) var(--s-3);
+    transition: transform 180ms var(--ease-out);
+  }
+  .book button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+  .spine-title, .spine-year { writing-mode: vertical-rl; }
+  .spine-title {
+    font-weight: 650;
+    font-size: clamp(0.6875rem, 0.55rem + 0.45vw, 0.9375rem);
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .spine-year { font-size: 0.6875rem; opacity: 0.7; }
+
+  /* Covers: four bindings from the site's own palette, so they work in both themes. */
+  .ink button { background: var(--ink); color: var(--paper); }
+  .paper button { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); }
+  .wash button { background: var(--wash); color: var(--ink); box-shadow: inset 0 0 0 1px var(--hairline); }
+  .grey button { background: var(--ink-2); color: var(--paper); }
+
+  /* Pulling a book off the shelf: it rises a little on hover and stays up while open. */
+  @media (hover: hover) {
+    .book button:hover { transform: translateY(-8px); }
+  }
+  .book button[aria-expanded='true'] { transform: translateY(-14px); }
+
+  /* The one thing out of place: an idea that hasn't started yet, leaning on its neighbour. */
+  .lean { margin-left: 34px; }
+  .lean button { transform: rotate(-7deg); transform-origin: bottom left; }
+  .lean button[aria-expanded='true'] { transform: rotate(-7deg) translateY(-14px); }
+  @media (hover: hover) {
+    .lean button:hover { transform: rotate(-3deg) translateY(-6px); }
+  }
+
+  .notes { min-height: 12rem; }
+  .note { display: grid; gap: var(--s-3); max-width: 46ch; }
+  .note[hidden] { display: none; }
+  .note h3 { font-size: var(--t-h3); letter-spacing: -0.03em; line-height: 1.1; }
+  .note .text { color: var(--ink-2); font-size: 1.0625rem; }
+  .state { color: var(--ink-2); }
+  .more { display: inline-flex; align-items: center; gap: var(--s-1); font-size: var(--t-small); justify-self: start; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .book button { transition: none; }
+  }
+</style>

@@ -32,6 +32,7 @@
   --rule: #0b0b0a;
   --hairline: #d5d3cc;
   --wash: #e9e7e1;    /* placeholder fill, image backdrops */
+  --signal: #0b0b0a;   /* highlight colour: ink by day, amber at night */
   --selection: #0b0b0a;
   --selection-ink: #f4f3ef;
 
@@ -76,30 +77,33 @@
   :root { --gutter: 24px; --margin: 48px; }
 }
 
-/* Dark follows the system unless the visitor picked a theme with the toggle (data-theme on <html>). */
+/* Night: a warm, late-night coffee-shop palette with one amber signal. It follows the system, switches on by
+   itself after 20:00 in Timișoara (see Base.astro), and the toggle overrides both (data-theme on <html>). */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --paper: #0d0d0c;
-    --ink: #eeede8;
-    --ink-2: #a3a29b;
-    --rule: #eeede8;
-    --hairline: #2c2b28;
-    --wash: #1a1a18;
-    --selection: #eeede8;
-    --selection-ink: #0d0d0c;
+    --paper: #14110d;
+    --ink: #ede6da;
+    --ink-2: #a89f92;
+    --rule: #ede6da;
+    --hairline: #2e2922;
+    --wash: #1f1b16;
+    --signal: #e0a458;
+    --selection: #e0a458;
+    --selection-ink: #14110d;
   }
 }
 :root[data-theme='dark'] {
   color-scheme: dark;
-  --paper: #0d0d0c;
-  --ink: #eeede8;
-  --ink-2: #a3a29b;
-  --rule: #eeede8;
-  --hairline: #2c2b28;
-  --wash: #1a1a18;
-  --selection: #eeede8;
-  --selection-ink: #0d0d0c;
+  --paper: #14110d;
+  --ink: #ede6da;
+  --ink-2: #a89f92;
+  --rule: #ede6da;
+  --hairline: #2e2922;
+  --wash: #1f1b16;
+  --signal: #e0a458;
+  --selection: #e0a458;
+  --selection-ink: #14110d;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -135,11 +139,11 @@ p, li, dd { text-wrap: pretty; }
 ul, ol { padding: 0; }
 img { display: block; max-width: 100%; height: auto; }
 
-a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+a { color: inherit; text-decoration-thickness: 1px; text-underline-offset: 0.2em; text-decoration-color: var(--signal); }
 a:hover { text-decoration-thickness: 2px; }
 
 :focus-visible {
-  outline: 2px solid var(--ink);
+  outline: 2px solid var(--signal);
   outline-offset: 3px;
   border-radius: 1px;
 }
@@ -250,6 +254,7 @@ a:hover { text-decoration-thickness: 2px; }
     --ink-2: #4a4a46;
     --rule: #000;
     --hairline: #d5d3cc;
+    --signal: #000;
   }
   .site-header, .site-footer, .skip, .no-print { display: none !important; }
 }
