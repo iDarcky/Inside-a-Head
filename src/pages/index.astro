@@ -3,7 +3,7 @@ import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
 import SessionCard from '../components/SessionCard.astro';
-import Bookshelf, { type Book, type Emblem } from '../components/Bookshelf.astro';
+import Bookshelf, { type Book, type Logo } from '../components/Bookshelf.astro';
 import { getProjects } from '../lib/projects';
 import { settings, formatDate, sessionNumbers } from '../lib/site';
 
@@ -14,15 +14,6 @@ const sessions = sessionNumbers(logbook);
 
 const stateLabel = { idea: 'Idea', paused: 'Paused', abandoned: 'Abandoned', became: 'Became something' } as const;
 const ideas = await getCollection('mess');
-
-// Each book's emblem, drawn from what the project is.
-const emblemFor: Record<string, Emblem> = {
-  'the-retro-circuit': 'pixels',
-  'setlists-md': 'staff',
-  meridian: 'sun',
-  ridely: 'road',
-  'redline-running': 'track',
-};
 
 // The Museum of my Mess: every project is a book in its own colour, then the ideas still waiting on the shelf.
 const books: Book[] = [
@@ -35,7 +26,7 @@ const books: Book[] = [
     text: p.data.summary,
     href: `/work/${p.id}`,
     linkLabel: 'Read the case study',
-    emblem: emblemFor[p.id],
+    logo: p.id as Logo,
   })),
   ...ideas.map((m) => ({
     id: m.id,
@@ -46,7 +37,7 @@ const books: Book[] = [
     text: m.data.note,
     href: m.data.link ?? undefined,
     linkLabel: m.data.link ? 'Visit' : undefined,
-    emblem: emblemFor[m.id],
+    logo: m.id === 'redline-running' ? ('redline-running' as Logo) : undefined,
     lean: m.data.state === 'idea',
   })),
 ];
