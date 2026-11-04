@@ -272,6 +272,17 @@ const titles = [
       0 3px 4px -1px rgb(0 0 0 / 0.3);
   }
   .book button:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+  /* The roundness of the spine: light across the middle, shade at the hinges, laid over cloth, pattern and band. */
+  .book button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    border-radius: inherit;
+    background: linear-gradient(90deg, rgb(0 0 0 / 0.32) 0%, rgb(255 255 255 / 0.05) 16%, rgb(255 255 255 / 0.11) 40%, rgb(0 0 0 / 0.03) 72%, rgb(0 0 0 / 0.34) 100%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), inset 0 -1px 0 rgb(0 0 0 / 0.3);
+  }
 
   /* The printed pattern fills the spine; the band and imprint sit on plain cloth above it. */
   .pattern { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--foil); opacity: 0.92; }
