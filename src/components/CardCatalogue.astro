@@ -1,0 +1,198 @@
+---
+// The Museum of my Mess as a library card-catalogue drawer. Each project is an index card with a tab in its
+// own colour, typed like an old catalogue card. Pick a tab and that card comes to the front.
+// The one thing out of place: the card for an idea that hasn't started yet sticks up crooked.
+import AppLogo from './AppLogo.astro';
+import Arrow from './Arrow.astro';
+import type { Piece } from '../lib/museum';
+
+interface Props { pieces: Piece[] }
+const { pieces } = Astro.props;
+const n = pieces.length;
+const callNo = (p: Piece) => `IAH ${String(p.number).padStart(3, '0')}`;
+---
+<div class="catalogue" data-catalogue>
+  <div class="cards" role="tablist" aria-label="Catalogue cards" style={`--n: ${n}`}>
+    {pieces.map((p, i) => (
+      <article
+        class:list={['card', { crooked: p.kind === 'idea' }]}
+        style={`--i: ${i}; --depth: ${i}; --accent: ${p.color}`}
+        data-card={p.id}
+      >
+        <button
+          class="tab"
+          type="button"
+          role="tab"
+          id={`tab-${p.id}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          aria-controls={`card-${p.id}`}
+        >
+          {p.logo && <AppLogo logo={p.logo} class="tab-logo" />}
+          <span class="tab-label">{p.title}</span>
+        </button>
+        <div class="face" id={`card-${p.id}`} role="tabpanel" aria-labelledby={`tab-${p.id}`} inert={i !== 0}>
+          <header class="card-head mono">
+            <span>{callNo(p)}</span>
+            <span>{p.year}</span>
+          </header>
+          <div class="card-title">
+            <h3>{p.title}</h3>
+            {p.logo && <AppLogo logo={p.logo} class="card-logo" />}
+          </div>
+          <dl class="typed mono">
+            {p.platform && <div><dt>Format</dt><dd>{p.platform}</dd></div>}
+            {p.status && <div><dt>Status</dt><dd>{p.status}</dd></div>}
+            {p.stack && <div><dt>Made with</dt><dd>{p.stack}</dd></div>}
+          </dl>
+          <p class="text">{p.text}</p>
+          {p.href && <a class="more" href={p.href}>{p.linkLabel} <Arrow dir="right" /></a>}
+          <span class="hole" aria-hidden="true"></span>
+        </div>
+      </article>
+    ))}
+  </div>
+  <div class="drawer" aria-hidden="true">
+    <span class="holder">Museum of my Mess · {String(1).padStart(2, '0')}–{String(n).padStart(2, '0')}</span>
+    <span class="pull"></span>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-catalogue]').forEach((root) => {
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-card]')];
+    const bring = (front: HTMLElement) => {
+      // The picked card goes to the front; the rest keep their order behind it.
+      const rest = cards.filter((c) => c !== front);
+      [front, ...rest].forEach((c, depth) => {
+        c.style.setProperty('--depth', String(depth));
+        const tab = c.querySelector<HTMLButtonElement>('.tab')!;
+        tab.setAttribute('aria-selected', String(depth === 0));
+        (c.querySelector('.face') as HTMLElement).inert = depth !== 0;
+      });
+    };
+    cards.forEach((c) => c.querySelector('.tab')!.addEventListener('click', () => bring(c)));
+  });
+</script>
+
+<style>
+  .catalogue { position: relative; max-width: 760px; }
+
+  /* All cards share one grid cell; depth lifts the ones behind so their tabs show. */
+  .cards {
+    display: grid;
+    padding-top: calc(var(--n) * 12px + 34px);
+  }
+  .card {
+    grid-area: 1 / 1;
+    position: relative;
+    z-index: calc(20 - var(--depth));
+    transform: translateY(calc(var(--depth) * -12px));
+    transition: transform 280ms var(--ease-out);
+  }
+
+  .tab {
+    all: unset;
+    box-sizing: border-box;
+    cursor: pointer;
+    position: absolute;
+    bottom: calc(100% - 2px);
+    left: calc(var(--i) * (100% - 9.5rem) / (var(--n) - 1));
+    width: 9.5rem;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    border-radius: 6px 6px 0 0;
+    background: var(--accent);
+    color: #fff;
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    box-shadow: inset 0 -6px 8px -6px rgb(0 0 0 / 0.25);
+  }
+  .tab:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
+  .tab :global(.tab-logo) { width: 14px; }
+  .tab-label { overflow: hidden; text-overflow: ellipsis; }
+  .crooked .tab { transform: rotate(-5deg); transform-origin: bottom left; }
+
+  /* The card: cream stock, one accent rule at the top, faint ruled lines, a rod hole at the foot. */
+  .face {
+    position: relative;
+    display: grid;
+    gap: var(--s-3);
+    min-height: 330px;
+    padding: var(--s-6) var(--s-8) var(--s-12);
+    background:
+      repeating-linear-gradient(180deg, transparent 0 27px, rgb(80 110 160 / 0.13) 27px 28px) 0 96px / 100% calc(100% - 96px) no-repeat,
+      #fbf8f1;
+    color: #1d1b17;
+    border-top: 4px solid var(--accent);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.06), 0 10px 24px -14px rgb(0 0 0 / 0.35);
+    filter: brightness(calc(1 - var(--depth) * 0.035));
+  }
+  .card-head { display: flex; justify-content: space-between; color: #6b665c; }
+  .card-title { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); }
+  .card-title h3 { font-size: var(--t-h3); letter-spacing: -0.03em; line-height: 1.1; }
+  .face :global(.card-logo) { width: 34px; color: var(--accent); }
+  .typed { display: grid; gap: 2px; font-size: 0.8125rem; line-height: 28px; }
+  .typed div { display: grid; grid-template-columns: 7rem 1fr; }
+  .typed dt { color: #6b665c; }
+  .text { font-family: var(--mono); font-size: 0.875rem; line-height: 28px; max-width: 58ch; }
+  .more { display: inline-flex; align-items: center; gap: var(--s-2); justify-self: start; font-size: var(--t-small); font-weight: 500; color: #1d1b17; text-decoration-color: var(--accent); }
+  .hole {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    width: 14px;
+    height: 14px;
+    margin-left: -7px;
+    border-radius: 50%;
+    background: var(--paper);
+    box-shadow: inset 0 1px 2px rgb(0 0 0 / 0.3);
+  }
+
+  /* The drawer front the cards stand in. */
+  .drawer {
+    position: relative;
+    z-index: 30;
+    margin-top: -26px;
+    height: 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--s-8);
+    background: var(--ink);
+    color: var(--paper);
+    box-shadow: 0 16px 20px -14px rgb(0 0 0 / 0.5);
+  }
+  .holder {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1.5px solid currentColor;
+  }
+  .pull {
+    width: 64px;
+    height: 16px;
+    border: 2px solid currentColor;
+    border-top: 0;
+    border-radius: 0 0 32px 32px;
+  }
+
+  @media (max-width: 599px) {
+    .tab { width: 3.25rem; left: calc(var(--i) * (100% - 3.25rem) / (var(--n) - 1)); justify-content: center; padding: 0; }
+    .tab-label { display: none; }
+    .tab :global(.tab-logo) { width: 18px; }
+    .face { padding: var(--s-4) var(--s-4) var(--s-12); }
+    .typed div { grid-template-columns: 5.5rem 1fr; }
+    .holder { font-size: 0.625rem; }
+    .drawer { gap: var(--s-4); }
+  }
+  @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+</style>

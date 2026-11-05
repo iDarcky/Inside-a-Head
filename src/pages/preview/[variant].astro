@@ -1,0 +1,71 @@
+---
+// Side-by-side previews of ideas for the Museum of my Mess. Not linked from the site and kept out of search.
+// Delete this folder (and the components of the ideas not chosen) once one is picked.
+import Base from '../../layouts/Base.astro';
+import SessionCard from '../../components/SessionCard.astro';
+import Bookshelf, { type Book, type Logo } from '../../components/Bookshelf.astro';
+import CardCatalogue from '../../components/CardCatalogue.astro';
+import MenuBoard from '../../components/MenuBoard.astro';
+import MuseumWall from '../../components/MuseumWall.astro';
+import { getMuseum } from '../../lib/museum';
+
+const variants = [
+  { slug: 'books', label: 'Books (current)' },
+  { slug: 'catalogue', label: 'Card catalogue' },
+  { slug: 'menu', label: 'Coffee shop menu' },
+  { slug: 'wall', label: 'Museum wall' },
+] as const;
+
+export function getStaticPaths() {
+  return ['books', 'catalogue', 'menu', 'wall'].map((variant) => ({ params: { variant } }));
+}
+
+const { variant } = Astro.params;
+const pieces = await getMuseum();
+const books: Book[] = pieces.map((p) => ({
+  id: p.id,
+  title: p.title,
+  year: p.year,
+  color: p.color,
+  meta: [p.platform, p.year, p.status].filter(Boolean).join(' · '),
+  text: p.text,
+  href: p.href,
+  linkLabel: p.linkLabel,
+  logo: p.logo as Logo | undefined,
+  lean: p.kind === 'idea',
+}));
+const current = variants.find((v) => v.slug === variant)!;
+---
+<Base title={`Preview: ${current.label}`} noindex>
+  <nav class="switch wrap" aria-label="Previews">
+    <span class="mono">Preview</span>
+    {variants.map((v) => (
+      <a href={`/preview/${v.slug}`} aria-current={v.slug === variant ? 'page' : undefined}>{v.label}</a>
+    ))}
+  </nav>
+  <section class="section wrap" aria-labelledby="museum-title">
+    <SessionCard number={1} title="Museum of my Mess" id="museum-title">4 things I’ve built, 1 still waiting</SessionCard>
+    <p class="lead">
+      Every piece in here is an idea. Some became products, one is still waiting for its turn.
+    </p>
+    {variant === 'books' && <Bookshelf books={books} />}
+    {variant === 'catalogue' && <CardCatalogue pieces={pieces} />}
+    {variant === 'menu' && <MenuBoard pieces={pieces} />}
+    {variant === 'wall' && <MuseumWall pieces={pieces} />}
+  </section>
+</Base>
+
+<style>
+  .switch {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--s-2) var(--s-6);
+    padding-block: var(--s-4);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .switch .mono { color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.1em; }
+  .switch a { text-decoration: none; color: var(--ink-2); min-height: 44px; display: inline-flex; align-items: center; }
+  .switch a[aria-current='page'] { color: var(--ink); text-decoration: underline; text-decoration-thickness: 2px; }
+  .lead { font-size: var(--t-lead); line-height: 1.3; max-width: 38ch; margin-bottom: var(--s-12); }
+</style>
