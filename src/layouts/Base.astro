@@ -14,8 +14,6 @@ interface Props {
   accent?: string;
   image?: string;
   type?: 'website' | 'article';
-  /** Keep the page out of search results (previews). */
-  noindex?: boolean;
 }
 
 const {
@@ -24,7 +22,6 @@ const {
   accent,
   image,
   type = 'website',
-  noindex = false,
 } = Astro.props;
 
 const fullTitle = title ? `${title} — inside a head` : `inside a head — ${settings.name}`;
@@ -55,7 +52,6 @@ const analyticsToken = import.meta.env.PUBLIC_CF_ANALYTICS_TOKEN;
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
