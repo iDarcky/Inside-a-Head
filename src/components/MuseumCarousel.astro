@@ -2,8 +2,7 @@
 // The Museum of my Mess as a carousel: one large card per piece on a snapping horizontal track, with the next
 // card peeking in. Prev/next buttons, a counter and a progress line; swipe or scroll on touch and trackpads.
 // An idea that hasn't started yet is the last card, its image hung slightly crooked: the one thing out of place.
-import { Picture } from 'astro:assets';
-import AppLogo from './AppLogo.astro';
+import PieceCard from './PieceCard.astro';
 import Arrow from './Arrow.astro';
 import type { Piece } from '../lib/museum';
 
@@ -21,43 +20,16 @@ const total = String(pieces.length).padStart(2, '0');
   </div>
 
   <ol class="track" role="list" data-track tabindex="0" aria-label="Pieces in the museum">
-    {pieces.map((p, i) => {
-      const Tag = p.href ? 'a' : 'div';
-      return (
-        <li
-          class:list={['slide', p.kind]}
-          role="group"
-          aria-roledescription="slide"
-          aria-label={`${i + 1} of ${pieces.length}: ${p.title}`}
-          style={`--accent: ${p.color}`}
-        >
-          <Tag class="card" href={p.href}>
-            <div class:list={['thumb', p.imageShape ?? 'screen']}>
-              {p.image && (
-                <Picture
-                  src={p.image}
-                  alt={p.imageAlt ?? ''}
-                  formats={['webp']}
-                  widths={p.imageShape === 'phone' ? [320, 480, 640] : [480, 800, 1200]}
-                  sizes="(min-width: 960px) 40vw, 84vw"
-                  loading={i < 2 ? 'eager' : 'lazy'}
-                />
-              )}
-            </div>
-            <div class="info">
-              <p class="kicker mono">
-                <span>{String(p.number).padStart(2, '0')}{p.kind === 'idea' && ' · Idea'}</span>
-                {p.logo && <AppLogo logo={p.logo} class="logo" />}
-              </p>
-              <h3>{p.title}</h3>
-              <p class="summary">{p.text}</p>
-              <p class="facts mono">{[p.year, p.platform, p.status].filter(Boolean).join(' · ')}</p>
-              {p.href && <span class="more">{p.linkLabel} <Arrow dir="right" /></span>}
-            </div>
-          </Tag>
-        </li>
-      );
-    })}
+    {pieces.map((p, i) => (
+      <li
+        class="slide"
+        role="group"
+        aria-roledescription="slide"
+        aria-label={`${i + 1} of ${pieces.length}: ${p.title}`}
+      >
+        <PieceCard piece={p} eager={i < 2} />
+      </li>
+    ))}
   </ol>
 
   <div class="progress" aria-hidden="true"><span data-progress></span></div>
@@ -162,57 +134,10 @@ const total = String(pieces.length).padStart(2, '0');
   }
   .slide { scroll-snap-align: start; min-width: 0; }
 
-  .card {
-    display: grid;
-    gap: var(--s-6);
-    height: 100%;
-    text-decoration: none;
-    color: inherit;
-  }
-  .card:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
-
-  /* The image on a panel of the project's colour; store graphics crop to the device. */
-  .thumb {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    overflow: hidden;
-    background: var(--accent);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .thumb :global(picture) { display: contents; }
-  .thumb :global(img) { display: block; transition: transform 320ms var(--ease-out); }
-  .thumb.screen :global(img) { width: 86%; height: auto; box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.5); }
-  .thumb.phone { align-items: flex-end; }
-  .thumb.phone :global(img) { width: 54%; height: 88%; object-fit: cover; object-position: 50% 100%; }
-  .idea .thumb.phone { align-items: center; }
-  .idea .thumb.phone :global(img) { height: 84%; object-position: 50% 0%; }
-  /* The one thing out of place. */
-  .idea .thumb { transform: rotate(-2.5deg); margin-top: 6px; }
-
-  .info { display: grid; gap: var(--s-3); align-content: start; }
-  .kicker { display: flex; align-items: center; justify-content: space-between; color: var(--ink-2); font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; }
-  .kicker :global(.logo) { width: 24px; color: var(--accent); }
-  :global(:root[data-theme='dark']) .kicker :global(.logo) { color: color-mix(in oklab, var(--accent) 55%, var(--ink)); }
-  @media (prefers-color-scheme: dark) {
-    :global(:root:not([data-theme='light'])) .kicker :global(.logo) { color: color-mix(in oklab, var(--accent) 55%, var(--ink)); }
-  }
-  h3 { font-size: clamp(1.75rem, 1.1rem + 2vw, 3rem); font-weight: 650; letter-spacing: -0.04em; line-height: 0.98; text-wrap: balance; }
-  .summary { color: var(--ink-2); font-size: 1.0625rem; line-height: 1.4; max-width: 44ch; }
-  .facts { color: var(--ink-2); font-size: 0.8125rem; }
-  .more { display: inline-flex; align-items: center; gap: var(--s-2); justify-self: start; font-size: var(--t-small); font-weight: 500; border-bottom: 1.5px solid var(--accent); padding-bottom: 2px; margin-top: var(--s-1); }
-  .more :global(svg) { transition: transform 200ms var(--ease-out); }
-
-  @media (hover: hover) {
-    a.card:hover .thumb :global(img) { transform: translateY(-6px) scale(1.02); }
-    a.card:hover .more :global(svg) { transform: translateX(3px); }
-  }
-
   .progress { margin-inline: var(--edge); height: 2px; background: var(--hairline); }
   .progress span { display: block; height: 100%; background: var(--ink); transform-origin: left; transform: scaleX(0.04); transition: transform 120ms linear; }
 
   @media (prefers-reduced-motion: reduce) {
-    .thumb :global(img), .nav, .progress span { transition: none; }
+    .nav, .progress span { transition: none; }
   }
 </style>

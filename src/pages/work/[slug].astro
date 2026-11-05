@@ -3,18 +3,29 @@ import { render } from 'astro:content';
 import { Picture, getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Arrow from '../../components/Arrow.astro';
+import AppLogo from '../../components/AppLogo.astro';
+import PieceCard from '../../components/PieceCard.astro';
 import { getProjects, accentStyle, type Project } from '../../lib/projects';
+import { getMuseum, type Piece } from '../../lib/museum';
 
 export async function getStaticPaths() {
   const projects = await getProjects();
+  const museum = await getMuseum();
+  const pieceFor = (id: string) => museum.find((m) => m.id === id)!;
   return projects.map((project, i) => ({
     params: { slug: project.id },
-    props: { project, next: projects[(i + 1) % projects.length] },
+    props: {
+      project,
+      piece: pieceFor(project.id),
+      next: pieceFor(projects[(i + 1) % projects.length].id),
+      total: museum.length,
+    },
   }));
 }
 
-interface Props { project: Project; next: Project }
-const { project, next } = Astro.props;
+interface Props { project: Project; piece: Piece; next: Piece; total: number }
+const { project, piece, next, total } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
 const d = project.data;
 const { Content } = await render(project);
 const og = await getImage({ src: d.cover, width: 1200, format: 'jpg' });
@@ -32,7 +43,13 @@ const isPhone = d.coverShape === 'phone';
   <article style={accentStyle(project)}>
     <header class="hero">
       <div class="wrap">
-        <a class="back mono" href="/#museum"><Arrow dir="left" /> Museum of my Mess</a>
+        <div class="hero-top">
+          <a class="back mono" href="/#museum"><Arrow dir="left" /> Museum of my Mess</a>
+          <p class="piece mono">
+            <span><span class="sr-only">Piece </span>{pad(piece.number)} / {pad(total)}</span>
+            {piece.logo && <AppLogo logo={piece.logo} class="hero-logo" />}
+          </p>
+        </div>
         <div class="title-row">
           <h1>{d.title}</h1>
           <p class="sticker mono">{d.status}</p>
@@ -65,6 +82,7 @@ const isPhone = d.coverShape === 'phone';
             {d.gallery.map((g, i) => (
               <li>
                 <figure>
+                  <div class="frame">
                   <Picture
                     src={g.image}
                     alt={g.alt}
@@ -73,6 +91,7 @@ const isPhone = d.coverShape === 'phone';
                     sizes={isPhone ? '(min-width: 1200px) 22vw, (min-width: 720px) 30vw, 48vw' : '(min-width: 720px) 90vw, 100vw'}
                     loading={i < 2 ? 'eager' : 'lazy'}
                   />
+                  </div>
                   {g.caption && <figcaption>{g.caption}</figcaption>}
                 </figure>
               </li>
@@ -82,11 +101,12 @@ const isPhone = d.coverShape === 'phone';
       )}
     </div>
 
-    <nav class="next" aria-label="Next project" style={accentStyle(next)}>
-      <a class="wrap" href={`/work/${next.id}`}>
-        <span class="mono">Next project</span>
-        <span class="next-title">{next.data.title} <Arrow dir="right" /></span>
-      </a>
+    <nav class="next wrap" aria-labelledby="next-title">
+      <h2 id="next-title" class="next-head">
+        <span>Next in the museum</span>
+        <a class="mono" href="/#museum">All {total} pieces</a>
+      </h2>
+      <PieceCard piece={next} layout="wide" kicker={`${pad(next.number)} / ${pad(total)}`} />
     </nav>
   </article>
 </Base>
@@ -105,6 +125,9 @@ const isPhone = d.coverShape === 'phone';
     text-decoration: none;
   }
   .back:hover { text-decoration: underline; }
+  .hero-top { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); }
+  .piece { display: flex; align-items: center; gap: var(--s-3); letter-spacing: 0.06em; }
+  .piece :global(.hero-logo) { width: 28px; color: var(--on-accent); }
   h1 {
     margin-top: var(--s-12);
     font-size: var(--t-display);
@@ -210,7 +233,10 @@ const isPhone = d.coverShape === 'phone';
   @media (min-width: 1200px) {
     .phones li { grid-column: span 3; }
   }
-  figure :global(img) { width: 100%; background: var(--wash); }
+  figure :global(img) { display: block; width: 100%; background: var(--wash); }
+  /* Browser screenshots sit on a panel of the project's colour, like the cards on the homepage. */
+  .screens .frame { background: var(--accent); padding: clamp(16px, 5.5%, 88px); }
+  .screens .frame :global(img) { box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.55); }
   figcaption {
     margin-top: var(--s-3);
     font-size: var(--t-small);
@@ -218,25 +244,19 @@ const isPhone = d.coverShape === 'phone';
     max-width: 40ch;
   }
 
-  .next { background: var(--accent); color: var(--on-accent); }
-  .next a {
-    display: grid;
-    gap: var(--s-3);
-    padding-block: var(--s-12) var(--s-16);
-    text-decoration: none;
-  }
-  .next-title {
-    display: inline-flex;
-    align-items: center;
+  /* The next piece, as the same card the homepage carousel uses. */
+  .next { padding-block: 0 var(--s-24); }
+  .next-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
     gap: var(--s-4);
-    font-size: var(--t-h2);
-    font-weight: 650;
-    letter-spacing: -0.045em;
-    line-height: 1;
+    font-size: var(--t-h3);
+    letter-spacing: -0.03em;
+    border-top: 2px solid var(--rule);
+    padding-top: var(--s-3);
+    margin-bottom: var(--s-8);
   }
-  .next-title :global(svg) { width: 0.6em; height: 0.6em; transition: transform 200ms var(--ease-out); }
-  @media (hover: hover) {
-    .next a:hover .next-title :global(svg) { transform: translateX(6px); }
-  }
-  .next :focus-visible { outline-color: var(--on-accent); outline-offset: -6px; }
+  .next-head a { font-size: var(--t-meta); font-weight: 400; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; }
+  .next-head a:hover { color: var(--ink); text-decoration: underline; }
 </style>
