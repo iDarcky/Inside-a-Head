@@ -2,7 +2,7 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Arrow from '../../components/Arrow.astro';
-import { formatDate, sessionNumbers } from '../../lib/site';
+import { formatDate, sessionNumbers, settings } from '../../lib/site';
 
 export async function getStaticPaths() {
   const entries = (await getCollection('logbook')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -21,7 +21,20 @@ interface Props {
 const { entry, newer, older, session } = Astro.props;
 const { Content } = await render(entry);
 ---
-<Base title={entry.data.title} description={entry.data.summary ?? undefined} type="article">
+<Base
+  title={entry.data.title}
+  description={entry.data.summary ?? undefined}
+  type="article"
+  publishedAt={entry.data.date.toISOString()}
+  jsonLd={[{
+    '@type': 'BlogPosting',
+    headline: entry.data.title,
+    ...(entry.data.summary ? { description: entry.data.summary } : {}),
+    datePublished: entry.data.date.toISOString(),
+    url: new URL(`/logbook/${entry.id}`, Astro.site).href,
+    author: { '@type': 'Person', name: settings.name },
+  }]}
+>
   <article class="wrap">
     <header class="head grid">
       <a class="back mono" href="/logbook"><Arrow dir="left" /> Logbook</a>
