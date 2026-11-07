@@ -1,10 +1,11 @@
 ---
 import { render } from 'astro:content';
-import { Picture, getImage } from 'astro:assets';
+import { getImage } from 'astro:assets';
 import Base from '../../layouts/Base.astro';
 import Arrow from '../../components/Arrow.astro';
 import AppLogo from '../../components/AppLogo.astro';
 import PieceCard from '../../components/PieceCard.astro';
+import ScreensCarousel from '../../components/ScreensCarousel.astro';
 import { getProjects, accentStyle, type Project } from '../../lib/projects';
 import { getMuseum, type Piece } from '../../lib/museum';
 import { settings } from '../../lib/site';
@@ -38,7 +39,6 @@ const facts = [
   ['Status', d.status],
   ['Stack', d.stack],
 ];
-const isPhone = d.coverShape === 'phone';
 ---
 <Base
   title={d.title}
@@ -94,25 +94,7 @@ const isPhone = d.coverShape === 'phone';
       {d.gallery.length > 0 && (
         <section class="gallery" aria-labelledby="screens-title">
           <h2 id="screens-title" class="gallery-title">Screens</h2>
-          <ul class:list={['shots', 'grid', isPhone ? 'phones' : 'screens']}>
-            {d.gallery.map((g, i) => (
-              <li>
-                <figure>
-                  <div class="frame">
-                  <Picture
-                    src={g.image}
-                    alt={g.alt}
-                    formats={['webp']}
-                    widths={isPhone ? [360, 540, 720] : [800, 1200, 1600, 2400]}
-                    sizes={isPhone ? '(min-width: 1200px) 22vw, (min-width: 720px) 30vw, 48vw' : '(min-width: 720px) 90vw, 100vw'}
-                    loading={i < 2 ? 'eager' : 'lazy'}
-                  />
-                  </div>
-                  {g.caption && <figcaption>{g.caption}</figcaption>}
-                </figure>
-              </li>
-            ))}
-          </ul>
+          <ScreensCarousel shots={d.gallery} shape={d.coverShape} label={`${d.title} screens`} />
         </section>
       )}
     </div>
@@ -231,25 +213,6 @@ const isPhone = d.coverShape === 'phone';
     border-top: 2px solid var(--rule);
     padding-top: var(--s-3);
     margin-bottom: var(--s-8);
-  }
-  .shots { list-style: none; row-gap: var(--s-12); }
-  .shots li { grid-column: span 2; }
-  .screens li { grid-column: 1 / -1; }
-  @media (min-width: 720px) {
-    .phones li { grid-column: span 4; }
-  }
-  @media (min-width: 1200px) {
-    .phones li { grid-column: span 3; }
-  }
-  figure :global(img) { display: block; width: 100%; background: var(--wash); }
-  /* Browser screenshots sit on a panel of the project's colour, like the cards on the homepage. */
-  .screens .frame { background: var(--accent); padding: clamp(16px, 5.5%, 88px); }
-  .screens .frame :global(img) { box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.55); }
-  figcaption {
-    margin-top: var(--s-3);
-    font-size: var(--t-small);
-    color: var(--ink-2);
-    max-width: 40ch;
   }
 
   /* The next piece, as the same card the homepage carousel uses. */
