@@ -1,0 +1,193 @@
+---
+// A project's screens as a carousel: one numbered, captioned image per slide on a snapping horizontal track, with the
+// next slide peeking in. Below it, the same counter, progress line and prev/next buttons as the museum carousel.
+// Phone screenshots show about three and a half at a time; browser screenshots one large slide on a colour panel.
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Arrow from './Arrow.astro';
+
+interface Shot { image: ImageMetadata; alt: string; caption?: string | null }
+interface Props { shots: Shot[]; shape: 'phone' | 'screen'; label: string }
+const { shots, shape, label } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+const isPhone = shape === 'phone';
+const single = shots.length < 2;
+---
+<div
+  class:list={['carousel', isPhone ? 'phones' : 'screens', { single }]}
+  role="region"
+  aria-roledescription="carousel"
+  aria-label={label}
+  data-shots
+>
+  <ol class="track" role="list" data-track tabindex={single ? undefined : 0} aria-label={label}>
+    {shots.map((s, i) => (
+      <li class="slide" role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${shots.length}`}>
+        <figure>
+          <div class="frame">
+            <Picture
+              src={s.image}
+              alt={s.alt}
+              formats={['webp']}
+              widths={isPhone ? [360, 540, 720] : [800, 1200, 1600, 2400]}
+              sizes={isPhone ? '(min-width: 960px) 26vw, 70vw' : '(min-width: 960px) 76vw, 88vw'}
+              loading="lazy"
+            />
+          </div>
+          {s.caption && (
+            <figcaption>
+              {!single && <span class="n mono" aria-hidden="true">{pad(i + 1)}</span>}
+              <span>{s.caption}</span>
+            </figcaption>
+          )}
+        </figure>
+      </li>
+    ))}
+  </ol>
+
+  {!single && (
+    <div class="bar">
+      <p class="count mono" aria-live="polite"><span data-current>01</span> / {pad(shots.length)}</p>
+      <div class="progress" aria-hidden="true"><span data-progress></span></div>
+      <div class="buttons">
+        <button type="button" class="nav" data-prev aria-label="Previous screen" disabled><Arrow dir="left" /></button>
+        <button type="button" class="nav" data-next aria-label="Next screen"><Arrow dir="right" /></button>
+      </div>
+    </div>
+  )}
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-shots]').forEach((root) => {
+    const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
+    const next = root.querySelector<HTMLButtonElement>('[data-next]');
+    if (!prev || !next) return;
+    const track = root.querySelector<HTMLElement>('[data-track]')!;
+    const slides = [...track.querySelectorAll<HTMLElement>('.slide')];
+    const current = root.querySelector<HTMLElement>('[data-current]')!;
+    const bar = root.querySelector<HTMLElement>('[data-progress]')!;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const step = () => slides[1].offsetLeft - slides[0].offsetLeft;
+    const max = () => track.scrollWidth - track.clientWidth;
+    // At the far right several slides can be fully in view at once; count the last one as current there.
+    const index = () => {
+      if (track.scrollLeft >= max() - 2) return slides.length - 1;
+      return Math.min(slides.length - 1, Math.max(0, Math.round(track.scrollLeft / step())));
+    };
+
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const m = max();
+      current.textContent = String(index() + 1).padStart(2, '0');
+      prev.disabled = track.scrollLeft <= 2;
+      next.disabled = track.scrollLeft >= m - 2;
+      bar.style.transform = `scaleX(${m > 0 ? Math.max(1 / slides.length, track.scrollLeft / m) : 1})`;
+    };
+    // Quick repeated clicks build on the slide being scrolled to, not the one still under the scroll position.
+    let target = -1;
+    let settle = 0;
+    const go = (dir: number) => {
+      target = Math.min(slides.length - 1, Math.max(0, (target >= 0 ? target : index()) + dir));
+      track.scrollTo({ left: target * step(), behavior: reduce.matches ? 'auto' : 'smooth' });
+      clearTimeout(settle);
+      settle = window.setTimeout(() => { target = -1; }, 700);
+    };
+
+    track.addEventListener('scroll', () => { if (!frame) frame = requestAnimationFrame(update); }, { passive: true });
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+    track.addEventListener('keydown', (e) => {
+      if (e.target !== track) return;
+      if (e.key === 'ArrowRight') { e.preventDefault(); go(1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); }
+    });
+    window.addEventListener('resize', update);
+    update();
+  });
+</script>
+
+<style>
+  /* The track runs to the right edge of the window; slides line up with the page margin on the left. */
+  .carousel { --edge: var(--margin); margin-right: calc(-1 * var(--edge)); container-type: inline-size; }
+
+  .track {
+    list-style: none;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--slide);
+    gap: var(--gutter);
+    padding-right: var(--edge);
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .track::-webkit-scrollbar { display: none; }
+  .track:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+  .phones .track { --slide: 68cqw; }
+  .screens .track { --slide: 86cqw; }
+  @media (min-width: 720px) {
+    .phones .track { --slide: calc((100cqw - var(--edge) - 2 * var(--gutter)) / 2.6); }
+  }
+  @media (min-width: 1200px) {
+    .phones .track { --slide: calc((100cqw - var(--edge) - 3 * var(--gutter)) / 3.4); }
+    .screens .track { --slide: 76cqw; }
+  }
+  .single .track { grid-auto-columns: calc(100cqw - var(--edge)); }
+  .slide { scroll-snap-align: start; min-width: 0; }
+
+  .frame :global(img) { display: block; width: 100%; height: auto; background: var(--wash); }
+  /* Browser screenshots sit on a panel of the project's colour, like the cards on the homepage. */
+  .screens .frame { background: var(--accent); padding: clamp(16px, 4.5%, 72px); }
+  .screens .frame :global(img) { box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.55); }
+
+  figcaption {
+    display: grid;
+    grid-template-columns: 3.5ch 1fr;
+    gap: var(--s-2);
+    margin-top: var(--s-3);
+    font-size: var(--t-small);
+    max-width: 48ch;
+  }
+  .single figcaption { grid-template-columns: 1fr; color: var(--ink-2); }
+  figcaption .n { font-size: var(--t-meta); color: var(--ink-2); padding-top: 0.2em; letter-spacing: 0.04em; }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: var(--s-6);
+    margin-top: var(--s-8);
+    margin-right: var(--edge);
+    padding-top: var(--s-4);
+    border-top: 1px solid var(--hairline);
+  }
+  .count { color: var(--ink-2); font-size: 0.875rem; letter-spacing: 0.06em; white-space: nowrap; }
+  .count [data-current] { color: var(--ink); }
+  .progress { flex: 1; height: 2px; background: var(--hairline); }
+  .progress span { display: block; height: 100%; background: var(--ink); transform-origin: left; transform: scaleX(0.1); transition: transform 120ms linear; }
+  .buttons { display: flex; gap: var(--s-2); }
+  .nav {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border: 1.5px solid var(--ink);
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: background-color 160ms ease, color 160ms ease, opacity 160ms ease, transform 120ms var(--ease-out);
+  }
+  .nav :global(svg) { width: 16px; height: 16px; }
+  .nav:hover:not(:disabled) { background: var(--ink); color: var(--paper); }
+  .nav:active:not(:disabled) { transform: scale(0.94); }
+  .nav:disabled { opacity: 0.3; cursor: default; }
+  .nav:focus-visible { outline: 2px solid var(--signal); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav, .progress span { transition: none; }
+  }
+</style>

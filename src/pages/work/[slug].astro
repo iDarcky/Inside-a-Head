@@ -1,10 +1,12 @@
 ---
 import { render } from 'astro:content';
 import { Picture, getImage } from 'astro:assets';
+import { experimental_AstroContainer } from 'astro/container';
 import Base from '../../layouts/Base.astro';
 import Arrow from '../../components/Arrow.astro';
 import AppLogo from '../../components/AppLogo.astro';
 import PieceCard from '../../components/PieceCard.astro';
+import ScreensCarousel from '../../components/ScreensCarousel.astro';
 import { getProjects, accentStyle, type Project } from '../../lib/projects';
 import { getMuseum, type Piece } from '../../lib/museum';
 import { settings } from '../../lib/site';
@@ -29,6 +31,28 @@ const { project, piece, next, total } = Astro.props;
 const pad = (n: number) => String(n).padStart(2, '0');
 const d = project.data;
 const { Content } = await render(project);
+
+// The case study is written as Markdoc with one `##` heading per section. Render it once and cut it at each heading,
+// so the page can lay the sections out itself and slot the product images and the project link into the right ones.
+const container = await experimental_AstroContainer.create();
+const html = (await container.renderToString(Content)).replace(/^\s*<article[^>]*>|<\/article>\s*$/g, '');
+const parts = html.split(/(?=<h2[\s>])/).filter((x) => x.trim());
+type Section = { title: string; key: string; body: string };
+const sections: Section[] = parts.map((part) => {
+  const m = part.match(/^<h2[^>]*>([\s\S]*?)<\/h2>([\s\S]*)$/);
+  const title = m ? m[1].replace(/<[^>]+>/g, '').trim() : '';
+  return { title, key: title.toLowerCase().replace(/[’']/g, ''), body: m ? m[2] : part };
+});
+// The product images go in a section called "The product"; without one they follow the first section.
+if (!sections.some((x) => x.key === 'the product')) {
+  sections.splice(Math.min(1, sections.length), 0, { title: 'The product', key: 'the product', body: '' });
+}
+const slug = (t: string) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+const isPhone = d.coverShape === 'phone';
+// Phones: the first three screens side by side. Browser screenshots: the cover, large.
+const heroShots = isPhone ? d.gallery.slice(0, 3) : [d.gallery.find((g) => g.image.src === d.cover.src) ?? { image: d.cover, alt: `${d.title} screenshot` }];
+const moreShots = isPhone ? d.gallery : d.gallery.filter((g) => g.image.src !== heroShots[0].image.src);
 const og = await getImage({ src: d.cover, width: 1200, format: 'jpg' });
 
 const facts = [
@@ -38,7 +62,6 @@ const facts = [
   ['Status', d.status],
   ['Stack', d.stack],
 ];
-const isPhone = d.coverShape === 'phone';
 ---
 <Base
   title={d.title}
@@ -61,10 +84,7 @@ const isPhone = d.coverShape === 'phone';
       <div class="wrap">
         <div class="hero-top">
           <a class="back mono" href="/museum"><Arrow dir="left" /> Museum of my Mess</a>
-          <p class="piece mono">
-            <span><span class="sr-only">Piece </span>{pad(piece.number)} / {pad(total)}</span>
-            {piece.logo && <AppLogo logo={piece.logo} class="hero-logo" />}
-          </p>
+          {piece.logo && <span class="piece"><AppLogo logo={piece.logo} class="hero-logo" /></span>}
         </div>
         <div class="title-row">
           <h1>{d.title}</h1>
@@ -87,34 +107,38 @@ const isPhone = d.coverShape === 'phone';
         ))}
       </dl>
 
-      <div class="prose grid">
-        <Content />
-      </div>
-
-      {d.gallery.length > 0 && (
-        <section class="gallery" aria-labelledby="screens-title">
-          <h2 id="screens-title" class="gallery-title">Screens</h2>
-          <ul class:list={['shots', 'grid', isPhone ? 'phones' : 'screens']}>
-            {d.gallery.map((g, i) => (
-              <li>
-                <figure>
-                  <div class="frame">
+      {sections.map((sec) => (
+        <section class="section grid" aria-labelledby={`s-${slug(sec.title)}`}>
+          <h2 id={`s-${slug(sec.title)}`} class="label mono">{sec.title}</h2>
+          {sec.key === 'the product' ? (
+            <>
+              <div class:list={['showcase', isPhone ? 'phones' : 'screen']}>
+                {heroShots.map((g, i) => (
                   <Picture
                     src={g.image}
                     alt={g.alt}
                     formats={['webp']}
                     widths={isPhone ? [360, 540, 720] : [800, 1200, 1600, 2400]}
-                    sizes={isPhone ? '(min-width: 1200px) 22vw, (min-width: 720px) 30vw, 48vw' : '(min-width: 720px) 90vw, 100vw'}
-                    loading={i < 2 ? 'eager' : 'lazy'}
+                    sizes={isPhone ? '(min-width: 960px) 22vw, 30vw' : '(min-width: 960px) 80vw, 92vw'}
+                    loading={i === 0 ? 'eager' : 'lazy'}
                   />
-                  </div>
-                  {g.caption && <figcaption>{g.caption}</figcaption>}
-                </figure>
-              </li>
-            ))}
-          </ul>
+                ))}
+              </div>
+              {sec.body.trim() && <div class="body" set:html={sec.body} />}
+              {moreShots.length > 1 && (
+                <div class="more">
+                  <ScreensCarousel shots={moreShots} shape={d.coverShape} label={`${d.title} screens`} />
+                </div>
+              )}
+            </>
+          ) : (
+            <div class:list={['body', { list: /^\s*<ul>/.test(sec.body) && !/<p>/.test(sec.body) }]} set:html={sec.body} />
+          )}
+          {sec.key === 'now' && d.link && (
+            <p class="cta"><a class="button" href={d.link} rel="noreferrer">Open {d.title} <Arrow /></a></p>
+          )}
         </section>
-      )}
+      ))}
     </div>
 
     <nav class="next wrap" aria-labelledby="next-title">
@@ -196,60 +220,45 @@ const isPhone = d.coverShape === 'phone';
     .facts div:last-child { grid-column: span 4; }
   }
 
-  /* Case study: headings hang in the left columns, text runs in a 7-column measure. */
-  .prose { padding-block: var(--s-16) var(--s-8); row-gap: 0; }
-  /* Markdoc wraps its output in <article>; let its children sit on the grid. */
-  .prose > :global(article) { display: contents; }
-  .prose :global(article > *) { grid-column: 1 / -1; }
-  .prose :global(h2) {
-    font-size: var(--t-h3);
-    letter-spacing: -0.03em;
-    line-height: 1.1;
-    margin-top: var(--s-16);
-    margin-bottom: var(--s-4);
-  }
-  .prose :global(h2:first-child) { margin-top: 0; }
-  .prose :global(p),
-  .prose :global(ul),
-  .prose :global(ol) { margin-bottom: var(--s-4); max-width: 68ch; }
-  .prose :global(ul), .prose :global(ol) { padding-left: 1.2em; }
-  .prose :global(li + li) { margin-top: var(--s-2); }
-  .prose :global(strong) { font-weight: 600; }
-  .prose :global(code) { font-family: var(--mono); font-size: 0.9em; }
-  .prose :global(a) { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
-  @media (min-width: 960px) {
-    .prose :global(article > h2) { grid-column: 1 / span 4; margin-top: var(--s-16); margin-bottom: 0; padding-right: var(--s-8); }
-    .prose :global(h2 + *) { margin-top: var(--s-16); }
-    .prose :global(h2:first-child + *) { margin-top: 0; }
-    .prose :global(article > :is(p, ul, ol)) { grid-column: 5 / span 7; }
-  }
-
-  .gallery { padding-block: var(--s-16) var(--s-24); }
-  .gallery-title {
-    font-size: var(--t-h3);
-    letter-spacing: -0.03em;
-    border-top: 2px solid var(--rule);
-    padding-top: var(--s-3);
-    margin-bottom: var(--s-8);
-  }
-  .shots { list-style: none; row-gap: var(--s-12); }
-  .shots li { grid-column: span 2; }
-  .screens li { grid-column: 1 / -1; }
-  @media (min-width: 720px) {
-    .phones li { grid-column: span 4; }
-  }
-  @media (min-width: 1200px) {
-    .phones li { grid-column: span 3; }
-  }
-  figure :global(img) { display: block; width: 100%; background: var(--wash); }
-  /* Browser screenshots sit on a panel of the project's colour, like the cards on the homepage. */
-  .screens .frame { background: var(--accent); padding: clamp(16px, 5.5%, 88px); }
-  .screens .frame :global(img) { box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.55); }
-  figcaption {
-    margin-top: var(--s-3);
-    font-size: var(--t-small);
+  /* Case study: one section per heading, each under a hairline. The label hangs in the left columns and the text
+     runs in a 7-column measure; the product images span the full width. */
+  .section { padding-block: var(--s-8) var(--s-16); border-top: 1px solid var(--hairline); row-gap: var(--s-6); }
+  .section:first-of-type { margin-top: var(--s-12); border-top-color: var(--ink); }
+  .section > * { grid-column: 1 / -1; }
+  .label {
+    font-size: var(--t-meta);
+    font-weight: 400;
+    letter-spacing: 0.06em;
     color: var(--ink-2);
-    max-width: 40ch;
+  }
+  .body { font-size: var(--t-body); }
+  .body :global(p), .body :global(ul), .body :global(ol) { max-width: 62ch; }
+  .body :global(p + p), .body :global(p + ul), .body :global(ul + p) { margin-top: var(--s-4); }
+  .body :global(ul), .body :global(ol) { padding-left: 1.2em; }
+  .body :global(li + li) { margin-top: var(--s-2); }
+  .body :global(strong) { font-weight: 600; }
+  .body :global(code) { font-family: var(--mono); font-size: 0.9em; }
+  .body :global(a) { text-decoration-color: var(--accent); text-decoration-thickness: 2px; }
+  /* The first paragraph of every section reads a step larger. */
+  .body > :global(p:first-child) { font-size: var(--t-lead); line-height: 1.3; letter-spacing: -0.015em; max-width: 34ch; }
+  .body > :global(p:first-child:has(strong:first-child)) { font-size: inherit; line-height: inherit; letter-spacing: inherit; max-width: 62ch; }
+  /* A bare list (like "What I did") as ruled rows. */
+  .body.list :global(ul) { list-style: none; padding: 0; max-width: none; border-top: 1px solid var(--ink); }
+  .body.list :global(li) { margin: 0; padding-block: var(--s-3); border-bottom: 1px solid var(--hairline); font-size: var(--t-lead); letter-spacing: -0.015em; }
+  .cta { margin-top: var(--s-2); }
+
+  /* The product: one large panel in the project colour. */
+  .showcase { background: var(--accent); display: grid; gap: clamp(12px, 3vw, 48px); padding: clamp(20px, 6vw, 112px); }
+  .showcase :global(img) { display: block; width: 100%; height: auto; }
+  .showcase.phones { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+  .showcase.screen :global(img) { box-shadow: 0 24px 48px -20px rgb(0 0 0 / 0.55); }
+  .more { margin-top: var(--s-8); }
+
+  @media (min-width: 960px) {
+    .label { grid-column: 1 / span 4; padding-top: 0.45em; }
+    .section > .body, .section > .cta { grid-column: 5 / span 7; }
+    .section > .showcase, .section > .more { grid-column: 1 / -1; }
+    .section > .showcase + .body { grid-column: 5 / span 7; }
   }
 
   /* The next piece, as the same card the homepage carousel uses. */

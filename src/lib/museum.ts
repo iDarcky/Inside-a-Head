@@ -42,7 +42,7 @@ export async function getMuseum(): Promise<Piece[]> {
       stack: p.data.stack,
       text: p.data.summary,
       href: `/work/${p.id}`,
-      linkLabel: 'Read the case study',
+      linkLabel: 'Explore project',
       logo: apps.includes(p.id) ? (p.id as AppId) : undefined,
       image: p.data.cover,
       imageAlt: p.data.gallery.find((g) => g.image.src === p.data.cover.src)?.alt ?? '',
