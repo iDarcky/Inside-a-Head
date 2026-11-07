@@ -6,7 +6,7 @@ interface Props {
 }
 
 const { currentlyReading } = Astro.props;
-const coverImageUrl = currentlyReading?.coverImage ? urlFor(currentlyReading.coverImage).url() : 'https://images.theconversation.com/files/620924/original/file-20240923-18-7oph3j.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip';
+const coverImageUrl = currentlyReading?.coverImage ? urlFor(currentlyReading.coverImage).width(600).auto('format').url() : 'https://images.theconversation.com/files/620924/original/file-20240923-18-7oph3j.jpg?ixlib=rb-4.1.0&q=45&auto=format&w=1000&fit=clip';
 ---
 
 <div class="bento-tile bento-reading" id="bento-reading" style="grid-area: book;">

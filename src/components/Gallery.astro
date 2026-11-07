@@ -7,7 +7,7 @@ const images = node.images || [];
 
 <div class="magazine-gallery">
   {images.map((img: any) => (
-    <img src={urlFor(img).url()} alt="Gallery Image" loading="lazy" />
+    <img src={urlFor(img).width(1600).auto('format').url()} alt="Gallery Image" loading="lazy" />
   ))}
 </div>
 

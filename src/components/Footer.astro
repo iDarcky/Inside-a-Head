@@ -17,10 +17,11 @@ const { className = "", variant = "minimal" } = Astro.props;
       <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
       <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
       <a href="https://www.instagram.com/danielmhimself/" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
+      <a href="mailto:maghisdaniel@gmail.com" id="email-btn" data-hover>EMAIL</a>
     </div>
   )}
   <div class="footer-bottom-meta" style={variant === 'minimal' ? "border-top: none; padding-top: 1rem; padding-bottom: 2rem;" : ""}>
-    <p>© 2026 INSIDE A HEAD STUDIO.</p>
+    <p>© {new Date().getFullYear()} INSIDE A HEAD STUDIO. <a href="mailto:maghisdaniel@gmail.com" class="footer-email" data-hover>SAY HELLO →</a></p>
     <a href="#top" class="back-to-top" data-hover>BACK TO TOP ↑</a>
   </div>
 </footer>

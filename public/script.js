@@ -187,15 +187,30 @@ function initKineticEngine() {
   const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
   if (hamburgerBtn && mobileMenuOverlay) {
     hamburgerBtn.addEventListener('click', () => {
-      hamburgerBtn.classList.toggle('active');
-      mobileMenuOverlay.classList.toggle('active');
-      document.body.classList.toggle('menu-open');
+      const isOpen = hamburgerBtn.classList.toggle('active');
+      mobileMenuOverlay.classList.toggle('active', isOpen);
+      document.body.classList.toggle('menu-open', isOpen);
+      hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
     });
     mobileNavLinks.forEach(link => link.addEventListener('click', () => {
       hamburgerBtn.classList.remove('active');
       mobileMenuOverlay.classList.remove('active');
       document.body.classList.remove('menu-open');
+      hamburgerBtn.setAttribute('aria-expanded', 'false');
     }));
+
+    // Close the menu with Escape and return focus to the toggle
+    if (window._menuEscape) document.removeEventListener('keydown', window._menuEscape);
+    window._menuEscape = (e) => {
+      if (e.key === 'Escape' && mobileMenuOverlay.classList.contains('active')) {
+        hamburgerBtn.classList.remove('active');
+        mobileMenuOverlay.classList.remove('active');
+        document.body.classList.remove('menu-open');
+        hamburgerBtn.setAttribute('aria-expanded', 'false');
+        hamburgerBtn.focus();
+      }
+    };
+    document.addEventListener('keydown', window._menuEscape);
   }
 }
 

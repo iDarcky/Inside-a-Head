@@ -3,6 +3,7 @@ export const prerender = false;
 import MagazineLayout from '../../layouts/MagazineLayout.astro';
 import PortableText from '../../components/PortableText.astro';
 import { sanityClient, urlFor } from '../../utils/sanity';
+import { SITE_URL, SITE_AUTHOR, portableTextToPlain, excerpt } from '../../utils/site';
 
 const { slug } = Astro.params;
 let entry = null;
@@ -14,7 +15,8 @@ try {
 }
 
 if (!entry) {
-  return Astro.redirect('/404');
+  // An empty 404 response makes Astro render src/pages/404.astro with a real 404 status (no redirect)
+  return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
 // Reading time heuristic
@@ -26,12 +28,33 @@ const words = entry.body
       .split(/\s+/).length
   : 0;
 const readingTime = Math.ceil(words / 200);
+
+const plainBody = portableTextToPlain(entry.body);
+const description = plainBody ? excerpt(plainBody) : `A logbook entry from Inside a Head: ${entry.title}`;
+const ogImage = entry.heroImage ? urlFor(entry.heroImage).width(1200).height(630).fit('crop').auto('format').url() : null;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: entry.title,
+  description,
+  url: `${SITE_URL}/logbook/${entry.slug.current}`,
+  author: { '@type': 'Person', name: SITE_AUTHOR },
+  ...(entry.publishedAt ? { datePublished: entry.publishedAt } : {}),
+  ...(ogImage ? { image: ogImage } : {}),
+};
 ---
 
-<MagazineLayout title={entry.title}>
+<MagazineLayout title={entry.title} description={description} image={ogImage} type="article" publishedAt={entry.publishedAt} jsonLd={jsonLd}>
   {entry.heroImage && (
     <div class="project-hero-wrapper">
-      <img src={urlFor(entry.heroImage).url()} alt={entry.title} class="project-hero-img" />
+      <img
+        src={urlFor(entry.heroImage).width(1600).auto('format').url()}
+        srcset={[800, 1200, 1600, 2400].map((w) => `${urlFor(entry.heroImage).width(w).auto('format').url()} ${w}w`).join(', ')}
+        sizes="100vw"
+        alt={entry.title}
+        class="project-hero-img"
+        fetchpriority="high"
+      />
     </div>
   )}
 

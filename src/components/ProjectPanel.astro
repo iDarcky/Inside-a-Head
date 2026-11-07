@@ -15,7 +15,17 @@ const reverseClass = index % 2 !== 0 ? 'reverse' : '';
 const colors = ['#1a0f30', '#121f1a', '#300a0a'];
 const projectBgColor = project.themeHex || colors[index % colors.length];
 
-const heroImageUrl = project.homepageImage ? urlFor(project.homepageImage).url() : null;
+// Local screenshots in /public, used when a project has no homepage image in Sanity yet
+const localFallbacks: Record<string, string> = {
+  'the-retro-circuit': '/retro-circuit.png',
+  'setlists-md': '/setlists-md.png',
+  'setlist-md': '/setlists-md.png',
+  'redline-running': '/redline-running.png',
+};
+
+const heroImageUrl = project.homepageImage
+  ? urlFor(project.homepageImage).width(1600).auto('format').url()
+  : localFallbacks[project.slug?.current] || null;
 ---
 
 <div class="app-panel section-snap" data-bg={projectBgColor}>
@@ -35,12 +45,12 @@ const heroImageUrl = project.homepageImage ? urlFor(project.homepageImage).url()
     </div>
     <div class="app-visual-column">
       {project.device === 'iphone' ? (
-        <div class="glass-iphone">
+        <div class="glass-iphone" role="img" aria-label={`${project.title} app screenshot`}>
           <div class="iphone-notch"></div>
           <div class="iphone-screen" style={heroImageUrl ? `background: url('${heroImageUrl}') top center/cover no-repeat;` : ''}></div>
         </div>
       ) : (
-        <div class="glass-browser">
+        <div class="glass-browser" role="img" aria-label={`${project.title} screenshot`}>
           <div class="glass-header">
             <div class="glass-dot"></div><div class="glass-dot"></div><div class="glass-dot"></div>
           </div>

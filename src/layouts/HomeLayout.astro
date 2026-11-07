@@ -1,14 +1,16 @@
 ---
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
+import SEO from '../components/SEO.astro';
 
 interface Props {
   title: string;
   description?: string;
+  image?: string | null;
   projects?: any[];
 }
 
-const { title, description = "Inside a Head - Digital Studio", projects = [] } = Astro.props;
+const { title, description, image, projects = [] } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -16,8 +18,8 @@ const { title, description = "Inside a Head - Digital Studio", projects = [] } =
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content={description} />
     <title>{title}</title>
+    <SEO title={title} description={description} image={image} />
 
     <!-- Lucide Icons -->
     <script is:inline src="https://unpkg.com/lucide@0.460.0"></script>
@@ -30,8 +32,9 @@ const { title, description = "Inside a Head - Digital Studio", projects = [] } =
     <ClientRouter />
   </head>
   <body>
+    <a href="#main-content" class="skip-link">Skip to content</a>
     <!-- Custom Cursor -->
-    <div class="custom-cursor" transition:persist></div>
+    <div class="custom-cursor" transition:persist aria-hidden="true"></div>
 
     <!-- Global Anchor -->
     <a href="#top" class="global-anchor" data-hover>
@@ -47,7 +50,7 @@ const { title, description = "Inside a Head - Digital Studio", projects = [] } =
           <a href="/resume" class="nav-link" data-hover>Resume</a>
         </nav>
         <!-- Mobile Hamburger Button -->
-        <button class="hamburger-btn" aria-label="Toggle menu">
+        <button class="hamburger-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu">
           <div class="hamburger-box">
             <div class="hamburger-line"></div>
             <div class="hamburger-line"></div>
@@ -58,7 +61,7 @@ const { title, description = "Inside a Head - Digital Studio", projects = [] } =
     </header>
 
     <!-- Full-Screen Hamburger Menu Overlay -->
-    <div class="mobile-menu-overlay">
+    <div class="mobile-menu-overlay" id="mobile-menu">
       <nav class="mobile-nav-links">
         <a href="/" class="mobile-nav-link">Studio</a>
         <a href="/logbook" class="mobile-nav-link">Logbook</a>
@@ -68,12 +71,13 @@ const { title, description = "Inside a Head - Digital Studio", projects = [] } =
         <div class="mobile-socials">
           <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer">GITHUB</a>
           <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer">LINKEDIN</a>
+          <a href="mailto:maghisdaniel@gmail.com">EMAIL</a>
         </div>
       </div>
     </div>
 
     <!-- Dot Navigation -->
-    <div class="dot-nav">
+    <div class="dot-nav" aria-hidden="true">
       <div class="dot active" data-target="#top"></div>
       {projects.map((_, i) => (
         <div class="dot" data-target={`#app-${i}`}></div>
@@ -85,7 +89,7 @@ const { title, description = "Inside a Head - Digital Studio", projects = [] } =
     </div>
 
     <div class="layout">
-      <main class="snap-container">
+      <main class="snap-container" id="main-content">
         <slot />
       </main>
     </div>

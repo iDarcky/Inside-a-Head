@@ -3,6 +3,7 @@ export const prerender = false;
 import MagazineLayout from '../../layouts/MagazineLayout.astro';
 import PortableText from '../../components/PortableText.astro';
 import { sanityClient, urlFor } from '../../utils/sanity';
+import { SITE_URL, SITE_AUTHOR } from '../../utils/site';
 
 const { slug } = Astro.params;
 let project = null;
@@ -18,7 +19,8 @@ try {
 }
 
 if (!project) {
-  return Astro.redirect('/404');
+  // An empty 404 response makes Astro render src/pages/404.astro with a real 404 status (no redirect)
+  return new Response(null, { status: 404, statusText: 'Not Found' });
 }
 
 const currentIndex = allProjects.findIndex((p: any) => p.slug.current === slug);
@@ -33,12 +35,32 @@ const projectColors: Record<string, string> = {
 };
 
 const projectBgColor = project.themeHex || projectColors[project.slug.current] || colors[currentIndex % colors.length];
+
+const shareSource = project.pageHeroImage || project.homepageImage;
+const ogImage = shareSource ? urlFor(shareSource).width(1200).height(630).fit('crop').auto('format').url() : null;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CreativeWork',
+  name: project.title,
+  description: project.description,
+  url: `${SITE_URL}/projects/${project.slug.current}`,
+  author: { '@type': 'Person', name: SITE_AUTHOR },
+  ...(project.year ? { dateCreated: String(project.year) } : {}),
+  ...(ogImage ? { image: ogImage } : {}),
+};
 ---
 
-<MagazineLayout title={project.title} description={project.description} backgroundColor={projectBgColor}>
+<MagazineLayout title={project.title} description={project.description} image={ogImage} type="article" jsonLd={jsonLd} backgroundColor={projectBgColor}>
   {project.pageHeroImage && (
     <div class="project-hero-wrapper">
-      <img src={urlFor(project.pageHeroImage).url()} alt={project.title} class="project-hero-img" />
+      <img
+        src={urlFor(project.pageHeroImage).width(1600).auto('format').url()}
+        srcset={[800, 1200, 1600, 2400].map((w) => `${urlFor(project.pageHeroImage).width(w).auto('format').url()} ${w}w`).join(', ')}
+        sizes="100vw"
+        alt={project.title}
+        class="project-hero-img"
+        fetchpriority="high"
+      />
     </div>
   )}
 

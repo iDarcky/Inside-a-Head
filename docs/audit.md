@@ -61,13 +61,13 @@ The package name is still `"cyan-comet"` from a template. Not a bug, but unprofe
 
 | Item | Status | Impact |
 |------|--------|--------|
-| **404 page** | ❌ Missing | Broken links show a raw error. Create `src/pages/404.astro` |
-| **robots.txt** | ❌ Missing | Search engines have no crawling guidance |
-| **sitemap.xml** | ❌ Missing | Google can't efficiently discover your pages. Use `@astrojs/sitemap` |
-| **Open Graph tags** | ⚠️ Partial | `<meta name="description">` exists, but no `og:image`, `og:type`, `og:url`, or Twitter cards |
-| **Canonical URLs** | ❌ Missing | No `<link rel="canonical">` on any page |
-| **Structured data (JSON-LD)** | ❌ Missing | No schema.org markup for Person, CreativeWork, or Article |
-| **Favicon** | ✅ Present | Both `.ico` and `.svg` exist |
+| **404 page** | ✅ Added | Broken links show a raw error. Create `src/pages/404.astro` |
+| **robots.txt** | ✅ Added | Search engines have no crawling guidance |
+| **sitemap.xml** | ✅ Added | Served live from Sanity at `/sitemap.xml` (static `@astrojs/sitemap` can't see SSR routes) |
+| **Open Graph tags** | ✅ Added | Full OG + Twitter cards via `src/components/SEO.astro`, with a branded default share image |
+| **Canonical URLs** | ✅ Added | No `<link rel="canonical">` on any page |
+| **Structured data (JSON-LD)** | ✅ Added | No schema.org markup for Person, CreativeWork, or Article |
+| **Favicon** | ✅ Replaced | Was the default Astro logo; now a studio mark (cursor triangle) in `.svg`, `.ico` and Apple touch icon |
 
 ---
 
@@ -107,21 +107,21 @@ The package name is still `"cyan-comet"` from a template. Not a bug, but unprofe
 ### Immediate (Do This Week)
 1. ⬜ Pin Lucide to a specific version (change `@latest` → `@0.460.0`)
 2. ⬜ Add try/catch around all Sanity fetches with fallback UI
-3. ⬜ Create a 404 page (`src/pages/404.astro`)
-4. ⬜ Add a contact method (email link, Calendly, or form)
+3. ✅ Create a 404 page (`src/pages/404.astro`)
+4. ✅ Add a contact method (email link, Calendly, or form)
 5. ⬜ Fix the Instagram footer link (add real URL or remove)
 
 ### Short-term (Next Sprint)
-6. ⬜ Add `robots.txt` and install `@astrojs/sitemap`
-7. ⬜ Add Open Graph + Twitter Card meta tags to both layouts
+6. ✅ Add `robots.txt` and install `@astrojs/sitemap`
+7. ✅ Add Open Graph + Twitter Card meta tags to both layouts
 8. ⬜ Use env variables for Sanity config
-9. ⬜ Add `<link rel="preconnect">` for Google Fonts and Sanity CDN
+9. ✅ Add `<link rel="preconnect">` for Google Fonts and Sanity CDN
 10. ⬜ Host the shoe image locally or in Sanity (remove npcdn dependency)
 
 ### Medium-term (Polish Phase)
 11. ⬜ Split `global.css` into modular files
 12. ⬜ Move `script.js`/`project.js` into Astro's module system
-13. ⬜ Add image optimization (Sanity URL params or Astro `<Image>`)
+13. ✅ Add image optimization (Sanity URL params or Astro `<Image>`)
 14. ⬜ Add analytics (Vercel Analytics or Plausible)
-15. ⬜ Improve accessibility (conditional cursor hiding, focus traps, focus styles)
-16. ⬜ Add RSS feed for Logbook
+15. ✅ Improve accessibility (conditional cursor hiding, focus traps, focus styles)
+16. ✅ Add RSS feed for Logbook

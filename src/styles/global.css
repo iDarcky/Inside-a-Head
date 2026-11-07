@@ -1,5 +1,4 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
 
 :root {
   /* Hardlocked Dark Mode Monochromatic Palette */
@@ -940,20 +939,19 @@ body.menu-open .global-anchor {
   background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
   border: 1px solid rgba(255,255,255,0.1);
   box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
-  transform: rotateY(-15deg) rotateX(5deg);
+  /* Phones stand upright: a tilted phone frame reads as a crooked card */
+  transform: none;
   border-radius: 40px;
   position: relative;
   overflow: hidden;
   padding: 12px; /* acts as a bezel */
-  -webkit-mask-image: linear-gradient(to bottom right, black 60%, transparent 100%);
-  mask-image: linear-gradient(to bottom right, black 60%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
   transition: transform var(--transition);
 }
 
 .app-panel-content.reverse .glass-iphone {
-  transform: rotateY(15deg) rotateX(5deg);
-  -webkit-mask-image: linear-gradient(to bottom left, black 60%, transparent 100%);
-  mask-image: linear-gradient(to bottom left, black 60%, transparent 100%);
+  transform: none;
 }
 
 .iphone-screen {
@@ -1906,3 +1904,64 @@ body.magazine-layout {
   }
 }
 
+
+/* ==========================================================================
+   Accessibility
+   ========================================================================== */
+
+/* Skip link: hidden until focused by keyboard */
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 10001;
+  padding: 12px 20px;
+  background: var(--geist-foreground);
+  color: var(--geist-background);
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--fast-transition);
+}
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+#main-content:focus {
+  outline: none;
+}
+
+/* Visible keyboard focus everywhere (mouse clicks stay clean) */
+:focus-visible {
+  outline: 2px solid var(--geist-foreground);
+  outline-offset: 4px;
+}
+
+/* Touch screens and stylus devices have no hover pointer to follow:
+   restore the native cursor and hide the custom one. */
+@media (hover: none), (pointer: coarse) {
+  *, body, a, button, [data-hover] {
+    cursor: auto !important;
+  }
+  a, button, [data-hover] {
+    cursor: pointer !important;
+  }
+  .custom-cursor {
+    display: none !important;
+  }
+}
+
+/* Respect the OS "reduce motion" setting for CSS-driven motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
