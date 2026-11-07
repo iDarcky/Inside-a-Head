@@ -1,28 +1,98 @@
 ---
-import Manifesto from './Manifesto.astro';
+import { settings } from '../lib/site';
+import Arrow from './Arrow.astro';
 
-interface Props {
-  className?: string;
-  variant?: 'massive' | 'minimal';
-}
-
-const { className = "", variant = "minimal" } = Astro.props;
+const year = new Date().getFullYear();
 ---
-
-<footer class={`footer-base ${variant === 'massive' ? 'footer-massive' : 'footer-minimal'} ${className}`} id="social">
-  {variant === 'massive' && (
-    <div class="footer-huge-links">
-      <a href="#" id="manifesto-btn" data-hover>MANIFESTO</a>
-      <a href="https://github.com/iDarcky" target="_blank" rel="noreferrer" id="github-btn" data-hover>GITHUB</a>
-      <a href="https://www.linkedin.com/in/danielnmaghis/" target="_blank" rel="noreferrer" id="linkedin-btn" data-hover>LINKEDIN</a>
-      <a href="https://www.goodreads.com/user/show/106429003-daniel-maghis" target="_blank" rel="noreferrer" id="goodreads-btn" data-hover>GOODREADS</a>
-      <a href="https://www.instagram.com/danielmhimself/" target="_blank" rel="noreferrer" id="instagram-btn" data-hover>INSTAGRAM</a>
-    </div>
-  )}
-  <div class="footer-bottom-meta" style={variant === 'minimal' ? "border-top: none; padding-top: 1rem; padding-bottom: 2rem;" : ""}>
-    <p>© 2026 INSIDE A HEAD STUDIO.</p>
-    <a href="#top" class="back-to-top" data-hover>BACK TO TOP ↑</a>
+<footer class="site-footer wrap" id="contact">
+  <div class="cta grid">
+    <h2>Got an idea, or just want to say hi?</h2>
+    <ul class="actions">
+      <li><a href={`mailto:${settings.email}`}>Email</a></li>
+      <li><a href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a></li>
+      <li><a href={settings.github} rel="me noreferrer">GitHub <Arrow /></a></li>
+      <li><a href="/resume">Resume</a></li>
+    </ul>
+  </div>
+  <div class="base grid mono">
+    <span>© {year} {settings.name}</span>
+    <span class="clock">
+      <span>{settings.location.split(',')[0]}</span>
+      <time data-clock={settings.timeZone} aria-live="off"></time>
+      <span class="mood" data-mood></span>
+    </span>
   </div>
 </footer>
 
-<Manifesto />
+<script>
+  // Local time in the studio's time zone. Rendered on the client only, so it is never stale.
+  // The studio is a coffee shop that stays open past midnight; the note follows the local hour.
+  const els = document.querySelectorAll<HTMLTimeElement>('time[data-clock]');
+  const moods = document.querySelectorAll<HTMLElement>('[data-mood]');
+  const mood = (h: number) =>
+    h < 6 ? 'open past midnight' : h < 12 ? 'first coffee' : h < 18 ? 'building' : 'evening session';
+  const tick = () => {
+    const now = new Date();
+    els.forEach((el) => {
+      const fmt = new Intl.DateTimeFormat('en-GB', { timeZone: el.dataset.clock, hour: '2-digit', minute: '2-digit' });
+      el.textContent = fmt.format(now);
+      el.dateTime = now.toISOString();
+      const hour = Number(new Intl.DateTimeFormat('en-GB', { timeZone: el.dataset.clock, hour: 'numeric', hourCycle: 'h23' }).format(now));
+      moods.forEach((m) => (m.textContent = `· ${mood(hour)}`));
+    });
+  };
+  tick();
+  setInterval(tick, 15_000);
+</script>
+
+<style>
+  .site-footer {
+    padding-bottom: max(var(--s-8), env(safe-area-inset-bottom));
+  }
+  .cta {
+    border-top: 2px solid var(--rule);
+    padding-block: var(--s-6) var(--s-24);
+    row-gap: var(--s-8);
+  }
+  h2 {
+    grid-column: 1 / -1;
+    font-size: var(--t-h2);
+    max-width: 14ch;
+  }
+  .actions {
+    grid-column: 1 / -1;
+    list-style: none;
+    display: grid;
+    align-self: end;
+    border-top: 1px solid var(--hairline);
+  }
+  .actions li { border-bottom: 1px solid var(--hairline); }
+  .actions a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    font-size: var(--t-lead);
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    text-decoration: none;
+  }
+  .actions a:hover { text-decoration: underline; text-decoration-thickness: 2px; }
+  @media (min-width: 720px) {
+    h2 { grid-column: 1 / span 7; }
+    .actions { grid-column: 9 / -1; }
+  }
+  .base {
+    border-top: 1px solid var(--hairline);
+    padding-top: var(--s-4);
+    row-gap: var(--s-2);
+    color: var(--ink-2);
+  }
+  .base > * { grid-column: 1 / -1; }
+  .clock { display: inline-flex; flex-wrap: wrap; gap: var(--s-2); }
+  .mood { color: var(--signal); }
+  @media (min-width: 720px) {
+    .base > :nth-child(1) { grid-column: 1 / span 4; }
+    .base > :nth-child(2) { grid-column: 9 / -1; justify-content: flex-end; }
+  }
+</style>

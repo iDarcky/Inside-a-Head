@@ -1,0 +1,84 @@
+---
+import Mark from './Mark.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const links = [
+  { href: '/museum', label: 'Museum' },
+  { href: '/logbook', label: 'Logbook' },
+  { href: '/about', label: 'About' },
+  { href: '/resume', label: 'Resume' },
+];
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+---
+<header class="site-header">
+  <div class="bar wrap">
+    <a class="brand" href="/" aria-label="inside a head, home">
+      <Mark size={20} />
+      <span>inside a head</span>
+    </a>
+    <nav aria-label="Main">
+      <ul>
+        {links.map((l) => (
+          <li>
+            <a href={l.href} aria-current={path === l.href ? 'page' : undefined}>{l.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: var(--paper);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-3) var(--s-8);
+    padding-block: var(--s-2);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    /* Same ratios as the logo lockup: type 0.72 × mark, gap 0.42 × mark. */
+    gap: 8.4px;
+    font-size: 14.4px;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    text-decoration: none;
+    min-height: 44px;
+  }
+  ul {
+    display: flex;
+    gap: var(--s-6);
+    list-style: none;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--t-small);
+    text-decoration: none;
+    color: var(--ink-2);
+    transition: color 160ms ease;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] { color: var(--ink); }
+  nav a[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  nav { margin-left: auto; }
+  @media (max-width: 559px) {
+    nav { order: 3; width: 100%; margin-left: 0; }
+    ul { justify-content: space-between; gap: var(--s-2); }
+  }
+</style>

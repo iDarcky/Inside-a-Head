@@ -1,0 +1,232 @@
+---
+import Base from '../layouts/Base.astro';
+import Arrow from '../components/Arrow.astro';
+import { settings } from '../lib/site';
+import { Picture } from 'astro:assets';
+import Mark from '../assets/identity/mark.svg';
+import Mark16 from '../assets/identity/mark-16.svg';
+import LockupH from '../assets/identity/lockup-horizontal.svg';
+import LockupS from '../assets/identity/lockup-stacked.svg';
+import inUse from '../assets/identity/in-use.png';
+
+const manifesto = settings.manifesto.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+
+// Each step is grounded in something one of the projects actually did.
+const steps = [
+  {
+    title: 'Start with one question',
+    text: 'Every product answers one question first. Ridely’s is “how much did I actually keep?” Everything else waits behind it.',
+  },
+  {
+    title: 'Write the principles before the screens',
+    text: 'A short list of rules decides the arguments before they happen: under ten seconds to add an entry, honest numbers, no account.',
+  },
+  {
+    title: 'Walk the flows end to end',
+    text: 'For Setlists.md I walked ten flows, from first launch to Sunday morning. That review settled the product model and the order of work.',
+  },
+  {
+    title: 'Build with AI as the engineering partner',
+    text: 'I write the specs and the constraints, an AI model writes the code, and I review what ships. It’s how The Retro Circuit went from zero to MVP in three months.',
+  },
+  {
+    title: 'Cut what doesn’t earn its place',
+    text: 'When Ridely’s home screen grew too many cards, it went back to one number. Less on the screen is usually the fix.',
+  },
+];
+---
+<Base title="About" description="inside a head is a personal studio for tech experiments and aesthetic design. Ideas are messy; this is where they get built.">
+  <article class="wrap about">
+    <header class="manifesto grid">
+      <h1>{settings.manifestoTitle}</h1>
+      <div class="manifesto-text">
+        {manifesto.map((p, i) => (i === manifesto.length - 1 ? <p class="closing">{p}</p> : <p>{p}</p>))}
+      </div>
+    </header>
+
+    <section class="block grid" aria-labelledby="me-title">
+      <h2 id="me-title">Daniel</h2>
+      <div class="text">
+        <p>
+          I like to create things and to challenge myself. By day I’m a product manager, with around four years in
+          enterprise SaaS. On the side I build my own products end to end, from the first idea to the release build,
+          and this studio is where they live.
+        </p>
+        <p class="muted">{settings.availability}, junior to mid level.</p>
+        <p class="links">
+          <a href="/resume">Resume</a>
+          <a href={settings.linkedin} rel="me noreferrer">LinkedIn <Arrow /></a>
+          <a href={settings.github} rel="me noreferrer">GitHub <Arrow /></a>
+          <a href={`mailto:${settings.email}`}>Email</a>
+        </p>
+      </div>
+    </section>
+
+    <section class="block grid" aria-labelledby="how-title">
+      <h2 id="how-title">How I work</h2>
+      <ol class="steps">
+        {steps.map((s, i) => (
+          <li>
+            <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+
+    <section class="block grid" aria-labelledby="design-title">
+      <h2 id="design-title">Design</h2>
+      <div class="text">
+        <p>
+          The mark is a square head with the idea sitting inside it, off-centre, where a thought would be. Two shapes
+          on one grid, nothing else: structure, with a little mess inside. The name is always lowercase.
+        </p>
+      </div>
+
+      <div class="kit">
+        <figure class="panel paper wide">
+          <LockupH class="lockup-h" role="img" aria-label="inside a head logo" />
+          <figcaption class="mono">Primary lockup</figcaption>
+        </figure>
+        <figure class="panel ink">
+          <Mark class="mark-big" role="img" aria-label="inside a head mark, reversed" />
+          <figcaption class="mono">Mark, reversed</figcaption>
+        </figure>
+        <figure class="panel paper">
+          <LockupS class="lockup-s" role="img" aria-label="inside a head stacked logo" />
+          <figcaption class="mono">Stacked lockup</figcaption>
+        </figure>
+        <figure class="panel paper">
+          <div class="ladder">
+            <Mark style="width: 64px; height: 64px" aria-hidden="true" />
+            <Mark style="width: 32px; height: 32px" aria-hidden="true" />
+            <Mark16 style="width: 16px; height: 16px" aria-hidden="true" />
+          </div>
+          <figcaption class="mono">64 · 32 · 16 px, with a pixel-snapped cut for 16</figcaption>
+        </figure>
+      </div>
+
+      <dl class="spec">
+        <div>
+          <dt class="mono">Colour</dt>
+          <dd class="swatches">
+            <span><i class="chip" style="background: #0b0b0a"></i>Ink <span class="mono">#0B0B0A</span></span>
+            <span><i class="chip" style="background: #f4f3ef"></i>Paper <span class="mono">#F4F3EF</span></span>
+          </dd>
+        </div>
+        <div>
+          <dt class="mono">Type</dt>
+          <dd><span class="specimen">Geist</span> <span class="specimen mono-face">Geist Mono</span></dd>
+        </div>
+        <div>
+          <dt class="mono">Grid</dt>
+          <dd>12 columns, 4 on phones. Colour belongs to the projects.</dd>
+        </div>
+      </dl>
+
+      <figure class="in-use">
+        <Picture src={inUse} alt="The logo in use: on a website header, a browser tab, an app icon, business cards, a social profile and a laptop sticker." formats={['webp']} widths={[800, 1400, 2304]} sizes="(min-width: 960px) 90vw, 100vw" loading="lazy" />
+        <figcaption class="mono">In use</figcaption>
+      </figure>
+
+      <p class="colophon">
+        Built with Astro and Keystatic, written in plain Markdown, in the open, on{' '}
+        <a href="https://github.com/iDarcky/Inside-a-Head" rel="noreferrer">GitHub</a>.
+      </p>
+    </section>
+  </article>
+</Base>
+
+<style>
+  .about { padding-bottom: var(--s-16); }
+  .manifesto { padding-block: var(--s-12) var(--s-24); row-gap: var(--s-12); }
+  h1 {
+    grid-column: 1 / -1;
+    font-size: clamp(3.5rem, 1rem + 10vw, 11rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+    max-width: 8ch;
+    margin-left: -0.04em;
+  }
+  .manifesto-text {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: var(--s-6);
+    font-size: var(--t-lead);
+    line-height: 1.35;
+    letter-spacing: -0.015em;
+    max-width: 40ch;
+  }
+  .closing { font-weight: 600; }
+  @media (min-width: 960px) {
+    .manifesto-text { grid-column: 6 / span 7; }
+  }
+
+  .block { border-top: 2px solid var(--rule); padding-block: var(--s-3) var(--s-16); row-gap: var(--s-6); }
+  .block h2 { grid-column: 1 / -1; font-size: var(--t-h3); letter-spacing: -0.03em; line-height: 1.1; }
+  .text, .steps { grid-column: 1 / -1; }
+  @media (min-width: 960px) {
+    .block h2 { grid-column: 1 / span 4; }
+    .text, .steps { grid-column: 6 / span 7; }
+  }
+  .text { display: grid; gap: var(--s-4); max-width: 62ch; font-size: 1.125rem; }
+  .muted { color: var(--ink-2); }
+  .links { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); font-size: var(--t-small); }
+  .links a { display: inline-flex; align-items: center; gap: var(--s-1); }
+
+  .steps { list-style: none; display: grid; gap: var(--s-8); }
+  .steps li { display: grid; grid-template-columns: 3rem 1fr; column-gap: var(--s-4); row-gap: var(--s-1); max-width: 62ch; }
+  .steps .mono { color: var(--ink-2); padding-top: 0.35em; grid-row: span 2; }
+  .steps h3 { font-size: 1.25rem; letter-spacing: -0.02em; line-height: 1.25; }
+  .steps p { color: var(--ink-2); }
+
+  .kit, .spec, .in-use, .colophon { grid-column: 1 / -1; }
+  .kit {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--gutter);
+    margin-top: var(--s-8);
+  }
+  @media (min-width: 720px) {
+    .kit { grid-template-columns: repeat(3, 1fr); }
+    .kit .wide { grid-column: 1 / -1; }
+  }
+  .panel {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: var(--s-6);
+    min-height: 260px;
+    padding: var(--s-8) var(--s-6) var(--s-4);
+    box-shadow: inset 0 0 0 1px var(--hairline);
+  }
+  .panel > :global(svg) { align-self: center; justify-self: center; }
+  /* Fixed colours: these panels show the logo as it is, whatever the site theme. */
+  .panel.paper { background: #f4f3ef; color: #0b0b0a; }
+  .panel.ink { background: #0b0b0a; color: #f4f3ef; }
+  .panel figcaption { opacity: 0.7; }
+  .wide { min-height: 320px; }
+  .lockup-h { width: min(100%, 560px); height: auto; }
+  .lockup-s { width: min(80%, 260px); height: auto; }
+  .mark-big { width: 112px; height: 112px; }
+  .ladder { display: flex; align-items: flex-end; justify-content: center; gap: var(--s-8); align-self: center; }
+
+  .spec { display: grid; gap: var(--s-4); margin-top: var(--s-12); max-width: 62ch; }
+  .spec div { display: grid; grid-template-columns: 5rem 1fr; gap: var(--s-4); align-items: baseline; }
+  .spec dt { color: var(--ink-2); }
+  .swatches { display: flex; flex-wrap: wrap; gap: var(--s-6); }
+  .swatches > span { display: inline-flex; align-items: center; gap: var(--s-2); }
+  .swatches .mono { color: var(--ink-2); }
+  .chip { display: inline-block; width: 20px; height: 20px; box-shadow: inset 0 0 0 1px var(--hairline); }
+  .specimen { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.03em; margin-right: var(--s-6); }
+  .mono-face { font-family: var(--mono); font-weight: 400; letter-spacing: 0; font-size: 1.25rem; }
+
+  .in-use { margin-top: var(--s-12); }
+  .in-use :global(img) { width: 100%; height: auto; }
+  .in-use figcaption { color: var(--ink-2); margin-top: var(--s-3); }
+  .colophon { margin-top: var(--s-12); color: var(--ink-2); max-width: 62ch; }
+  @media (min-width: 960px) {
+    .spec, .colophon { grid-column: 6 / span 7; }
+  }
+</style>

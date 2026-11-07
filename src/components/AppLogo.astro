@@ -1,0 +1,56 @@
+---
+// Each app's own mark in one colour (currentColor). Sources: Setlists.md's favicon, Meridian's and Ridely's
+// themed launcher icons, the running track drawn for Redline Running, and a stamp of The Retro Circuit's neon
+// wordmark used as an image mask.
+import type { AppId } from '../lib/museum';
+import trcStamp from '../assets/logos/the-retro-circuit-stamp.png';
+
+interface Props { logo: AppId; class?: string; label?: string }
+const { logo, class: className, label } = Astro.props;
+
+const shapes: Record<Exclude<AppId, 'the-retro-circuit'>, { viewBox: string; body: string }> = {
+  'setlists-md': {
+    viewBox: '6 8 20 16',
+    body:
+      '<rect x="7" y="9" width="18" height="3" rx="1.5"/><rect x="7" y="14.5" width="14" height="3" rx="1.5" opacity=".82"/>' +
+      '<rect x="7" y="20" width="10" height="3" rx="1.5" opacity=".62"/>',
+  },
+  meridian: {
+    viewBox: '30 22 48 64',
+    body:
+      '<path d="M54 32a22 22 0 0 0 0 44Z"/><path d="M54 32a22 22 0 0 1 0 44Z" opacity=".45"/>' +
+      '<path d="M54 24a1.6 1.6 0 0 1 1.6 1.6v56.8a1.6 1.6 0 0 1-3.2 0V25.6A1.6 1.6 0 0 1 54 24Z"/>',
+  },
+  ridely: {
+    viewBox: '24 22 60 60',
+    body:
+      '<path d="M54 32a22 22 0 1 1-20.92 15.2" fill="none" stroke="currentColor" stroke-width="8" stroke-linecap="round"/>' +
+      '<circle cx="54" cy="32" r="7"/>',
+  },
+  'redline-running': {
+    viewBox: '0 0 40 40',
+    body:
+      '<g stroke="currentColor" stroke-width="2.5" fill="none"><rect x="2" y="9" width="36" height="22" rx="11"/>' +
+      '<rect x="9" y="15.5" width="22" height="9" rx="4.5"/></g>',
+  },
+};
+const a11y = label ? { role: 'img', 'aria-label': label } : { 'aria-hidden': 'true' };
+---
+{logo === 'the-retro-circuit' ? (
+  <span
+    class:list={['app-logo', 'mask', className]}
+    style={`--mask: url(${trcStamp.src}); aspect-ratio: ${trcStamp.width} / ${trcStamp.height}`}
+    {...a11y}
+  ></span>
+) : (
+  <svg class:list={['app-logo', className]} viewBox={shapes[logo].viewBox} fill="currentColor" {...a11y} set:html={shapes[logo].body} />
+)}
+
+<style>
+  .app-logo { display: block; height: auto; flex: none; }
+  .mask {
+    background: currentColor;
+    mask: var(--mask) center / contain no-repeat;
+    -webkit-mask: var(--mask) center / contain no-repeat;
+  }
+</style>
