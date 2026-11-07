@@ -60,7 +60,7 @@ const isPhone = d.coverShape === 'phone';
     <header class="hero">
       <div class="wrap">
         <div class="hero-top">
-          <a class="back mono" href="/#museum"><Arrow dir="left" /> Museum of my Mess</a>
+          <a class="back mono" href="/museum"><Arrow dir="left" /> Museum of my Mess</a>
           <p class="piece mono">
             <span><span class="sr-only">Piece </span>{pad(piece.number)} / {pad(total)}</span>
             {piece.logo && <AppLogo logo={piece.logo} class="hero-logo" />}
@@ -120,7 +120,7 @@ const isPhone = d.coverShape === 'phone';
     <nav class="next wrap" aria-labelledby="next-title">
       <h2 id="next-title" class="next-head">
         <span>Next in the museum</span>
-        <a class="mono" href="/#museum">All {total} pieces</a>
+        <a class="mono" href="/museum">All {total} pieces</a>
       </h2>
       <PieceCard piece={next} layout="wide" kicker={`${pad(next.number)} / ${pad(total)}`} />
     </nav>
