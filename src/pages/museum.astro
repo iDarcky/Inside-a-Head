@@ -1,5 +1,5 @@
 ---
-// The whole Museum of my Mess on one page: every piece as an index grid, so the museum has its own address.
+// The whole Museum of my Mess on one page, as a bento grid, so the museum has its own address.
 import Base from '../layouts/Base.astro';
 import PieceCard from '../components/PieceCard.astro';
 import { getMuseum } from '../lib/museum';
@@ -28,14 +28,22 @@ const waiting = pieces.length - built;
   h1 { grid-column: 1 / -1; font-size: var(--t-display); font-weight: 700; letter-spacing: -0.055em; line-height: 0.9; }
   .intro { grid-column: 1 / -1; font-size: var(--t-lead); line-height: 1.3; color: var(--ink-2); max-width: 34ch; }
   .count { grid-column: 1 / -1; color: var(--ink-2); }
+  /* A bento on the 12-column grid: a large first tile beside a narrower one, then a row of three.
+     Tiles in a row share one image height, so their tops, images and text all line up. */
   .pieces { list-style: none; row-gap: var(--s-16); }
   .pieces > li { grid-column: 1 / -1; }
   @media (min-width: 720px) {
     .intro { grid-column: 1 / span 7; }
     .count { grid-column: 9 / -1; text-align: right; }
     .pieces > li { grid-column: span 6; }
+    .pieces > li :global(.thumb) { aspect-ratio: auto; height: min(34vw, 340px); }
   }
   @media (min-width: 1100px) {
     .pieces > li { grid-column: span 4; }
+    .pieces > li:nth-child(5n + 1) { grid-column: span 8; }
+    .pieces > li:nth-child(-n + 2) :global(.thumb),
+    .pieces > li:nth-child(5n + 1) :global(.thumb),
+    .pieces > li:nth-child(5n + 2) :global(.thumb) { height: min(36vw, 520px); }
+    .pieces > li :global(.thumb) { height: min(24vw, 360px); }
   }
 </style>

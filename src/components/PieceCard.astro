@@ -81,7 +81,7 @@ const sizes = layout === 'wide' ? '(min-width: 720px) 55vw, 92vw' : '(min-width:
   }
 
   .info { display: grid; gap: var(--s-3); align-content: start; }
-  .kicker { display: flex; align-items: center; justify-content: space-between; color: var(--ink-2); font-size: 0.8125rem; }
+  .kicker { display: flex; align-items: center; justify-content: space-between; min-height: 24px; color: var(--ink-2); font-size: 0.8125rem; }
   .kicker :global(.logo) { width: 24px; color: var(--accent); }
   :global(:root[data-theme='dark']) .kicker :global(.logo) { color: color-mix(in oklab, var(--accent) 55%, var(--ink)); }
   @media (prefers-color-scheme: dark) {
