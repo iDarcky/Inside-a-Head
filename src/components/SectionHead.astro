@@ -1,0 +1,20 @@
+---
+// A section break: a full-weight rule, a small index number, the title on the grid, and an optional note on the right.
+interface Props {
+  number: number;
+  title: string;
+  id: string;
+}
+const { number, title, id } = Astro.props;
+---
+<header class="section-head grid">
+  <p class="no mono" aria-hidden="true">{String(number).padStart(2, '0')}</p>
+  <h2 id={id}>{title}</h2>
+  {Astro.slots.has('default') && <div class="aside mono"><slot /></div>}
+</header>
+
+<style>
+  /* Beat the shared .section-head .mono rule, which right-aligns notes: the index sits top left. */
+  .section-head .no { grid-column: 1 / -1; color: var(--ink-2); margin: 0 0 var(--s-6); text-align: left; }
+  .aside :global(a) { color: inherit; }
+</style>

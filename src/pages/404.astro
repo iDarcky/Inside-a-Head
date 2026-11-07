@@ -4,16 +4,13 @@ import Base from '../layouts/Base.astro';
 <Base title="Not found" noindex>
   <section class="wrap nf">
     <h1>404</h1>
-    <p>This page drifted off into space. Nothing out here but static and a little jazz.</p>
+    <p>There’s nothing at this address. It may have moved, or it never existed.</p>
     <a class="button solid" href="/">Back to the studio</a>
-    <p class="mono note">see you, space cowboy…</p>
   </section>
 </Base>
 
 <style>
   .nf { padding-block: var(--s-16) var(--s-32); display: grid; gap: var(--s-8); justify-items: start; }
-  /* The one thing out of place on this page. */
-  h1 { font-size: var(--t-display); font-weight: 700; letter-spacing: -0.055em; line-height: 0.86; transform: rotate(-5deg); transform-origin: left bottom; }
+  h1 { font-size: var(--t-display); font-weight: 650; letter-spacing: -0.05em; line-height: 0.86; }
   p { font-size: var(--t-lead); max-width: 28ch; line-height: 1.3; }
-  .note { font-size: var(--t-meta); color: var(--ink-2); letter-spacing: 0.08em; }
 </style>

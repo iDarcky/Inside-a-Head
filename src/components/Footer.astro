@@ -25,7 +25,6 @@ const year = new Date().getFullYear();
       <a href="/logbook/rss.xml">RSS</a>
     </span>
   </div>
-  <p class="end mono" aria-hidden="true">see you, space cowboy…</p>
 </footer>
 
 <script>
@@ -95,11 +94,6 @@ const year = new Date().getFullYear();
   .base > * { grid-column: 1 / -1; }
   .clock { display: inline-flex; flex-wrap: wrap; gap: var(--s-2); }
   .mood { color: var(--signal); }
-  .end {
-    padding-block: var(--s-16) var(--s-4);
-    color: var(--ink-2);
-    letter-spacing: 0.08em;
-  }
   .links { display: flex; gap: var(--s-4); }
   .links a { text-decoration: none; }
   .links a:hover { color: var(--ink); text-decoration: underline; }

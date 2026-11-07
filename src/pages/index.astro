@@ -2,21 +2,21 @@
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
 import Arrow from '../components/Arrow.astro';
-import SessionCard from '../components/SessionCard.astro';
+import SectionHead from '../components/SectionHead.astro';
 import MuseumCarousel from '../components/MuseumCarousel.astro';
 import { getMuseum } from '../lib/museum';
-import { settings, formatDate, sessionNumbers } from '../lib/site';
+import { settings, formatDate } from '../lib/site';
 
 const pieces = await getMuseum();
 const builtCount = pieces.filter((p) => p.kind === 'project').length;
 const waitingCount = pieces.length - builtCount;
 const logbook = (await getCollection('logbook')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const latest = logbook.slice(0, 4);
-const sessions = sessionNumbers(logbook);
 ---
 <Base>
   <section class="masthead wrap" aria-labelledby="masthead-title">
-    <h1 id="masthead-title">inside a head</h1>
+    <p class="kicker mono">{settings.name}</p>
+    <h1 id="masthead-title">{settings.headline}</h1>
     <div class="grid intro">
       <p class="lead">{settings.intro}</p>
       <dl class="facts">
@@ -32,7 +32,7 @@ const sessions = sessionNumbers(logbook);
   </section>
 
   <section class="section wrap" id="museum" aria-labelledby="museum-title">
-    <SessionCard number={1} title="Museum of my Mess" id="museum-title">{builtCount} things I’ve built, {waitingCount} still waiting</SessionCard>
+    <SectionHead number={1} title="Museum of my Mess" id="museum-title">{builtCount} things I’ve built, {waitingCount} still waiting</SectionHead>
     <p class="museum-lead">
       Every piece in here started as an idea. Some became products, one is still waiting for its turn.{' '}
       <a href="/about">Why this studio exists</a>.
@@ -41,7 +41,7 @@ const sessions = sessionNumbers(logbook);
   </section>
 
   <section class="section wrap" id="logbook" aria-labelledby="logbook-title">
-    <SessionCard number={2} title="Logbook" id="logbook-title"><a href="/logbook">All entries</a></SessionCard>
+    <SectionHead number={2} title="Logbook" id="logbook-title"><a href="/logbook">All entries</a></SectionHead>
     {latest.length === 0 ? (
       <p class="empty">The first entry is on its way.</p>
     ) : (
@@ -49,7 +49,7 @@ const sessions = sessionNumbers(logbook);
         {latest.map((e) => (
           <li>
             <a class="row grid" href={`/logbook/${e.id}`}>
-              <span class="mono when">Session {sessions.get(e.id)} · <time datetime={e.data.date.toISOString()}>{formatDate(e.data.date)}</time></span>
+              <span class="mono when"><time datetime={e.data.date.toISOString()}>{formatDate(e.data.date)}</time></span>
               <span class="row-title">{e.data.title}</span>
               {e.data.summary && <span class="row-note">{e.data.summary}</span>}
               <Arrow dir="right" />
@@ -66,13 +66,15 @@ const sessions = sessionNumbers(logbook);
   .masthead {
     padding-block: var(--s-12) var(--s-16);
   }
+  .kicker { color: var(--ink-2); margin-bottom: var(--s-6); }
   h1 {
-    /* Set to fill the grid: the wordmark is the poster. */
-    font-size: clamp(3.5rem, 21vw, 17rem);
-    font-weight: 700;
-    letter-spacing: -0.055em;
-    line-height: 0.86;
-    margin-left: -0.03em; /* optical: align the i's stem with the grid edge */
+    /* The largest line on the site says who this is; the logo is already in the header. */
+    font-size: var(--t-display);
+    font-weight: 650;
+    letter-spacing: -0.05em;
+    line-height: 0.92;
+    max-width: 13ch;
+    margin-left: -0.04em; /* optical: align the first stem with the grid edge */
   }
   .intro {
     margin-top: var(--s-12);
@@ -99,7 +101,6 @@ const sessions = sessionNumbers(logbook);
   .facts dt { color: var(--ink-2); }
   .actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s-3); }
   @media (min-width: 720px) {
-    h1 { font-size: min(15.4vw, 16.5rem); }
     .lead { grid-column: 1 / span 7; }
     .facts { grid-column: 9 / -1; }
     .actions { grid-column: 9 / -1; }

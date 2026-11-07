@@ -4,6 +4,7 @@ import raw from '../content/settings.yaml?raw';
 export interface Settings {
   name: string;
   role: string;
+  headline: string;
   intro: string;
   location: string;
   timeZone: string;
@@ -25,8 +26,3 @@ export function formatDate(date: Date): string {
   return `${y}.${m}.${d}`;
 }
 
-/** Logbook entries are numbered like Cowboy Bebop sessions: the oldest is #01. */
-export function sessionNumbers(entries: { id: string; data: { date: Date } }[]): Map<string, string> {
-  const byAge = [...entries].sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
-  return new Map(byAge.map((e, i) => [e.id, `#${String(i + 1).padStart(2, '0')}`]));
-}

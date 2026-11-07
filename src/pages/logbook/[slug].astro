@@ -2,13 +2,13 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Base from '../../layouts/Base.astro';
 import Arrow from '../../components/Arrow.astro';
-import { formatDate, sessionNumbers, settings } from '../../lib/site';
+import { formatDate, settings } from '../../lib/site';
 
 export async function getStaticPaths() {
   const entries = (await getCollection('logbook')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
   return entries.map((entry, i) => ({
     params: { slug: entry.id },
-    props: { entry, newer: entries[i - 1], older: entries[i + 1], session: sessionNumbers(entries).get(entry.id)! },
+    props: { entry, newer: entries[i - 1], older: entries[i + 1] },
   }));
 }
 
@@ -16,9 +16,8 @@ interface Props {
   entry: CollectionEntry<'logbook'>;
   newer?: CollectionEntry<'logbook'>;
   older?: CollectionEntry<'logbook'>;
-  session: string;
 }
-const { entry, newer, older, session } = Astro.props;
+const { entry, newer, older } = Astro.props;
 const { Content } = await render(entry);
 ---
 <Base
@@ -38,7 +37,7 @@ const { Content } = await render(entry);
   <article class="wrap">
     <header class="head grid">
       <a class="back mono" href="/logbook"><Arrow dir="left" /> Logbook</a>
-      <p class="mono when">Session {session} · <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time></p>
+      <p class="mono when"><time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time></p>
       <h1>{entry.data.title}</h1>
     </header>
     <div class="body grid">
