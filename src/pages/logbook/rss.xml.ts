@@ -8,11 +8,12 @@ export async function GET(context: APIContext) {
     title: 'inside a head — logbook',
     description: 'What I built, what broke, and what I’d do differently. Roughly once a week.',
     site: context.site!,
+    trailingSlash: false,
     items: entries.map((e) => ({
       title: e.data.title,
       pubDate: e.data.date,
       description: e.data.summary ?? undefined,
-      link: `/logbook/${e.id}/`,
+      link: `/logbook/${e.id}`,
     })),
   });
 }

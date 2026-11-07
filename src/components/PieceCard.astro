@@ -58,7 +58,7 @@ const sizes = layout === 'wide' ? '(min-width: 720px) 55vw, 92vw' : '(min-width:
     .card.wide { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--gutter); align-items: center; }
   }
 
-  /* The image on a panel of the project's colour; store graphics crop to the device. */
+  /* The image on a panel of the project's colour. */
   .thumb {
     position: relative;
     aspect-ratio: 4 / 3;
@@ -70,16 +70,18 @@ const sizes = layout === 'wide' ? '(min-width: 720px) 55vw, 92vw' : '(min-width:
   }
   .thumb :global(picture) { display: contents; }
   .thumb :global(img) { display: block; transition: transform 320ms var(--ease-out); }
-  .thumb.screen :global(img) { width: 86%; height: auto; box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.5); }
-  .thumb.phone { align-items: flex-end; }
-  .thumb.phone :global(img) { width: 54%; height: 88%; object-fit: cover; object-position: 50% 100%; }
-  .idea .thumb.phone { align-items: center; }
-  .idea .thumb.phone :global(img) { height: 84%; object-position: 50% 0%; }
-  /* The one thing out of place. */
-  .idea .thumb { transform: rotate(-2.5deg); margin-top: 6px; }
+  /* One framing rule for every piece: the whole image, centred, with the same inset on all sides. */
+  .thumb :global(img) {
+    width: auto;
+    height: auto;
+    max-width: 84%;
+    max-height: 84%;
+    object-fit: contain;
+    box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.45);
+  }
 
   .info { display: grid; gap: var(--s-3); align-content: start; }
-  .kicker { display: flex; align-items: center; justify-content: space-between; color: var(--ink-2); font-size: 0.8125rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  .kicker { display: flex; align-items: center; justify-content: space-between; min-height: 24px; color: var(--ink-2); font-size: 0.8125rem; }
   .kicker :global(.logo) { width: 24px; color: var(--accent); }
   :global(:root[data-theme='dark']) .kicker :global(.logo) { color: color-mix(in oklab, var(--accent) 55%, var(--ink)); }
   @media (prefers-color-scheme: dark) {
