@@ -95,7 +95,11 @@ const skills = [
   ['Languages', 'Romanian (Native), English (Fluent), German (Basic)'],
 ];
 
-const certifications = ['Product Strategy (PSC)', 'Product Discovery', 'Product Experimentation', 'Product-Led Growth'];
+const certifications = [
+  ...['Product Strategy (PSC)', 'Product Discovery', 'Product Experimentation', 'Product-Led Growth'].map((name) => ({ name, org: 'Product School' })),
+  { name: 'Claude 101', org: 'Anthropic, 2026' },
+  { name: 'Exploring the Basics of Project Management', org: 'Adobe Learning Manager, 2026' },
+];
 
 const volunteering = [
   { org: 'BBPT', role: 'Social Media Lead', text: 'Led social media strategy (Facebook/Instagram) and implemented software for media production and lyric projection.' },
@@ -177,7 +181,7 @@ const volunteering = [
         ))}
         <div class="item">
           <dt class="dates mono">Certifications</dt>
-          <dd><ul class="plain">{certifications.map((c) => <li>{c} <span class="muted">· Product School</span></li>)}</ul></dd>
+          <dd><ul class="plain">{certifications.map((c) => <li>{c.name} <span class="muted">· {c.org}</span></li>)}</ul></dd>
         </div>
       </dl>
     </section>
