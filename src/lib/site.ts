@@ -4,7 +4,6 @@ import raw from '../content/settings.yaml?raw';
 export interface Settings {
   name: string;
   role: string;
-  headline: string;
   intro: string;
   location: string;
   timeZone: string;

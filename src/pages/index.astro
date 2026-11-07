@@ -15,8 +15,7 @@ const latest = logbook.slice(0, 4);
 ---
 <Base>
   <section class="masthead wrap" aria-labelledby="masthead-title">
-    <p class="kicker mono">{settings.name}</p>
-    <h1 id="masthead-title">{settings.headline}</h1>
+    <h1 id="masthead-title">inside a head</h1>
     <div class="grid intro">
       <p class="lead">{settings.intro}</p>
       <dl class="facts">
@@ -66,15 +65,13 @@ const latest = logbook.slice(0, 4);
   .masthead {
     padding-block: var(--s-12) var(--s-16);
   }
-  .kicker { color: var(--ink-2); margin-bottom: var(--s-6); }
   h1 {
-    /* The largest line on the site says who this is; the logo is already in the header. */
-    font-size: var(--t-display);
-    font-weight: 650;
-    letter-spacing: -0.05em;
-    line-height: 0.92;
-    max-width: 13ch;
-    margin-left: -0.04em; /* optical: align the first stem with the grid edge */
+    /* Set to fill the grid: the wordmark is the poster. */
+    font-size: clamp(3.5rem, 21vw, 17rem);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 0.86;
+    margin-left: -0.03em; /* optical: align the i's stem with the grid edge */
   }
   .intro {
     margin-top: var(--s-12);
@@ -101,6 +98,7 @@ const latest = logbook.slice(0, 4);
   .facts dt { color: var(--ink-2); }
   .actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: var(--s-3); }
   @media (min-width: 720px) {
+    h1 { font-size: min(15.4vw, 16.5rem); }
     .lead { grid-column: 1 / span 7; }
     .facts { grid-column: 9 / -1; }
     .actions { grid-column: 9 / -1; }

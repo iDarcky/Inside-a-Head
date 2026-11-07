@@ -31,7 +31,6 @@ export default config({
       schema: {
         name: fields.text({ label: 'Name' }),
         role: fields.text({ label: 'Role line', description: 'Shown under the masthead, e.g. "Product manager"' }),
-        headline: fields.text({ label: 'Headline', description: 'The biggest line on the homepage: who you are, in one sentence.' }),
         intro: fields.text({ label: 'Intro', multiline: true, description: 'Two or three sentences for the homepage.' }),
         location: fields.text({ label: 'Location' }),
         timeZone: fields.text({ label: 'Time zone', description: 'IANA name, e.g. Europe/Bucharest' }),
